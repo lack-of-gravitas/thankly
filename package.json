@@ -1,29 +1,45 @@
 {
-  "name": "tailwindui-pocket",
+  "name": "thankly",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "find:unused": "next-unused",
+    "analyze": "cross-env BUNDLE_ANALYZE=both next build"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
     "@headlessui/react": "^1.6.5",
+    "@stripe/stripe-js": "^1.34.0",
+    "@supabase/supabase-auth-helpers": "^1.2.3",
+    "@supabase/supabase-js": "^1.35.4",
+    "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/forms": "^0.5.2",
+    "@tailwindcss/line-clamp": "^0.4.0",
+    "@tailwindcss/typography": "^0.5.2",
     "autoprefixer": "^10.4.7",
     "clsx": "^1.1.1",
     "focus-visible": "^5.2.0",
     "framer-motion": "^6.5.1",
-    "next": "12.2.3",
+    "next": "^12.2.3",
     "postcss-focus-visible": "^6.0.4",
     "react": "18.2.0",
+    "next-seo": "^5.5.0",
+    "next-themes": "^0.2.0",
     "react-dom": "18.2.0",
+    "stripe": "^10.0.0",
+    "swr": "^1.3.0",
     "tailwindcss": "^3.1.4",
+    "react-merge-refs": "^2.0.1",
     "use-debounce": "^8.0.3"
   },
   "devDependencies": {
+    "@builder.io/partytown": "^0.6.4",
+    "@next/bundle-analyzer": "^12.1.6",
+    "@types/js-cookie": "^3.0.2",
     "@types/node": "^18.7.13",
     "@types/react": "^18.0.17",
     "eslint": "8.15.0",
@@ -31,5 +47,25 @@
     "prettier": "^2.6.2",
     "prettier-plugin-tailwindcss": "^0.1.11",
     "typescript": "^4.8.2"
+  },
+  "next-unused": {
+    "alias": {
+      "@/lib/*": [
+        "lib/*"
+      ],
+      "@/components/*": [
+        "components/*"
+      ]
+    },
+    "debug": true,
+    "include": [
+      "components",
+      "lib",
+      "pages"
+    ],
+    "exclude": [],
+    "entrypoints": [
+      "pages"
+    ]
   }
 }

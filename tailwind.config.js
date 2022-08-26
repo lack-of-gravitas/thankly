@@ -38,6 +38,7 @@ module.exports = {
       }),
       fontFamily: {
         sans: ['Inter', ...defaultTheme.fontFamily.sans],
+        title: ['Roboto', ...defaultTheme.fontFamily.sans],
       },
       keyframes: {
         'fade-in': {
@@ -64,5 +65,10 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [
+    require('@tailwindcss/forms'), // cleaner forms - https://github.com/tailwindlabs/tailwindcss-forms
+    require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/typography'), // adds prose class for niceness on std elements without effort
+    require('@tailwindcss/line-clamp'), // restricts text to # lines
+  ],
 }
