@@ -192,7 +192,7 @@ function InviteScreen({ custom, animated = false }) {
               </div>
             ))}
           </div>
-          <div className="mt-6 rounded-lg bg-cyan-500 py-2 px-3 text-center text-sm font-semibold text-white">
+          <div className="mt-6 rounded-md bg-cyan-500 py-2 px-3 text-center text-sm font-semibold text-white">
             Invite person
           </div>
         </div>
@@ -344,7 +344,7 @@ function InvestScreen({ custom, animated = false }) {
                 </div>
               </div>
             ))}
-            <div className="rounded-lg bg-cyan-500 py-2 px-3 text-center text-sm font-semibold text-white">
+            <div className="rounded-md bg-cyan-500 py-2 px-3 text-center text-sm font-semibold text-white">
               Buy shares
             </div>
           </div>

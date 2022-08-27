@@ -2,7 +2,10 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{js,jsx}'],
+  important: true,
+
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+
   theme: {
     fontSize: {
       xs: ['0.75rem', { lineHeight: '1rem' }],
@@ -37,7 +40,7 @@ module.exports = {
         gray: colors.neutral,
       }),
       fontFamily: {
-        sans: ['Inter', ...defaultTheme.fontFamily.sans],
+        sans: ['Lato', ...defaultTheme.fontFamily.sans],
         title: ['Roboto', ...defaultTheme.fontFamily.sans],
       },
       keyframes: {

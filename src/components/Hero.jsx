@@ -300,7 +300,7 @@ function AppDemo() {
               <div>1Y</div>
               <div>5Y</div>
             </div>
-            <div className="mt-3 rounded-lg bg-gray-50 ring-1 ring-inset ring-black/5">
+            <div className="mt-3 rounded-md bg-gray-50 ring-1 ring-inset ring-black/5">
               <Chart
                 width={286}
                 height={208}
@@ -310,7 +310,7 @@ function AppDemo() {
                 onChangeActivePointIndex={setActivePointIndex}
               />
             </div>
-            <div className="mt-4 rounded-lg bg-cyan-500 py-2 px-4 text-center text-sm font-semibold text-white">
+            <div className="mt-4 rounded-md bg-cyan-500 py-2 px-4 text-center text-sm font-semibold text-white">
               Trade
             </div>
             <div className="mt-3 divide-y divide-gray-100 text-sm">

@@ -1,0 +1,25 @@
+{
+  "title": "Thankly | Cards and Gifts",
+  "titleTemplate": "%s - Thankly",
+  "description": "Thankly - https://thankly.com.au",
+  "openGraph": {
+    "title": "Thankly | Cards and Gifts",
+    "description": "Thankly - https://thankly.com.au",
+    "type": "website",
+    "url": "https://thankly.com.au",
+    "site_name": "Thankly",
+    "images": [
+      {
+        "url": "/card.png",
+        "width": "800",
+        "height": "600",
+        "alt": "Thankly"
+      }
+    ]
+  },
+  "twitter": {
+    "handle": "@nextjs",
+    "site": "@nextjs",
+    "cardType": "summary_large_image"
+  }
+}

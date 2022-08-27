@@ -20,7 +20,6 @@ const nextConfig = {
       'dummyimage.com',
       'thankly.azureedge.net',
       'images.unsplash.com',
-      'thankly.azurewebsites.net',
       'thankly-cms.fly.dev',
       'lh3.googleusercontent.com', // for google user profiles
     ],
