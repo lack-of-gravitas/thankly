@@ -165,9 +165,6 @@ const products = [
   // More products...
 ]
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
 
 export function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -267,7 +264,7 @@ export function Example() {
                                       name={`${section.id}[]`}
                                       defaultValue={option.value}
                                       type="checkbox"
-                                      className="w-4 h-4 text-slate-500 border-gray-300 rounded focus:ring-indigo-500"
+                                      className="w-4 h-4 border-gray-300 rounded text-slate-500 focus:ring-indigo-500"
                                     />
                                     <label
                                       htmlFor={`${section.id}-${optionIdx}-mobile`}
@@ -339,17 +336,17 @@ export function Example() {
 
               <div className="hidden lg:block">
                 <form className="space-y-10 divide-y divide-gray-200">
-                  {filters.map((section, sectionIdx) => (
+                  {filters.map((section:any, sectionIdx:any) => (
                     <div
                       key={section.name}
-                      className={sectionIdx === 0 ? null : 'pt-10'}
+                      className={sectionIdx === 0 ? '' : 'pt-10'}
                     >
                       <fieldset>
                         <legend className="block text-sm font-medium text-gray-900">
                           {section.name}
                         </legend>
                         <div className="pt-6 space-y-3">
-                          {section.options.map((option, optionIdx) => (
+                          {section.options.map((option:any, optionIdx:any) => (
                             <div
                               key={option.value}
                               className="flex items-center"
@@ -359,7 +356,7 @@ export function Example() {
                                 name={`${section.id}[]`}
                                 defaultValue={option.value}
                                 type="checkbox"
-                                className="w-4 h-4 text-slate-500 border-gray-300 rounded focus:ring-indigo-500"
+                                className="w-4 h-4 border-gray-300 rounded text-slate-500 focus:ring-indigo-500"
                               />
                               <label
                                 htmlFor={`${section.id}-${optionIdx}`}

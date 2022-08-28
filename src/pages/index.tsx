@@ -94,9 +94,6 @@ const categories = [
   },
   { name: 'Sale', href: '#', imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-01-category-03.jpg' },
 ]
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
 
 export  function Example() {
 
@@ -120,7 +117,7 @@ export  function Example() {
           <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">New arrivals are here</h1>
           <p className="mt-4 text-xl text-white">
             The new arrivals have, well, newly arrived. Check out the latest options from our summer small-batch release
-            while they're still in stock.
+            while theyre still in stock.
           </p>
           <a
             href="#"
@@ -230,8 +227,8 @@ export  function Example() {
                 Long-term thinking
               </h2>
               <p className="mt-3 text-xl text-white">
-                We're committed to responsible, sustainable, and ethical manufacturing. Our small-scale approach allows
-                us to focus on quality and reduce our impact. We're doing our best to delay the inevitable heat-death of
+                Were committed to responsible, sustainable, and ethical manufacturing. Our small-scale approach allows
+                us to focus on quality and reduce our impact. Were doing our best to delay the inevitable heat-death of
                 the universe.
               </p>
               <a

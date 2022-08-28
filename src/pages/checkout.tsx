@@ -88,9 +88,7 @@ const products = [
   // More products...
 ]
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+
 
 export  function Example() {
   const [open, setOpen] = useState(false)
