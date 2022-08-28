@@ -309,7 +309,7 @@ export async function getSection(params: any) {
 
       let { data: stripePrices } = await (
         await fetch(
-          `https://api.stripe.com/v1/search/prices?query=product:"${params.product_id}" AND active:"true"`,
+          `https://api.stripe.com/v1/search/prices?query=product:'${params.product_id}' AND active:'true'`,
           {
             method: 'GET',
             headers: {

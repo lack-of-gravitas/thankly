@@ -3,23 +3,23 @@ import { Head, Html, Main, NextScript } from 'next/document'
 export default function Document(props: any) {
   return (
     <Html
-      className="bg-pink-50 h-full scroll-smooth antialiased [font-feature-settings:'ss01']"
-      lang="en"
+      className='h-full antialiased bg-pink-50 scroll-smooth'
+      lang='en'
     >
       <Head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel='preconnect' href='https://fonts.googleapis.com' />
         <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
+          rel='preconnect'
+          href='https://fonts.gstatic.com'
+          crossOrigin='anonymous'
         />
         <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Lato&family=Roboto&display=swap"
+          rel='stylesheet'
+          href='https://fonts.googleapis.com/css2?family=Lato&family=Roboto&display=swap'
         />
         <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
+          rel='stylesheet'
+          href='https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap'
         />
 
         {/* <script
@@ -29,11 +29,11 @@ export default function Document(props: any) {
           ></script> */}
         {/* <noscript
             dangerouslySetInnerHTML={{
-              __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MN6W52S" height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
+              __html: `<iframe src='https://www.googletagmanager.com/ns.html?id=GTM-MN6W52S' height='0' width='0' style='display:none;visibility:hidden'></iframe>`,
             }}
           ></noscript> */}
       </Head>
-      <body className="">
+      <body className=''>
         {/* flex flex-col h-full  */}
         <Main />
         <NextScript />
@@ -46,9 +46,9 @@ export default function Document(props: any) {
 
 // export default function Document() {
 //   return (
-//     <Html className="h-full antialiased bg-gray-50" lang="en">
+//     <Html className='h-full antialiased bg-gray-50' lang='en'>
 //       <Head />
-//       <body className="flex flex-col h-full">
+//       <body className='flex flex-col h-full'>
 //         <Main />
 //         <NextScript />
 //       </body>

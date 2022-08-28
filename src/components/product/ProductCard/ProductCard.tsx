@@ -48,12 +48,12 @@ const ProductCard: FC<Props> = ({
             {product?.images && (
               <div>
                 <Image
-                  quality="85"
+                  quality='85'
                   src={product.images[0]?.url || placeholderImg}
                   alt={product.name || 'Product Image'}
                   height={320}
                   width={320}
-                  layout="fixed"
+                  layout='fixed'
                   {...imgProps}
                 />
               </div>
@@ -91,8 +91,8 @@ const ProductCard: FC<Props> = ({
                     src={product.images[0]?.url || placeholderImg}
                     height={540}
                     width={540}
-                    quality="85"
-                    layout="responsive"
+                    quality='85'
+                    layout='responsive'
                     {...imgProps}
                   />
                 </div>
@@ -125,8 +125,8 @@ const ProductCard: FC<Props> = ({
                     src={product.images[0]?.url || placeholderImg}
                     height={540}
                     width={540}
-                    quality="85"
-                    layout="responsive"
+                    quality='85'
+                    layout='responsive'
                     {...imgProps}
                   />
                 </div>

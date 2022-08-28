@@ -49,13 +49,13 @@ const Text: FunctionComponent<TextProps> = ({
   return (
     <Component
       className={cn(
-        s.root,
-        {
-          [s.body]: variant === 'body',
-          [s.heading]: variant === 'heading',
-          [s.pageHeading]: variant === 'pageHeading',
-          [s.sectionHeading]: variant === 'sectionHeading',
-        },
+        // s.root,
+        // {
+        //   [s.body]: variant === 'body',
+        //   [s.heading]: variant === 'heading',
+        //   [s.pageHeading]: variant === 'pageHeading',
+        //   [s.sectionHeading]: variant === 'sectionHeading',
+        // },
         className
       )}
       onClick={onClick}

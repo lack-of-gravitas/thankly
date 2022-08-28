@@ -15,11 +15,11 @@ const Marquee: FC<MarqueeProps> = ({
   variant = 'primary',
 }) => {
   const rootClassName = cn(
-    s.root,
-    {
-      [s.primary]: variant === 'primary',
-      [s.secondary]: variant === 'secondary',
-    },
+    // s.root,
+    // {
+    //   [s.primary]: variant === 'primary',
+    //   [s.secondary]: variant === 'secondary',
+    // },
     className
   )
 

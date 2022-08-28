@@ -15,7 +15,7 @@ export default function Page({ slug, preview, prefetchedData }: any) {
   return (
     <>
       {prefetchedData?.sections?.map((section: any) => (
-        <Section key={section.sort} section={section} />
+        <>{/* <Section key={section.sort} section={section} /> */}</>
       ))}
     </>
   )
@@ -50,6 +50,6 @@ export async function getStaticPaths(context: any) {
     paths: [], // anything not present inside will be built dynamically or return 404. If empty, all routes need to be checked in getStaticProps
     // fallback: false, // if false, will return 404 if page not in the paths array above
     // fallback: true, // if true, if page not in the paths array above, will run getStaticProps to gen page on request
-    fallback: 'blocking', // doesnt send any props down and waits for getstaticprops to return before rendering page "no flashes of missing content". Con is only the 1st visitor will have a delay on pages. Use this most of the time unless getStaticProps is slow on first run (slow API calls, slow to build pages, etc)
+    fallback: 'blocking', // doesnt send any props down and waits for getstaticprops to return before rendering page 'no flashes of missing content'. Con is only the 1st visitor will have a delay on pages. Use this most of the time unless getStaticProps is slow on first run (slow API calls, slow to build pages, etc)
   }
 }

@@ -1,4 +1,6 @@
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
+
 const Navbar = dynamic(() => import('@/components/common/Navbar'))
 const Footer = dynamic(() => import('@/components/common/Footer'))
 const Loading = dynamic(() => import('@/components/ui/Loading'))
@@ -37,9 +39,9 @@ const Layout: React.FC = ({ children, brand }: any) => {
             <span className="md:inline">
               This site uses cookies to improve your experience. By clicking
               accept, you agree to our{' '}
-              <a href="/privacy" className="underline">
-                Privacy Policy.
-              </a>
+              <Link href="/privacy" passHref className="underline">
+                <a>Privacy Policy.</a>
+              </Link>
             </span>
           }
           dismiss={

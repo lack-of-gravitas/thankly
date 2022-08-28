@@ -13,7 +13,7 @@ interface SkeletonProps {
   boxHeight?: string | number
 }
 
-const Skeleton: React.FC<SkeletonProps> = ({
+const Skeleton: React.FC<SkeletonProps|any> = ({
   style,
   width,
   height,
@@ -33,11 +33,15 @@ const Skeleton: React.FC<SkeletonProps> = ({
 
   return (
     <span
-      className={cn(s.skeleton, className, {
-        [s.show]: show,
-        [s.wrapper]: shouldAutoSize,
-        [s.loaded]: !shouldAutoSize && !!children,
-      })}
+      className={cn(
+        // s.skeleton, 
+        className, 
+        {
+        // [s.show]: show,
+        // [s.wrapper]: shouldAutoSize,
+        // [s.loaded]: !shouldAutoSize && !!children,
+      }
+      )}
       style={
         shouldAutoSize
           ? {}

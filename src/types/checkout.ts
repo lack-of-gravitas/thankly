@@ -1,4 +1,4 @@
-import type { UseSubmitCheckout } from '../checkout/use-submit-checkout'
+// import type { UseSubmitCheckout } from '../checkout/use-submit-checkout'
 import type { Address, AddressFields } from './customer/address'
 import type { Card, CardFields } from './customer/card'
 
@@ -26,7 +26,7 @@ export type GetCheckoutHook<T extends CheckoutTypes = CheckoutTypes> = {
   input: {}
   fetcherInput: { cartId?: string }
   swrState: { isEmpty: boolean }
-  mutations: { submit: UseSubmitCheckout }
+  // mutations: { submit: UseSubmitCheckout }
 }
 
 export type CheckoutHooks<T extends CheckoutTypes = CheckoutTypes> = {

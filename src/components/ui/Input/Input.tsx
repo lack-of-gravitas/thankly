@@ -10,7 +10,9 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 const Input: React.FC<InputProps> = (props) => {
   const { className, children, onChange, ...rest } = props
 
-  const rootClassName = cn(s.root, {}, className)
+  const rootClassName = cn(
+    // s.root, {}, 
+    className)
 
   const handleOnChange = (e: any) => {
     if (onChange) {
@@ -24,10 +26,10 @@ const Input: React.FC<InputProps> = (props) => {
       <input
         className={rootClassName}
         onChange={handleOnChange}
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        spellCheck="false"
+        autoComplete='off'
+        autoCorrect='off'
+        autoCapitalize='off'
+        spellCheck='false'
         {...rest}
       />
     </label>
