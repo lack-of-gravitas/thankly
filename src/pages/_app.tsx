@@ -14,7 +14,7 @@ const Noop: FC = ({ children }: any) => <>{children}</>
 export default function MyApp({ Component, pageProps }: AppProps) {
   const Layout = (Component as any).Layout || Noop
   const brand: any = SwrBrand()
-  console.log('_app brand->', brand)
+  // console.log('_app brand->', brand)
 
   useEffect(() => {
     document.body.classList?.remove('loading')

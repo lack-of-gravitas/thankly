@@ -26,7 +26,7 @@ const FeatureBar: React.FC<FeatureBarProps> = ({
     <>
       <div className={cn(`fixed inset-x-0 `, className)}>
         <div className='px-2 mx-auto max-w-7xl sm:px-6 lg:px-8'>
-          <div className='p-2 bg-indigo-600 rounded-md shadow-lg sm:p-3'>
+          <div className='p-2 rounded-md shadow-lg bg-slate-500 sm:p-3'>
             <div className='flex flex-wrap items-center justify-between'>
               <div className='flex items-center flex-1 w-0'>
                 {icon && icon}

@@ -13,7 +13,7 @@ interface Props {
 }
 
 const Footer: FC<Props | any> = ({ data, className}) => {
-  console.log('footer data->', data)
+  // console.log('footer data->', data)
   
   return (
     <>

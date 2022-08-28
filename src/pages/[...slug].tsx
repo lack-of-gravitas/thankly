@@ -1,11 +1,12 @@
 import dynamic from 'next/dynamic'
-import { Section } from '@/components/ui'
 import { getPage } from '@/lib/queries'
 import { useRouter } from 'next/router'
 
 const Layout = dynamic(() => import('@/components/common/Layout'))
+const Section = dynamic(() => import('@/components/ui/Section'))
+
 export default function Page({ slug, preview, prefetchedData }: any) {
-  // console.log('prefetchedData->', slug, '->', prefetchedData)
+  console.log('prefetchedData->', slug, '->', prefetchedData)
   const router = useRouter()
 
   if (!prefetchedData) {
@@ -15,7 +16,9 @@ export default function Page({ slug, preview, prefetchedData }: any) {
   return (
     <>
       {prefetchedData?.sections?.map((section: any) => (
-        <>{/* <Section key={section.sort} section={section} /> */}</>
+        <>
+          <Section key={section.sort} data={section} />
+        </>
       ))}
     </>
   )

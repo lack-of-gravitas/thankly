@@ -103,7 +103,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                             className={({ selected }) =>
                               cn(
                                 selected
-                                  ? 'border-indigo-600 text-indigo-600'
+                                  ? 'border-pink-200 text-slate-500'
                                   : 'border-transparent text-gray-900',
                                 'flex-1 whitespace-nowrap border-b-2 py-4 px-1 text-base font-medium'
                               )
@@ -213,7 +213,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                             height={36}
                           />
                         </span>
-                        <span className='ml-2 font-extrabold text-pink-300 text-md group-hover:text-gray-800'>
+                        <span className='ml-2 font-extrabold text-slate-500 text-md group-hover:text-gray-800'>
                           {data.name || `Company Name`}
                         </span>
                       </a>
@@ -234,7 +234,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                   <Popover.Button
                                     className={cn(
                                       open
-                                        ? 'text-indigo-600'
+                                        ? 'text-slate-500'
                                         : 'text-gray-700 hover:text-gray-800',
                                       'relative flex items-center justify-center text-sm font-medium transition-colors duration-200 ease-out'
                                     )}
@@ -242,7 +242,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                     {category.name}
                                     <span
                                       className={cn(
-                                        open ? 'bg-indigo-600' : '',
+                                        open ? 'bg-pink-200' : '',
                                         'absolute inset-x-0 -bottom-px z-20 h-0.5 transition duration-200 ease-out'
                                       )}
                                       aria-hidden='true'

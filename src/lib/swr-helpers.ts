@@ -5,7 +5,7 @@ export function SwrBrand() {
   let { data } = useSWR('brand', () => getBrand(), {
     revalidateOnReconnect: false,
   })
-  console.log('swr brand -- ', data)
+  // console.log('swr brand -- ', data)
   // const { data: brandColors } = useSWR('brandColors', () => getBrandColors(), {
   //   revalidateOnReconnect: false,
   // })

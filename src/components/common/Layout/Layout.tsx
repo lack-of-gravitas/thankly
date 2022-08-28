@@ -10,7 +10,7 @@ import { useAcceptCookies } from '@/lib/hooks/useAcceptCookies'
 import { Button } from '@/components/ui'
 
 const Layout: React.FC = ({ children, brand }: any) => {
-  console.log('layout brand ->', brand)
+  // console.log('layout brand ->', brand)
   const { acceptedCookies, onAcceptCookies } = useAcceptCookies()
 
   if (brand) {
@@ -60,7 +60,7 @@ const Layout: React.FC = ({ children, brand }: any) => {
           }
           action={
             <Button
-              className="flex items-center justify-center px-4 py-2 text-sm font-medium text-indigo-600 bg-white border border-transparent rounded-md shadow-sm hover:bg-indigo-50"
+              className="flex items-center justify-center px-4 py-2 text-sm font-medium bg-white border border-transparent rounded-md shadow-sm text-slate-500 hover:bg-indigo-50"
               onClick={() => onAcceptCookies()}
             >
               Accept cookies

@@ -14,7 +14,7 @@ export async function getBrand() {
     )
   ).json()
   brand = brand.data[0]
-  console.log('brand query--', brand)
+  // console.log('brand query--', brand)
 
   return brand
 }
@@ -113,7 +113,7 @@ export async function getSection(params: any) {
       ).json()
       return section.data[0].item
       break
-    case 'Hero':
+    case 'hero':
       section = await (
         await fetch(
           `${process.env.NEXT_PUBLIC_REST_API}/${
