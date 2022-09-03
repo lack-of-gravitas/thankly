@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
 import dynamic from 'next/dynamic'
-import { SwrBrand } from '@/lib/swr-helpers'
 import { SwrSection } from '@/lib/swr-helpers'
 import * as Sections from '@/components/ui'
 
@@ -19,13 +18,16 @@ export const Section: FC<SectionProps> = ({ data, className, children }) => {
     id: data.id,
     pages_id: data.pages_id,
   }
+  console.log('queryParams -- ', queryParams)
 
-  sectionData = SwrSection(queryParams)
-  console.log('sectionData -- ', sectionData)
-  // switch (section.collection) {
-  //   case 'Hero':
-  //     return <Sections.Hero data={sectionData ? sectionData : null} />
-  //     break
+  sectionData =  SwrSection(queryParams)
+  if (!sectionData) return null
+
+  // console.log('sectionData -- ', sectionData)
+  switch (data.collection) {
+    case 'hero':
+      return <Sections.Hero data={sectionData ? sectionData : null} />
+      break
   //   case 'Slider':
   //     return <Sections.Slider data={sectionData ? sectionData : null} />
   //     break
@@ -37,9 +39,9 @@ export const Section: FC<SectionProps> = ({ data, className, children }) => {
   //     return <ProductsFeatured data={sectionData ? sectionData : null} />
   //     break
 
-  //   case 'BasicContent':
-  //     return <Sections.BasicContent data={sectionData ? sectionData : null} />
-  //     break
+    case 'pageContent':
+      return <Sections.Content data={sectionData ? sectionData : null} />
+      break
   //   case 'CallToAction':
   //     return <Sections.CallToAction data={sectionData ? sectionData : null} />
   //     break
@@ -70,9 +72,9 @@ export const Section: FC<SectionProps> = ({ data, className, children }) => {
   //     return <ProductsFeatured data={sectionData ? sectionData : null} />
   //     break
 
-  //   default:
-  //     return <></>
-  // }
+    default:
+      return <></>
+  }
 
   return <></>
 }

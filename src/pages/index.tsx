@@ -148,7 +148,7 @@ export  function Example() {
                     <a
                       key={category.name}
                       href={category.href}
-                      className="relative flex flex-col w-56 p-6 overflow-hidden rounded-lg h-80 hover:opacity-75 xl:w-auto"
+                      className="relative flex flex-col w-56 p-6 overflow-hidden rounded-md h-80 hover:opacity-75 xl:w-auto"
                     >
                       <span aria-hidden="true" className="absolute inset-0">
                         <img src={category.imageSrc} alt="" className="object-cover object-center w-full h-full" />
@@ -186,7 +186,7 @@ export  function Example() {
             <div className="grid grid-cols-1 mt-6 gap-y-10 sm:grid-cols-3 sm:gap-y-0 sm:gap-x-6 lg:gap-x-8">
               {favorites.map((favorite) => (
                 <div key={favorite.id} className="relative group">
-                  <div className="w-full overflow-hidden rounded-lg h-96 group-hover:opacity-75 sm:h-auto sm:aspect-w-2 sm:aspect-h-3">
+                  <div className="w-full overflow-hidden rounded-md h-96 group-hover:opacity-75 sm:h-auto sm:aspect-w-2 sm:aspect-h-3">
                     <img
                       src={favorite.imageSrc}
                       alt={favorite.imageAlt}

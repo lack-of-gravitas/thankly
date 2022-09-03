@@ -53,6 +53,14 @@ export async function getPage(path: any) {
         `&filter[slug][_eq]=${path}`
     )
   ).json()
+
+
+// get sections for the page
+
+
+
+
+
 }
 
 export async function getCourseContent(id: any) {
@@ -88,16 +96,15 @@ export async function getSection(params: any) {
   let section: any = {}
   let posts: any
   switch (params.collection) {
-    case 'BasicContent':
+    case 'pageContent':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
-            `?fields=*,item.id,item.content,item.section_name` +
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections`+
+            `?fields=*,item.id,item.content,item.name` +
             `&filter[id][_eq]=${params.id}`
         )
       ).json()
+      console.log('section --', section)
       return section.data[0].item
       break
     case 'CallToAction':

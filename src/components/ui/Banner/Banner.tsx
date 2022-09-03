@@ -1,34 +1,26 @@
 import cn from 'clsx'
+// import s from './Marquee.module.css'
+import { FC, ReactNode, Component, Children } from 'react'
+
 import { SwrBrand } from '@/lib/swr-helpers'
 
-interface FeatureBarProps {
+interface BannerProps {
   className?: string
   hide?: boolean
+  dismiss?: React.ReactNode
 
   // title: string
   // description?: string
   icon?: React.ReactNode
   content?: React.ReactNode
-  action?: React.ReactNode
-  dismiss?: React.ReactNode
 }
 
-const FeatureBar: React.FC<FeatureBarProps> = ({
-  // title,
-  // description,
-  className,
-  hide,
-  icon,
-  content,
-  action,
-  dismiss,
-}) => {
+const Banner: FC<BannerProps> = ({ className, hide, icon, content,dismiss }) => {
   const brand: any = SwrBrand()
 
   return (
-    <>
-      <div className={cn(`fixed inset-x-0 `, className)}>
-        <div className='px-2 mx-auto max-w-7xl sm:px-6 lg:px-8'>
+    <div className={cn(`inset-x-0 `, className)}>
+        <div className='px-2 mx-auto md:pt-5 max-w-7xl sm:px-6 lg:px-8'>
           <div 
           
           style={{
@@ -47,12 +39,9 @@ const FeatureBar: React.FC<FeatureBarProps> = ({
                     ? brand.textColour
                     : '#64748b',
                 }}
-                className='ml-3 font-medium'>
+                className='ml-3 text-sm font-medium'>
                   {content && content}
                 </p>
-              </div>
-              <div className='flex-shrink-0 order-3 w-full mt-2 sm:order-2 sm:mt-0 sm:w-auto'>
-                {action && action}
               </div>
               <div className='flex-shrink-0 order-2 sm:order-3 sm:ml-2'>
                 {dismiss && dismiss}
@@ -61,8 +50,7 @@ const FeatureBar: React.FC<FeatureBarProps> = ({
           </div>
         </div>
       </div>
-    </>
   )
 }
 
-export default FeatureBar
+export default Banner

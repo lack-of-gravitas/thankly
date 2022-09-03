@@ -115,7 +115,7 @@ export  function Example() {
                         <img
                           src={product.imageSrc}
                           alt={product.imageAlt}
-                          className="object-cover object-center w-24 h-24 rounded-lg sm:w-32 sm:h-32"
+                          className="object-cover object-center w-24 h-24 rounded-md sm:w-32 sm:h-32"
                         />
                       </div>
 
@@ -172,7 +172,7 @@ export  function Example() {
 
               {/* Order summary */}
               <section aria-labelledby="summary-heading" className="mt-10 sm:ml-32 sm:pl-6">
-                <div className="px-4 py-6 rounded-lg bg-gray-50 sm:p-6 lg:p-8">
+                <div className="px-4 py-6 rounded-md bg-gray-50 sm:p-6 lg:p-8">
                   <h2 id="summary-heading" className="sr-only">
                     Order summary
                   </h2>

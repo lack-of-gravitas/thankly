@@ -386,7 +386,7 @@ export function Example() {
                 {products.map((product) => (
                   <div
                     key={product.id}
-                    className="relative flex flex-col overflow-hidden bg-white border border-gray-200 rounded-lg group"
+                    className="relative flex flex-col overflow-hidden bg-white border border-gray-200 rounded-md group"
                   >
                     <div className="bg-gray-200 aspect-w-3 aspect-h-4 group-hover:opacity-75 sm:aspect-none sm:h-96">
                       <img
