@@ -101,7 +101,7 @@ export function FeatureColumns({ data }: any) {
       >
         {data.items?.map(({ item }: any) => {
           return (
-            <div>
+            <div key={item.sort}>
               <div className="w-full overflow-hidden rounded-md aspect-w-3 aspect-h-2">
                 {item.image && item.image !== '' ? (
                   <Image
@@ -151,6 +151,7 @@ export function FeatureColumns({ data }: any) {
 
           return (
             <Link
+            key={id}
               href={
                 ((item.slug === 'home' || item.slug === '') && '/') ||
                 (collection === 'CustomLinks'
@@ -159,7 +160,6 @@ export function FeatureColumns({ data }: any) {
               }
             >
               <Button
-                key={id}
                 style={{
                   backgroundColor: brand.firstAccentColour
                     ? brand.firstAccentColour

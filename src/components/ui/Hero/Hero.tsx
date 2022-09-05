@@ -59,6 +59,7 @@ const Hero: FC<HeroProps> = ({ data }) => {
 
           return (
             <Link
+            key={id}
               href={
                 ((item.slug === 'home' || item.slug === '') && '/') ||
                 (collection === 'CustomLinks'
@@ -67,7 +68,7 @@ const Hero: FC<HeroProps> = ({ data }) => {
               }
             >
               <Button
-                key={id}
+                
                 style={{
                   backgroundColor: brand.firstAccentColour
                     ? brand.firstAccentColour
