@@ -17,6 +17,7 @@ const nextConfig = {
   },
   images: {
     domains: [
+      'tailwindui.com',
       'dummyimage.com',
       'thankly.azureedge.net',
       'images.unsplash.com',

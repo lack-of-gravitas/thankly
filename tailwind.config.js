@@ -4,7 +4,10 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
   important: true,
 
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  content: [
+    // './node_modules/tw-elements/dist/js/**/*.js',
+    './src/**/*.{js,jsx,ts,tsx}',
+  ],
 
   theme: {
     fontSize: {

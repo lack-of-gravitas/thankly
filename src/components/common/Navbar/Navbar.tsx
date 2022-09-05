@@ -22,7 +22,7 @@ interface NavbarProps {
 
 const Navbar: FC<NavbarProps> = ({ data }) => {
   const [open, setOpen] = useState(false)
-  console.log('navbar data->', data)
+  // console.log('navbar data->', data)
   const [bannerVisible, setBannerVisible] = useState(true)
   const { header } = data
   return (

@@ -9,7 +9,7 @@ interface ContentProps {
 }
 
 const Content: FC<ContentProps> = ({ className = '', data }) => {
-  console.log('content --', data)
+  // console.log('content --', data)
   return (
     <>
       <div className="relative px-4 sm:px-6 lg:px-8">

@@ -54,13 +54,7 @@ export async function getPage(path: any) {
     )
   ).json()
 
-
-// get sections for the page
-
-
-
-
-
+  // get sections for the page
 }
 
 export async function getCourseContent(id: any) {
@@ -99,7 +93,7 @@ export async function getSection(params: any) {
     case 'pageContent':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections`+
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
             `?fields=*,item.id,item.content,item.name` +
             `&filter[id][_eq]=${params.id}`
         )
@@ -107,89 +101,66 @@ export async function getSection(params: any) {
       console.log('section --', section)
       return section.data[0].item
       break
-    case 'CallToAction':
+
+    case 'banner':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
-            `?fields=item.*,item.buttons.collection,` +
-            `item.buttons.item.id,item.buttons.item.slug,item.buttons.item.name` +
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
+            `?fields=*,item.name,item.icon,item.content` +
             `&filter[id][_eq]=${params.id}`
         )
       ).json()
       return section.data[0].item
       break
+
     case 'hero':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
-            `?fields=item.id,item.image,item.section_name,item.style,item.text,item.buttons.collection,` +
-            `item.buttons.item.id,item.buttons.item.slug,item.buttons.item.name` +
-            `&filter[id][_eq]=${params.id}`
-        )
-      ).json()
-      return section.data[0].item
-
-      break
-    case 'Team':
-      section = await (
-        await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
-            `?fields=item.id,item.text,item.section_name` +
-            `&filter[id][_eq]=${params.id}`
-        )
-      ).json()
-
-      section = section.data[0].item
-
-      let team = await (
-        await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/brands` +
-            `?fields=team.id,team.sort,team.directus_users_id.first_name,team.directus_users_id.last_name,team.directus_users_id.title,team.directus_users_id.description,team.directus_users_id.avatar` +
-            `&filter[domain][_eq]=${process.env.NEXT_PUBLIC_BRAND}`
-        )
-      ).json()
-
-      section.team = team.data[0].team
-
-      return section
-      break
-    case 'FeatureMajor':
-      section = await (
-        await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
-            `?fields=item.*,item.buttons.collection,` +
-            `item.buttons.item.id,item.buttons.item.slug,item.buttons.item.name` +
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
+            `?fields=*,item.*, item.buttons.*,item.buttons.item.*` +
             `&filter[id][_eq]=${params.id}`
         )
       ).json()
       return section.data[0].item
       break
-    case 'FeatureList':
+
+    case 'slider':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
-            `?fields=item.id,item.text,item.section_name,item.items` +
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
+            `?fields=*,item.*,item.slides.*,item.slides.item.*,item.slides.item.buttons.*,item.slides.item.buttons.item.*` +
             `&filter[id][_eq]=${params.id}`
         )
       ).json()
       return section.data[0].item
       break
+
+    case 'features':
+      section = await (
+        await fetch(
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
+            `?fields=*,item.*,item.buttons.*,item.buttons.item.*,item.items.*,item.items.item.*,item.items.item.buttons.*` +
+            `&filter[id][_eq]=${params.id}`
+        )
+      ).json()
+      return section.data[0].item
+      break
+
+    case 'seenOn':
+      section = await (
+        await fetch(
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
+            `?fields=*,item.*,item.images.*` +
+            `&filter[id][_eq]=${params.id}`
+        )
+      ).json()
+      return section.data[0].item
+      break
+
     case 'PostsRecent':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
             `?fields=item.id,item.text,item.section_name,item.limit` +
             `&filter[id][_eq]=${params.id}`
         )
@@ -211,9 +182,7 @@ export async function getSection(params: any) {
     case 'ProductsAll':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
             `?fields=item.id,item.text,item.section_name,item.filter,item.pagination` +
             `&filter[id][_eq]=${params.id}`
         )
@@ -238,9 +207,7 @@ export async function getSection(params: any) {
     case 'ProductComponents':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
             `?fields=item.id,item.text,item.section_name,item.items.*,` +
             `item.items.item.id,item.items.item.name,item.items.item.description,` + // products
             `item.items.item.modules.item.id,item.items.item.modules.item.name,item.items.item.modules.item.description,item.items.item.modules.sort` + // modules
@@ -254,9 +221,7 @@ export async function getSection(params: any) {
     case 'ProductFAQs':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
             `?fields=item.*` +
             `&filter[id][_eq]=${params.id}`
         )
@@ -266,9 +231,7 @@ export async function getSection(params: any) {
     case 'ProductsFeatured':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
             `?fields=item.id,item.text,item.section_name,item.items.*` +
             `item.items.item.id,item.items.item.slug,item.items.item.name,item.items.item.description,item.items.item.image,item.items.item.type` +
             `&filter[id][_eq]=${params.id}`
@@ -276,36 +239,11 @@ export async function getSection(params: any) {
       ).json()
       return section.data[0].item
       break
-    case 'ProductPeek':
-      section = await (
-        await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
-            `?fields=item.id,item.text,item.section_name` +
-            `&filter[id][_eq]=${params.id}`
-        )
-      ).json()
 
-      section = section.data[0].item
-      let videos = await (
-        await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
-            `?fields=item.items.*,item.items.CourseContent_id.id,item.items.CourseContent_id.name,item.items.CourseContent_id.video` +
-            `&filter[id][_eq]=${params.id}`
-        )
-      ).json()
-
-      section.videos = videos.data[0].item.items
-      return section
     case 'ProductPricing':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
             `?fields=item.id,item.text,item.section_name,item.prices.*,products_id.stripeId` +
             `&filter[id][_eq]=${params.id}`
         )
@@ -352,9 +290,7 @@ export async function getSection(params: any) {
     case 'ProductReviews':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
             `?fields=*,item.*,item.items.*,item.items.ReviewId.*` +
             `&filter[id][_eq]=${params.id}`
         )
@@ -365,9 +301,7 @@ export async function getSection(params: any) {
     case 'PostsAll':
       section = await (
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/${
-            params.pages_id ? 'PageSections' : 'ProductSections'
-          }` +
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
             `?fields=item.id,item.text,item.section_name,item.limit` +
             `&filter[id][_eq]=${params.id}`
         )
