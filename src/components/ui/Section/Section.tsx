@@ -24,6 +24,7 @@ export const Section: FC<SectionProps> = ({ data, className, children }) => {
   }
 
   // console.log('queryParams -- ', queryParams)
+  console.log('rendering:', data.collection)
 
   sectionData = SwrSection(queryParams)
   if (!sectionData) return null
@@ -37,12 +38,9 @@ export const Section: FC<SectionProps> = ({ data, className, children }) => {
     //   // console.log(data.collection, `: `, sectionData)
     //   return <Sections.Slider data={sectionData ? sectionData : null} />
     //   break
-    //   case 'Features':
-    //     return <FeatureMajor data={sectionData ? sectionData : null} />
-    //     break
 
     case 'banner':
-      console.log('rendering:', data.collection)
+      // console.log('rendering:', data.collection)
       // console.log(data.collection,`: `, sectionData)
 
       return (
@@ -91,22 +89,30 @@ export const Section: FC<SectionProps> = ({ data, className, children }) => {
       break
 
     case 'pageContent':
-      console.log('rendering:', data.collection)
+      // console.log('rendering:', data.collection)
       return <Sections.Content data={sectionData ? sectionData : null} />
       break
-    //   case 'CallToAction':
-    //     return <Sections.CallToAction data={sectionData ? sectionData : null} />
-    //     break
+    case 'seenOn':
+      return <Sections.SeenOn data={sectionData ? sectionData : null} />
+      break
 
     case 'features':
-      console.log('rendering:', data.collection)
+      // console.log('rendering:', data.collection)
       // console.log(data.collection, `: `, sectionData)
       return <Sections.Features data={sectionData ? sectionData : null} />
       break
 
-    //   case 'Form':
-    //     return <ProductsFeatured data={sectionData ? sectionData : null} />
-    //     break
+    case 'form':
+      return <Sections.Form data={sectionData ? sectionData : null} />
+      break
+
+    case 'featuredProducts':
+      // console.log('query ', data)
+
+      return (
+        <Sections.FeaturedProducts data={sectionData ? sectionData : null} />
+      )
+      break
 
     //   case 'PostsAll':
     //     return <PostsAll data={sectionData ? sectionData : null} />
@@ -119,11 +125,7 @@ export const Section: FC<SectionProps> = ({ data, className, children }) => {
     //   case 'ProductsAll':
     //     return <ProductsAll data={sectionData ? sectionData : null} />
     //     break
-    // case 'seenOn':
-    //   // console.log('rendering:', data.collection)
-    //   // console.log(data.collection, `: `, sectionData)
-    //   return <Sections.SeenOn data={sectionData ? sectionData : null} />
-    //   break
+   
     //   case 'Testimonials':
     //     return <ProductsFeatured data={sectionData ? sectionData : null} />
     //     break

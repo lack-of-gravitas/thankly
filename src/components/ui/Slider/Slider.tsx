@@ -11,7 +11,7 @@ interface HeroProps {
 }
 
 const Hero: FC<HeroProps> = ({ data }) => {
-  console.log('slider data --> ', data)
+  // console.log('slider data --> ', data)
   const brand = SwrBrand()
 
   return (
@@ -73,7 +73,7 @@ const Hero: FC<HeroProps> = ({ data }) => {
     //                 ? brand.firstAccentColour
     //                 : '#fff',
     //             }}
-    //             className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md border-slate-100 hover:border-slate-500 hover:bg-gray-100 hover:text-slate-500"
+    //             className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md border-slate-100 hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
     //             type="button"
     //             // item={item}
     //             // collection={collection}

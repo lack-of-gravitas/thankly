@@ -13,36 +13,30 @@ interface Props {
   // pages?: Page[]
 }
 
-const Footer: FC<Props | any> = ({ data, className}) => {
+const Footer: FC<Props | any> = ({ data, className }) => {
   // console.log('footer data->', data)
-  
+
   return (
     <>
-      <footer aria-labelledby='footer-heading' 
-      style={{ backgroundColor: data.backgroundColour ? data.backgroundColour : '#fff' }}
-      // className='bg-pink-50'
+      <footer
+        style={{
+          backgroundColor: data.backgroundColour
+            ? data.backgroundColour
+            : '#fff',
+        }}
       >
-        <h2 id='footer-heading' className='sr-only'>
+        <h2 id="footer-heading" className="sr-only">
           Footer
         </h2>
-        <div className='px-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
-          <div className='pb-20 '>
-            <div className='pt-16'>
-              <div className='md:flex md:justify-center'>
-                <Logo className='w-auto h-8' width={50} height={50} />
-              </div>
-            </div>
-            <div className='py-10 md:flex md:items-center md:justify-between'>
-              <div className='text-center md:text-left'>
-                <p className='text-sm text-gray-500'>
-                  {data?.name || 'Company Name '} &copy; 2022 All Rights
-                  Reserved
-                </p>
-              </div>
-
-              <div className='flex items-center justify-center mt-4 md:mt-0'>
-                <div className='flex space-x-8'>
-                  {data.footer[0]?.item.links.map(
+        <div className="flex justify-center mt-8 space-x-6">
+          <Logo className="w-auto h-8" width={50} height={50} />
+        </div>
+        <div className="px-4 py-12 mx-auto overflow-hidden max-w-7xl sm:px-6 lg:px-8">
+          <nav
+            className="flex flex-wrap justify-center -mx-5 -my-2"
+            aria-label="Footer"
+          >
+            {data.footer[0]?.item.links.map(
                     ({ sort, collection, item }: any) => {
                       let coll = ''
 
@@ -58,28 +52,36 @@ const Footer: FC<Props | any> = ({ data, className}) => {
                         <Link
                           key={sort}
                           passHref
+                          className="px-5 py-2"
                           href={
                             ((item.slug === 'home' || item.slug === '') &&
                               '/') ||
                             (collection === 'CustomLinks'
                               ? item.slug
                               : '/' + coll + item.slug)
-                          }><a
-                          className='pl-6 ml-6 text-sm text-gray-500 border-l border-gray-200 hover:text-gray-600'
+                          }
                         >
-                          {item.name}
-                        </a></Link>
+                          <a 
+                          className="text-base text-gray-500 hover:text-gray-900"
+                          // className="pl-6 ml-6 text-sm text-gray-500 border-l border-gray-200 hover:text-gray-600"
+                          >
+                            {item.name}
+                          </a>
+                        </Link>
                       )
                     }
                   )}
-                </div>
 
+           
+          </nav>
           
-              </div>
-            </div>
-          </div>
+          <p className="mt-8 text-sm text-center text-gray-400">
+            {data?.name || 'Company Name '} &copy; 2022 All Rights Reserved
+          </p>
         </div>
       </footer>
+
+     
     </>
   )
 }

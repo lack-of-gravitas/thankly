@@ -37,42 +37,6 @@ const Features: FC<FeaturesOnProps> = ({ data }) => {
         </>
       )}
 
-      {/* <div className="px-4 pt-8 pb-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-6 lg:grid-cols-6">
-          {data?.images?.map(({ directus_files_id: image, sort }: any) => {
-            return (
-              <div
-                key={sort}
-                className="flex justify-center col-span-1 md:col-span-2 lg:col-span-1"
-              >
-                {image && image !== '' ? (
-                  <Image
-                    className="h-12"
-                    src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${image}`}
-                    // layout="fill"
-                    width={100}
-                    height={50}
-                    // alt={data?.name || ''}
-                    priority
-                  />
-                ) : (
-                  <>
-                    <Image
-                      className="h-12"
-                      src="https://tailwindui.com/img/logos/mirage-logo-gray-400.svg"
-                      // layout="fill"
-                      width={100}
-                      height={50}
-                      alt=""
-                      priority
-                    />
-                  </>
-                )}
-              </div>
-            )
-          })}
-        </div>
-      </div> */}
     </div>
   )
 }
@@ -82,7 +46,7 @@ export default Features
 export function FeatureColumns({ data }: any) {
   const brand = SwrBrand()
 
-  console.log('feature data --', data)
+  // console.log('feature data --', data)
   return (
     <div className="max-w-2xl px-4 py-16 mx-auto sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
       {data.content && (
@@ -102,16 +66,16 @@ export function FeatureColumns({ data }: any) {
         {data.items?.map(({ item }: any) => {
           return (
             <div key={item.sort}>
-              <div className="w-full overflow-hidden rounded-md aspect-w-3 aspect-h-2">
+              <div className="w-full overflow-hidden rounded-md aspect-w-3 aspect-h-4">
                 {item.image && item.image !== '' ? (
                   <Image
                     className="object-cover object-center w-full h-full"
                     src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${item.image}`}
                     // layout="fill"
-                    width={800}
-                    height={600}
+                    width={400}
+                    height={800}
                     // alt={data?.name || ''}
-                    priority
+                    
                   />
                 ) : (
                   <>
@@ -122,7 +86,7 @@ export function FeatureColumns({ data }: any) {
                       width={800}
                       height={600}
                       alt=""
-                      priority
+                      
                     />
                   </>
                 )}
@@ -165,7 +129,7 @@ export function FeatureColumns({ data }: any) {
                     ? brand.firstAccentColour
                     : '#fff',
                 }}
-                className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md border-slate-100 hover:border-slate-500 hover:bg-gray-100 hover:text-slate-500"
+                className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
                 type="button"
                 // item={item}
                 // collection={collection}
@@ -193,7 +157,7 @@ export function FeatureImageCover({ data }: any) {
             src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${data.items[0].item.image}`}
             // layout="fill"
             width={1600}
-            height={600}
+            height={800}
             // alt={data?.name || ''}
           />
         ) : (
@@ -203,7 +167,7 @@ export function FeatureImageCover({ data }: any) {
               src="https://tailwindui.com/img/ecommerce-images/home-page-03-feature-section-full-width.jpg"
               // layout="fill"
               width={1600}
-              height={600}
+              height={800}
               alt=""
             />
           </>
@@ -213,7 +177,7 @@ export function FeatureImageCover({ data }: any) {
         aria-hidden="true"
         className="absolute inset-0 bg-gray-900 bg-opacity-50"
       />
-      <div className="relative flex flex-col items-center max-w-3xl mx-auto text-center text-white">
+      <div className="relative flex flex-col items-center max-w-3xl py-16 mx-auto text-center text-white md:py-32">
         {data.content && (
           <div className="flex flex-col items-center text-center text-white">
             <article className="max-w-4xl text-base prose prose-headings:text-white prose-img:rounded-md md:pt-5">
@@ -229,7 +193,7 @@ export function FeatureImageCover({ data }: any) {
 export function FeatureImageRight({ data }: any) {
   return (
     <>
-      <div className="grid items-center max-w-2xl grid-cols-1 px-4 py-24 mx-auto gap-y-16 gap-x-8 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
+      <div className="grid items-center max-w-2xl grid-cols-1 px-4 py-16 mx-auto gap-y-16 gap-x-8 sm:px-6 sm:py-16 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
         {data.items[0].item.content && (
           <div className="flex flex-col items-center ">
             <article className="max-w-4xl text-base prose prose-img:rounded-md md:pt-5">

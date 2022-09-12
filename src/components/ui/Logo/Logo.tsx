@@ -11,8 +11,8 @@ export default function Logo({ className = '', ...props }) {
           <Image
             src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${brand?.logo}`}
             // layout='fill'
-            width={props.height || 50}
-            height={props.width || 50}
+            width={props.height || 200}
+            height={props.width || 55}
             alt={brand?.name || 'Company Name'}
             priority
           />

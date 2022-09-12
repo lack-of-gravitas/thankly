@@ -6,7 +6,7 @@ const Layout = dynamic(() => import('@/components/common/Layout'))
 const Section = dynamic(() => import('@/components/ui/Section'))
 
 export default function Page({ slug, preview, prefetchedData }: any) {
-  console.log('prefetchedData->', slug, '->', prefetchedData)
+  // console.log('prefetchedData->', slug, '->', prefetchedData)
   const router = useRouter()
 
   if (!prefetchedData) {

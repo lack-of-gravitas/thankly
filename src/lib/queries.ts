@@ -29,18 +29,7 @@ export const getBrandColors = async () =>
     )
   ).json()
 
-// core page
-// export const getPage = async (path: any) =>
-//   await (
-//     await fetch(
-//       `${process.env.NEXT_PUBLIC_REST_API}/pages` +
-//         `?fields=id,slug,name,` + // key fields
-//         `sections.*` + // sections fields
-//         `&filter[brand][domain][_eq]=${process.env.NEXT_PUBLIC_BRAND}` +
-//         `&filter[slug][_eq]=${path}`
-//     )
-//   ).json()
-
+// core
 export async function getPage(path: any) {
   // console.log('getPage->', path)
 
@@ -55,21 +44,6 @@ export async function getPage(path: any) {
   ).json()
 
   // get sections for the page
-}
-
-export async function getCourseContent(id: any) {
-  // console.log('id', id)
-
-  let content = await (
-    await fetch(
-      `${process.env.NEXT_PUBLIC_REST_API}/Courses` +
-        `?fields=id,slug,name,description,image,modules.item.*,modules.item.content.*,modules.item.content.item.*,modules.item.content.item.links.item.id,modules.item.content.item.links.item.slug,modules.item.content.item.links.item.name,modules.item.content.item.links.item.description,modules.item.content.item.links.item.title,modules.item.content.item.links.collection` +
-        `&filter[slug][_eq]=${id}`
-    )
-  ).json()
-  // console.log('content--', content)
-  content = content.data[0]
-  return content
 }
 
 export async function getPurchases() {
@@ -89,6 +63,8 @@ export async function getPost(path: any) {
 export async function getSection(params: any) {
   let section: any = {}
   let posts: any
+  let products: any
+
   switch (params.collection) {
     case 'pageContent':
       section = await (
@@ -98,7 +74,7 @@ export async function getSection(params: any) {
             `&filter[id][_eq]=${params.id}`
         )
       ).json()
-      console.log('section --', section)
+      // console.log('section --', section)
       return section.data[0].item
       break
 
@@ -157,6 +133,48 @@ export async function getSection(params: any) {
       return section.data[0].item
       break
 
+    case 'form':
+      section = await (
+        await fetch(
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
+            `?fields=*,item.*` +
+            `&filter[id][_eq]=${params.id}`
+        )
+      ).json()
+      return section.data[0].item
+      break
+
+    case 'featuredProducts':
+      // console.log('params ', params)
+      section = await (
+        await fetch(
+          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
+            `?fields=*,item.*,item.buttons.*,item.buttons.item.*` +
+            `&filter[id][_eq]=${params.id}`
+        )
+      ).json()
+      section = section.data[0].item
+
+      products = await (
+        await fetch(
+          `${process.env.NEXT_PUBLIC_REST_API}/products` +
+            `?fields=*` +
+            `&filter[featured][_eq]=true` +
+            `&filter[status][_eq]=active` +
+            `&filter[stockQty][_gt]=0` +
+            `&filter[type][_in]=${
+              section.type ? section.type.toString() : `card,gift`
+            }` +
+            `&sort=-date_created` +
+            `&limit=${section.limit ? section.limit : 3}`
+        )
+      ).json()
+
+      section.products = products.data
+
+      return section
+      break
+
     case 'PostsRecent':
       section = await (
         await fetch(
@@ -188,21 +206,7 @@ export async function getSection(params: any) {
         )
       ).json()
       section = section.data[0].item
-      // console.log(section)
 
-      let products = await (
-        await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/products` +
-            `?fields=id,stripeId,slug,name,description,image,type` +
-            `&filter[status][_eq]=published` +
-            `&filter[type][_in]=${
-              section.filter ? section.filter.slice(0, -1) : 'all'
-            }` +
-            `&filter[brands][Brands_id][domain][_eq]=${process.env.NEXT_PUBLIC_BRAND}`
-        )
-      ).json()
-      // console.log(products)
-      section.products = products.data
       return section
     case 'ProductComponents':
       section = await (
@@ -223,17 +227,6 @@ export async function getSection(params: any) {
         await fetch(
           `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
             `?fields=item.*` +
-            `&filter[id][_eq]=${params.id}`
-        )
-      ).json()
-      return section.data[0].item
-      break
-    case 'ProductsFeatured':
-      section = await (
-        await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
-            `?fields=item.id,item.text,item.section_name,item.items.*` +
-            `item.items.item.id,item.items.item.slug,item.items.item.name,item.items.item.description,item.items.item.image,item.items.item.type` +
             `&filter[id][_eq]=${params.id}`
         )
       ).json()
@@ -333,6 +326,22 @@ export async function getProduct(path: any) {
         `&filter[slug][_eq]=${path}`
     )
   ).json()
+}
+
+export async function getFeaturedProducts(type: any, limit: any) {
+  let data = await (
+    await fetch(
+      `${process.env.NEXT_PUBLIC_REST_API}/products` +
+        `?fields=*` +
+        `&filter[status][_eq]=active` +
+        `&filter[stockQty][_gt]=0` +
+        `&filter[type][_in]=${type ? type.toString() : `card,gift`}` +
+        `&sort=-date_created` +
+        `&limit=${limit ? limit : 3}`
+    )
+  ).json()
+  data = data.data[0]
+  return
 }
 
 export async function getPosts(id: any, type: any) {

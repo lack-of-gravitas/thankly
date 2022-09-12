@@ -1,20 +1,19 @@
 import useSWR from 'swr'
-import { getBrand, getBrandColors, getSection, getProduct } from '@/lib/queries'
+import { getBrand, getBrandColors, getSection, getProduct,getFeaturedProducts } from '@/lib/queries'
 
 export function SwrBrand() {
   let { data } = useSWR('brand', () => getBrand(), {
     revalidateOnReconnect: false,
   })
-  // console.log('swr brand -- ', data)
-  // const { data: brandColors } = useSWR('brandColors', () => getBrandColors(), {
-  //   revalidateOnReconnect: false,
-  // })
+  return data
+}
 
-  // if (brand && brandColors) {
-  //   brand = { ...brand.data[0], ...brandColors.data[0] }
-  //   // console.log('brand->', brand)
-  //   // console.log('brandColors->', brandColors)
-  // }
+
+export function SwrFeaturedProducts(type:any,limit:any) {
+  let { data } = useSWR('featuredProducts', () => getFeaturedProducts(type,limit), {
+    revalidateOnReconnect: false,
+  })
+
   return data
 }
 
