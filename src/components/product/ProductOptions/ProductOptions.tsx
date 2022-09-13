@@ -5,13 +5,13 @@ import { SelectedOptions } from '../helpers'
 interface ProductOptionsProps {
   options: ProductOption[]
   selectedOptions: SelectedOptions
-  setSelectedOptions: React.Dispatch<React.SetStateAction<SelectedOptions>>
+  // setSelectedOptions: React.Dispatch<React.SetStateAction<SelectedOptions>>
 }
 
 const ProductOptions: React.FC<ProductOptionsProps> = ({
   options,
   selectedOptions,
-  setSelectedOptions,
+  // setSelectedOptions,
 }) => {
   return (
     <div>

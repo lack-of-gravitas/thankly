@@ -17,16 +17,3 @@ export function getProductVariant(product: Product, opts: SelectedOptions) {
   })
   return variant
 }
-
-export function selectDefaultOptionFromProduct(
-  product: Product,
-  updater: Dispatch<SetStateAction<SelectedOptions>>
-) {
-  // Selects the default option
-  product.variants[0]?.options?.forEach((v) => {
-    updater((choices) => ({
-      ...choices,
-      [v.displayName.toLowerCase()]: v.values[0].label.toLowerCase(),
-    }))
-  })
-}

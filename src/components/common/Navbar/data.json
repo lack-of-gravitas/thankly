@@ -1,0 +1,27 @@
+{
+    "data": {
+        "id": 1,
+        "name": "Thankly",
+        "tagline": "Cards and Gifts",
+        "domain": "https://thankly.com.au",
+        "logo": "cc39d8c4-c763-457a-b6c2-4ca123ee996a",
+        "backgroundColour": "#F9F9F9",
+        "textColour": "#727272",
+        "secondAccentColour": "#E2CBC7",
+        "firstAccentColour": "#E69789",
+        "thirdAccentColour": "#EDE3DE",
+        "copyrightNotice": "© Thankly 2022. All rights reserved.",
+        "banner": 1,
+        "seo": null,
+        "homepage": 5,
+        "footer": [
+            1
+        ],
+        "header": [
+            2,
+            4,
+            1,
+            3
+        ]
+    }
+}
