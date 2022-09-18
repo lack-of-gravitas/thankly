@@ -51,7 +51,7 @@ export function FeatureColumns({ data }: any) {
     <div className="max-w-2xl px-4 py-16 mx-auto sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
       {data.content && (
         <div className="flex flex-col items-center text-center">
-          <article className="max-w-4xl text-base prose text-slate-700 prose-a:text-blue-600 prose-img:rounded-md md:pt-5">
+          <article className="max-w-4xl text-base prose text-slate-700 prose-a:text-blue-600 prose-img:rounded-xs md:pt-5">
             {parse(data.content)}
           </article>
         </div>
@@ -66,7 +66,7 @@ export function FeatureColumns({ data }: any) {
         {data.items?.map(({ item }: any) => {
           return (
             <div key={item.sort}>
-              <div className="w-full overflow-hidden rounded-md aspect-w-3 aspect-h-4">
+              <div className="w-full overflow-hidden rounded-xs aspect-w-3 aspect-h-4">
                 {item.image && item.image !== '' ? (
                   <Image
                     className="object-cover object-center w-full h-full"
@@ -92,7 +92,7 @@ export function FeatureColumns({ data }: any) {
                 )}
               </div>
               {item.content && (
-                <article className="max-w-4xl pt-12 text-base prose text-slate-700 prose-a:text-blue-600 prose-img:rounded-md md:pt-5">
+                <article className="max-w-4xl pt-12 text-base prose text-slate-700 prose-a:text-blue-600 prose-img:rounded-xs md:pt-5">
                   {parse(item.content)}
                 </article>
               )}
@@ -129,7 +129,7 @@ export function FeatureColumns({ data }: any) {
                     ? brand.firstAccentColour
                     : '#fff',
                 }}
-                className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-xs shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
                 type="button"
                 // item={item}
                 // collection={collection}
@@ -180,7 +180,7 @@ export function FeatureImageCover({ data }: any) {
       <div className="relative flex flex-col items-center max-w-3xl py-16 mx-auto text-center text-white md:py-32">
         {data.content && (
           <div className="flex flex-col items-center text-center text-white">
-            <article className="max-w-4xl text-base prose prose-headings:text-white prose-img:rounded-md md:pt-5">
+            <article className="max-w-4xl text-base prose prose-headings:text-white prose-img:rounded-xs md:pt-5">
               {parse(data.content)}
             </article>
           </div>
@@ -196,7 +196,7 @@ export function FeatureImageRight({ data }: any) {
       <div className="grid items-center max-w-2xl grid-cols-1 px-4 py-16 mx-auto gap-y-16 gap-x-8 sm:px-6 sm:py-16 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
         {data.items[0].item.content && (
           <div className="flex flex-col items-center ">
-            <article className="max-w-4xl text-base prose prose-img:rounded-md md:pt-5">
+            <article className="max-w-4xl text-base prose prose-img:rounded-xs md:pt-5">
               {parse(data.items[0].item.content)}
             </article>
           </div>
@@ -205,7 +205,7 @@ export function FeatureImageRight({ data }: any) {
         <div className="grid grid-cols-1 grid-rows-1 gap-4 sm:gap-6 lg:gap-8">
           {data.items[0].item.image && data.items[0].item.image !== '' ? (
             <Image
-              className="object-cover object-center w-full h-full rounded-md"
+              className="object-cover object-center w-full h-full rounded-xs"
               src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${data.items[0].item.image}`}
               // layout="fill"
               width={800}
@@ -236,7 +236,7 @@ export function FeatureImageLeft({ data }: any) {
       <div className="overflow-hidden aspect-w-3 aspect-h-2 sm:aspect-w-5 lg:aspect-none lg:absolute lg:h-full lg:w-1/2 lg:pr-4 xl:pr-16">
         {data.items[0].item.image && data.items[0].item.image !== '' ? (
           <Image
-            className="object-cover object-center w-full h-full rounded-md"
+            className="object-cover object-center w-full h-full rounded-xs"
             src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${data.items[0].item.image}`}
             // layout="fill"
             width={800}
@@ -267,7 +267,7 @@ export function FeatureImageLeft({ data }: any) {
         <div className="lg:col-start-2">
           {data.items[0].item.content && (
             <div className="flex flex-col items-center">
-              <article className="max-w-4xl text-base prose prose-img:rounded-md md:pt-5">
+              <article className="max-w-4xl text-base prose prose-img:rounded-xs md:pt-5">
                 {parse(data.items[0].item.content)}
               </article>
             </div>

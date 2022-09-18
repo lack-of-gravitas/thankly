@@ -112,7 +112,7 @@ export function Example() {
                   <time dateTime={order.datetime}>{order.date}</time>
                 </h3>
 
-                <div className="px-4 py-6 rounded-md bg-gray-50 sm:flex sm:items-center sm:justify-between sm:space-x-6 sm:px-6 lg:space-x-8">
+                <div className="px-4 py-6 rounded-xs bg-gray-50 sm:flex sm:items-center sm:justify-between sm:space-x-6 sm:px-6 lg:space-x-8">
                   <dl className="flex-auto space-y-6 text-sm text-gray-600 divide-y divide-gray-200 sm:grid sm:grid-cols-3 sm:gap-x-6 sm:space-y-0 sm:divide-y-0 lg:w-1/2 lg:flex-none lg:gap-x-8">
                     <div className="flex justify-between sm:block">
                       <dt className="font-medium text-gray-900">Date placed</dt>
@@ -133,7 +133,7 @@ export function Example() {
                   </dl>
                   <a
                     href={order.invoiceHref}
-                    className="flex items-center justify-center w-full px-4 py-2 mt-6 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto"
+                    className="flex items-center justify-center w-full px-4 py-2 mt-6 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xs shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto"
                   >
                     View Invoice
                     <span className="sr-only">for order {order.number}</span>

@@ -17,10 +17,6 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
 
   return (
     <>
-     <div className="bg-white">
-      
-    </div>
-    
       <div
 
       // style={{
@@ -32,40 +28,14 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
         <div className="max-w-2xl px-4 py-16 mx-auto sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
           {data.content && (
             <div className="flex flex-col items-center text-center">
-              <article className="max-w-4xl text-base prose text-slate-700 prose-a:text-blue-600 prose-img:rounded-xs md:pt-5">
+              <article className="max-w-4xl text-base prose prose-img:rounded-xs text-slate-700 prose-a:text-blue-600 md:pt-5">
                 {parse(data.content)}
               </article>
             </div>
           )}
 
-<div className="max-w-2xl px-4 py-16 mx-auto sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-        
-        <div className="grid grid-cols-1 mt-6 gap-x-8 gap-y-8 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-3">
-          {products.map((product) => (
-            <div key={product.id} className="relative group">
-              <div className="overflow-hidden bg-gray-100 rounded-xs aspect-w-4 aspect-h-3">
-                <img src={product.imageSrc} alt={product.imageAlt} className="object-cover object-center" />
-                <div className="flex items-end p-4 opacity-0 group-hover:opacity-100" aria-hidden="true">
-                  <div className="w-full px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white bg-opacity-75 rounded-xs backdrop-blur backdrop-filter">
-                    View Product
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between mt-4 space-x-8 text-base font-medium text-gray-900">
-                <h3>
-                  <a href="#">
-                    <span aria-hidden="true" className="absolute inset-0" />
-                    {product.name}
-                  </a>
-                </h3>
-                <p>{product.price}</p>
-              </div>
-              {/* <p className="mt-1 text-sm text-gray-500">{product.category}</p> */}
-            </div>
-          ))}
-        </div>
-      </div>
-      
+          
+
           <div
             className={cn(
               data.columns ? `lg:grid-cols-` + data.columns : `lg:grid-cols-3`,
@@ -77,9 +47,9 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                 <>
                   <div
                     key={product.id}
-                    className="relative flex flex-col overflow-hidden bg-white border border-gray-200 shadow-xs rounded-xs group"
+                    className="relative flex flex-col overflow-hidden bg-white rounded-xs group"
                   >
-                    <div className="bg-gray-200 aspect-w-3 aspect-h-4 group-hover:opacity-75 sm:aspect-none sm:h-96 ">
+                    <div className="bg-gray-200 aspect-w-3 aspect-h-4 group-hover:opacity-75 sm:aspect-none sm:h-96">
                       {product.mainImage && product.mainImage !== '' ? (
                         <Image
                           className="object-cover object-center w-full h-full sm:h-full sm:w-full"
@@ -103,24 +73,44 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                       )}
                     </div>
                     <div className="flex flex-col flex-1 p-4 space-y-2">
-                      <h3 className="font-bold text-gray-900 text-md">
-                        {product.name}
-                      </h3>
+                      <div className="flex items-center justify-between mt-2 space-x-8 text-base font-medium text-gray-900">
+                        <h3>
+                          <a href="#">
+                            <span
+                              aria-hidden="true"
+                              className="absolute inset-0"
+                            />
+                            {product.name}
+                          </a>
+                        </h3>
+                        <p>{product.price}</p>
+                      </div>
+
                       <p className="text-sm text-gray-500">
                         {product.description}
                       </p>
-                      <div className="flex flex-col justify-end flex-1">
-                        {/* <p className="text-sm italic text-gray-500">{product.options}</p> */}
-                        <p className="text-base font-medium text-gray-900">
-                          {product.price}
-                        </p>
-                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <a
+                        style={{
+                          backgroundColor: brand.firstAccentColour
+                            ? brand.firstAccentColour
+                            : '#fff',
+                        }}
+                        href={product.href}
+                        className="relative flex items-center justify-center px-8 py-2 text-sm font-medium text-white border border-transparent rounded-xs hover:bg-gray-200 hover:text-slate-600"
+                      >
+                        Send as Thankly
+                        <span className="sr-only">, {product.name}</span>
+                      </a>
                     </div>
                   </div>
                 </>
               )
             })}
           </div>
+
+          {/* Button */}
           <div className="flex flex-col items-center pt-5 text-center justify-middle">
             {data.buttons?.map(({ id, item, collection }: any) => {
               let coll = ''
@@ -171,18 +161,3 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
 }
 
 export default FeaturedProducts
-
-
-const products = [
-  {
-    id: 1,
-    name: 'Fusion',
-    category: 'UI Kit',
-    href: '#',
-    price: '$49',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-05-related-product-01.jpg',
-    imageAlt:
-      'Payment application dashboard screenshot with transaction table, financial highlights, and main clients on colorful purple background.',
-  },
-  // More products...
-]

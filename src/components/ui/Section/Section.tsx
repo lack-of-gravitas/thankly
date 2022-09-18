@@ -53,7 +53,7 @@ export const Section: FC<SectionProps> = ({ data, className, children }) => {
                   ? brand.firstAccentColour
                   : '#fff',
               }}
-              className="flex p-2 rounded-md"
+              className="flex p-2 rounded-xs"
             >
               <span
                 className="w-6 h-6 text-white material-symbols-outlined"
@@ -71,7 +71,7 @@ export const Section: FC<SectionProps> = ({ data, className, children }) => {
               onClick={() => setBannerVisible(false)}
               type="button"
               className={cn(
-                `-mr-1 flex rounded-md p-2 hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-white`
+                `-mr-1 flex rounded-xs p-2 hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-white`
               )}
             >
               <span className="sr-only">Dismiss</span>

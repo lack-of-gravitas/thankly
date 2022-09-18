@@ -27,6 +27,7 @@
     "clsx": "^1.1.1",
     "focus-visible": "^5.2.0",
     "framer-motion": "^7.2.1",
+    "fuse.js": "^6.6.2",
     "html-react-parser": "^3.0.4",
     "js-cookie": "^3.0.1",
     "keen-slider": "^6.6.3",

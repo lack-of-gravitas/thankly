@@ -37,7 +37,7 @@ const Layout: React.FC = ({ children, brand }: any) => {
                 ? brand.firstAccentColour
                 : '#fff',
             }}
-            className="flex p-2 rounded-md">
+            className="flex p-2 rounded-xs">
               <span
                 className="w-6 h-6 text-white material-symbols-outlined"
                 aria-hidden="true"
@@ -59,7 +59,7 @@ const Layout: React.FC = ({ children, brand }: any) => {
             <button
               type="button"
               onClick={() => onAcceptCookies()}
-              className="flex p-2 -mr-1 rounded-md hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-white"
+              className="flex p-2 -mr-1 rounded-xs hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-white"
             >
               <span className="sr-only">Dismiss</span>
               <span
@@ -72,7 +72,7 @@ const Layout: React.FC = ({ children, brand }: any) => {
           }
           action={
             <Button
-              className="flex items-center justify-center px-4 py-2 text-sm font-medium bg-white border border-transparent rounded-md shadow-sm text-slate-500 hover:bg-slate-500 hover:text-white"
+              className="flex items-center justify-center px-4 py-2 text-sm font-medium bg-white border border-transparent rounded-xs shadow-sm text-slate-500 hover:bg-slate-500 hover:text-white"
               onClick={() => onAcceptCookies()}
             >
               Accept cookies

@@ -67,11 +67,11 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                     alt="Your Company"
                   />*/}
-                    <img
+                    {/* <img
                       className="hidden w-auto h-8 lg:block"
                       src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                       alt="Your Company"
-                    />
+                    /> */}
                   </div>
                   <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                     {/* Current: "border-indigo-500 text-slate-900", Default: "border-transparent text-slate-500 hover:border-gray-300 hover:text-slate-700" */}
@@ -97,7 +97,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                               ? item.slug
                               : '/' + coll + item.slug)
                           }
-                          className="inline-flex items-center px-1 text-sm font-medium text-slate-900"
+                          className="inline-flex items-center px-1 text-sm font-medium text-slate-500"
                           passHref
                         > <a
                         >
@@ -135,7 +135,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                               leaveFrom="transform opacity-100 scale-100"
                               leaveTo="transform opacity-0 scale-95"
                             >
-                              <Menu.Items className="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white shadow-lg rounded-xs ring-1 ring-black ring-opacity-5 focus:outline-none">
+                              <Menu.Items className="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white shadow-md rounded-xs ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 <Menu.Item>
                                   {({ active }) => (
                                     <a
@@ -180,7 +180,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                 ? data.firstAccentColour
                                 : '#fff',
                             }}
-                            className="flex px-8 py-2 font-medium prose-md text-white border rounded-md shadow-xs hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                            className="flex px-8 py-2 font-medium text-white border rounded-xs shadow-md prose-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
                             type="button"
                           // item={item}
                           // collection={collection}
@@ -328,7 +328,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                           ? data.firstAccentColour
                           : '#fff',
                       }}
-                      className="flex px-8 py-2 font-medium prose-md text-white border rounded-md shadow-xs hover:border-slate-300"
+                      className="flex px-8 py-2 font-medium text-white border rounded-xs shadow-md prose-md hover:border-slate-300"
                       type="button"
                     // item={item}
                     // collection={collection}
@@ -349,12 +349,12 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
       </Disclosure>
 
       <div
-        style={{
-          backgroundColor: data.backgroundColour
-            ? data.backgroundColour
-            : '#fff',
-        }}
-        className='bg-pink-50'
+        // style={{
+        //   backgroundColor: data.backgroundColour
+        //     ? data.backgroundColour
+        //     : '#fff',
+        // }}
+        // className='bg-pink-50'
       >
         {/* Mobile menu */}
         <Transition.Root show={open} as={Fragment}>
@@ -385,7 +385,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                 leaveFrom="translate-x-0"
                 leaveTo="-translate-x-full"
               >
-                <Dialog.Panel className="relative flex flex-col w-full max-w-xs pb-12 overflow-y-auto bg-white shadow-xl">
+                <Dialog.Panel className="relative flex flex-col w-full max-w-xs pb-12 overflow-y-auto bg-white shadow-md">
                   <div className="flex px-4 pt-5 pb-2">
                     <button
                       type="button"

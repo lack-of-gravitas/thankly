@@ -28,7 +28,7 @@ const Banner: FC<BannerProps> = ({ className, hide, icon, content,dismiss }) => 
               ? brand.secondAccentColour
               : '#fff',
           }}
-          className='p-2 rounded-md shadow-lg sm:p-3'>
+          className='p-2 rounded-xs shadow-md sm:p-3'>
             <div className='flex flex-wrap items-center justify-between'>
               <div className='flex items-center flex-1 w-0'>
                 {icon && icon}

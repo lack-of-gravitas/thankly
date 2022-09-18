@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { getPage } from '@/lib/queries'
+import Fuse from 'fuse.js'
 
 const Layout = dynamic(() => import('@/components/common/Layout'))
 const Section = dynamic(() => import('@/components/ui/Section'))
@@ -9,13 +10,37 @@ const Section = dynamic(() => import('@/components/ui/Section'))
 export default function Home({ slug, preview, prefetchedData }: any) {
   console.log('prefetchedData->', prefetchedData)
   const router = useRouter()
+  const list = [
+    {
+      "title": "Old Man's War",
+      "author": "John Scalzi",
+      "tags": ["fiction"]
+    },
+    {
+      "title": "The Lock Artist",
+      "author": "John Steven",
+      "tags": ["thriller"]
+    }
+  ]
+  const options = {
+    includeScore: true,
+    // Search in `author` and in `tags` array
+    keys: ['author', 'tags']
+  }
+  
+  const fuse = new Fuse(list, options)
+  
+  const result = fuse.search('john')
+  console.log(result)
   //   if (!prefetchedData) {
   //     router.push('/404')
   //   }
 
   return (
     <>
-      <Example />
+      
+
+      <Example className="sticky top-0 "/>
     </>
   )
 }
@@ -165,13 +190,76 @@ const products = [
   // More products...
 ]
 
+/* This example requires Tailwind CSS v2.0+ */
+export  function Example2() {
+  return (
+    <div className="md:flex md:items-center md:justify-between md:space-x-5">
+      <div className="flex items-start space-x-5">
+        <div className="flex-shrink-0">
+          <div className="relative">
+            <img
+              className="w-16 h-16 rounded-full"
+              src="https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80"
+              alt=""
+            />
+            <span className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true" />
+          </div>
+        </div>
+        {/*
+          Use vertical padding to simulate center alignment when both lines of text are one line,
+          but preserve the same layout if the text wraps without making the image jump around.
+        */}
+        <div className="pt-1.5">
+          <h1 className="text-2xl font-bold text-gray-900">Ricardo Cooper</h1>
+          <p className="text-sm font-medium text-gray-500">
+            Applied for{' '}
+            <a href="#" className="text-gray-900">
+              Front End Developer
+            </a>{' '}
+            on <time dateTime="2020-08-25">August 25, 2020</time>
+          </p>
+        </div>
+      </div>
+      <div className="flex flex-col-reverse mt-6 space-y-4 space-y-reverse justify-stretch sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
+        <button
+          type="button"
+          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xs shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+        >
+          Disqualify
+        </button>
+        <button
+          type="button"
+          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-xs shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+        >
+          Advance to offer
+        </button>
+      </div>
+    </div>
+  )
+}
+
 
 export function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
   return (
-    <div className="bg-white">
+    <>
+
+    
+    <section
+          aria-labelledby="collection-heading"
+          className="max-w-xl px-4 pt-6 mx-auto sm:px-6 sm:pt-6 lg:max-w-7xl lg:px-8"
+        >
+          <h2 id="collection-heading" className="text-2xl font-bold tracking-tight text-gray-900">
+            Send a Thankly
+          </h2>
+          <p className="mt-4 text-base text-gray-500">
+          Start by selecting a Gift from our wide selection and then add a personal touch with a Card at the next step.
+          </p>
+          </section>
+    
+    <div className="">
       <div>
         {/* Mobile filter dialog */}
         <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -202,7 +290,7 @@ export function Example() {
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <Dialog.Panel className="relative flex flex-col w-full h-full max-w-xs py-4 pb-6 ml-auto overflow-y-auto bg-white shadow-xl">
+                <Dialog.Panel className="relative flex flex-col w-full h-full max-w-xs py-4 pb-6 ml-auto overflow-y-auto bg-white shadow-md">
                   <div className="flex items-center justify-between px-4">
                     <h2 className="text-lg font-medium text-gray-900">
                       Filters
@@ -288,30 +376,7 @@ export function Example() {
         </Transition.Root>
 
         <main className="max-w-2xl px-4 mx-auto lg:max-w-7xl lg:px-8">
-          <div className="pt-24 pb-10 border-b border-gray-200">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-              Send a Thankly
-            </h1>
-            <p className="mt-4 text-base text-gray-500">
-              Start by selecting a Gift fro our wide selection and then add a
-              personal touch with a Card at the next step.
-            </p>
-
-            <div className="flex flex-col-reverse mt-6 space-y-4 space-y-reverse justify-stretch sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-              >
-                Send a Card Only
-              </button>
-              <button
-                type="button"
-                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-pink-200 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-              >
-                Next Step
-              </button>
-            </div>
-          </div>
+         
 
           <div className="pt-12 pb-24 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
             <aside>
@@ -386,7 +451,7 @@ export function Example() {
                 {products.map((product) => (
                   <div
                     key={product.id}
-                    className="relative flex flex-col overflow-hidden bg-white border border-gray-200 rounded-md group"
+                    className="relative flex flex-col overflow-hidden bg-white border border-gray-200 rounded-xs group"
                   >
                     <div className="bg-gray-200 aspect-w-3 aspect-h-4 group-hover:opacity-75 sm:aspect-none sm:h-96">
                       <img
@@ -424,6 +489,6 @@ export function Example() {
           </div>
         </main>
       </div>
-    </div>
+    </div></>
   )
 }
