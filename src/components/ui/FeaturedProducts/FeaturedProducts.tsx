@@ -28,7 +28,7 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
         <div className="max-w-2xl px-4 py-16 mx-auto sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
           {data.content && (
             <div className="flex flex-col items-center text-center">
-              <article className="max-w-4xl text-base prose prose-img:rounded-xs text-slate-700 prose-a:text-blue-600 md:pt-5">
+              <article className="max-w-4xl text-base prose prose-img:rounded-md text-slate-700 prose-a:text-blue-600 md:pt-5">
                 {parse(data.content)}
               </article>
             </div>
@@ -47,7 +47,7 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                 <>
                   <div
                     key={product.id}
-                    className="relative flex flex-col overflow-hidden bg-white rounded-xs group"
+                    className="relative flex flex-col overflow-hidden bg-white rounded-md group"
                   >
                     <div className="bg-gray-200 aspect-w-3 aspect-h-4 group-hover:opacity-75 sm:aspect-none sm:h-96">
                       {product.mainImage && product.mainImage !== '' ? (
@@ -98,9 +98,9 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                             : '#fff',
                         }}
                         href={product.href}
-                        className="relative flex items-center justify-center px-8 py-2 text-sm font-medium text-white border border-transparent rounded-xs hover:bg-gray-200 hover:text-slate-600"
+                        className="relative flex items-center justify-center px-8 py-2 text-sm font-medium text-white border border-transparent rounded-md hover:bg-gray-200 hover:text-slate-600"
                       >
-                        Send as Thankly
+                        Send
                         <span className="sr-only">, {product.name}</span>
                       </a>
                     </div>
@@ -140,7 +140,7 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                         ? brand.firstAccentColour
                         : '#fff',
                     }}
-                    className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border shadow-md rounded-xs hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                    className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
                     type="button"
                     // item={item}
                     // collection={collection}

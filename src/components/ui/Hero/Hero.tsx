@@ -74,7 +74,7 @@ const Hero: FC<HeroProps> = ({ data }) => {
                     ? brand.firstAccentColour
                     : '#fff',
                 }}
-                className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-xs shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
                 type="button"
                 // item={item}
                 // collection={collection}

@@ -7,12 +7,12 @@ export default function Logo({ className = '', ...props }) {
   if (brand && brand.logo) {
     return (
       <>
-        <span className={className + ` `}>
+        <span className={className + ` `} >
           <Image
             src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${brand?.logo}`}
             // layout='fill'
-            width={props.height || 200}
-            height={props.width || 55}
+            width={props.width || 200}
+            height={props.height || 55}
             alt={brand?.name || 'Company Name'}
             priority
           />

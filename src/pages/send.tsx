@@ -40,7 +40,7 @@ export default function Home({ slug, preview, prefetchedData }: any) {
     <>
       
 
-      <Example className="sticky top-0 "/>
+      {/* <Example className="sticky top-0 "/> */}
     </>
   )
 }
@@ -223,13 +223,13 @@ export  function Example2() {
       <div className="flex flex-col-reverse mt-6 space-y-4 space-y-reverse justify-stretch sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
         <button
           type="button"
-          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xs shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
         >
           Disqualify
         </button>
         <button
           type="button"
-          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-xs shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
         >
           Advance to offer
         </button>
@@ -451,7 +451,7 @@ export function Example() {
                 {products.map((product) => (
                   <div
                     key={product.id}
-                    className="relative flex flex-col overflow-hidden bg-white border border-gray-200 rounded-xs group"
+                    className="relative flex flex-col overflow-hidden bg-white border border-gray-200 rounded-md group"
                   >
                     <div className="bg-gray-200 aspect-w-3 aspect-h-4 group-hover:opacity-75 sm:aspect-none sm:h-96">
                       <img

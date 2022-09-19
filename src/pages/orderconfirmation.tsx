@@ -101,7 +101,7 @@ export  function Example() {
                     <img
                       src={product.imageSrc}
                       alt={product.imageAlt}
-                      className="flex-none object-cover object-center w-24 h-24 bg-gray-100 rounded-xs"
+                      className="flex-none object-cover object-center w-24 h-24 bg-gray-100 rounded-md"
                     />
                     <div className="flex-auto space-y-1">
                       <h3 className="text-gray-900">

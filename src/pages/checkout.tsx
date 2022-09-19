@@ -115,7 +115,7 @@ export  function Example() {
                         <img
                           src={product.imageSrc}
                           alt={product.imageAlt}
-                          className="object-cover object-center w-24 h-24 rounded-xs sm:w-32 sm:h-32"
+                          className="object-cover object-center w-24 h-24 rounded-md sm:w-32 sm:h-32"
                         />
                       </div>
 
@@ -142,7 +142,7 @@ export  function Example() {
                             <select
                               id={`quantity-${productIdx}`}
                               name={`quantity-${productIdx}`}
-                              className="block max-w-full rounded-xs border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              className="block max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             >
                               <option value={1}>1</option>
                               <option value={2}>2</option>
@@ -172,7 +172,7 @@ export  function Example() {
 
               {/* Order summary */}
               <section aria-labelledby="summary-heading" className="mt-10 sm:ml-32 sm:pl-6">
-                <div className="px-4 py-6 rounded-xs bg-gray-50 sm:p-6 lg:p-8">
+                <div className="px-4 py-6 rounded-md bg-gray-50 sm:p-6 lg:p-8">
                   <h2 id="summary-heading" className="sr-only">
                     Order summary
                   </h2>
@@ -201,7 +201,7 @@ export  function Example() {
                 <div className="mt-10">
                   <button
                     type="submit"
-                    className="w-full px-4 py-3 text-base font-medium text-white bg-pink-200 border border-transparent rounded-xs shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+                    className="w-full px-4 py-3 text-base font-medium text-white bg-pink-200 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
                   >
                     Checkout
                   </button>

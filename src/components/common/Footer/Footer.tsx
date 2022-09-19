@@ -29,7 +29,7 @@ const Footer: FC<Props | any> = ({ data, className }) => {
           Footer
         </h2>
         <div className="flex justify-center mt-8 space-x-6">
-          <Logo className="w-auto h-8" width={50} height={50} />
+        <Logo className="w-auto h-10 align-middle" height={'25'} width={'100'}/>
         </div>
         <div className="px-4 py-12 mx-auto overflow-hidden max-w-7xl sm:px-6 lg:px-8">
           <nav

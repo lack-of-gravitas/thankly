@@ -23,7 +23,7 @@ const Form: FC<FormProps> = ({ data }) => {
             : '#fff',
         }}
       >
-        <div className="px-4 py-24 mx-auto max-w-7xl sm:px-6 lg:flex lg:items-center lg:py-32 lg:px-8">
+        <div className="px-4 py-24 mx-auto max-w-7xl sm:px-6 lg:flex lg:items-center lg:py-16 lg:px-8">
           <div className="lg:w-0 lg:flex-1">
             <article className="max-w-3xl text-base prose prose-img:rounded-md md:pt-5">
               {parse(data.content)}
@@ -95,7 +95,7 @@ const Form: FC<FormProps> = ({ data }) => {
                     id="mc-embedded-subscribe"
                     className="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-white border border-transparent rounded-md shadow-sm hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
-                    Let's talk
+                    {`Let's talk`}
                   </button>
 
                   <p className="mt-3 text-sm text-gray-500">
@@ -109,7 +109,7 @@ const Form: FC<FormProps> = ({ data }) => {
                     </Link>
                   </p>
 
-                  <div hidden="true">
+                  <div hidden>
                     <input
                       type="hidden"
                       name="tags"
