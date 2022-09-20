@@ -15,41 +15,47 @@ interface BannerProps {
   content?: React.ReactNode
 }
 
-const Banner: FC<BannerProps> = ({ className, hide, icon, content,dismiss }) => {
+const Banner: FC<BannerProps> = ({
+  className,
+  hide,
+  icon,
+  content,
+  dismiss,
+}) => {
   const brand: any = SwrBrand()
 
   return (
-    <div className={cn(`inset-x-0 `, className)}>
-        <div className='px-2 mx-auto md:pt-5 max-w-7xl sm:px-6 lg:px-8'>
-          <div 
-          
-          style={{
-            backgroundColor: brand.secondAccentColour
-              ? brand.secondAccentColour
-              : '#fff',
-          }}
-          className='p-2 rounded-md shadow-md sm:p-3'>
-            <div className='flex flex-wrap items-center justify-between'>
-              <div className='flex items-center flex-1 w-0'>
-                {icon && icon}
-
-                <p 
-                style={{
-                  color: brand.textColour
-                    ? brand.textColour
-                    : '#64748b',
-                }}
-                className='ml-3 text-sm font-medium'>
-                  {content && content}
-                </p>
-              </div>
-              <div className='flex-shrink-0 order-2 sm:order-3 sm:ml-2'>
-                {dismiss && dismiss}
-              </div>
-            </div>
+    <>
+      <div
+        style={{
+          backgroundColor: brand.secondAccentColour
+            ? brand.secondAccentColour
+            : '#fff',
+        }}
+        className={cn(
+          `relative inset-x-0 flex flex-wrap items-center justify-between `,
+          className
+        )}
+      >
+        <div className="px-3 py-3 mx-auto max-w-7xl sm:px-6 lg:px-8 ">
+          <div className="flex items-center pr-16 sm:px-16 sm:text-center">
+            {icon && icon}
+            <p
+              style={{
+                color: brand.textColour ? brand.textColour : '#64748b',
+              }}
+              className="text-white "
+            >
+              {content && content}
+            </p>
+          </div>
+          <div className="absolute inset-y-0 right-0 flex items-start pt-1 pr-1 sm:items-start sm:pt-1 sm:pr-2">
+            <span className="sr-only">Dismiss</span>
+            {dismiss && dismiss}
           </div>
         </div>
       </div>
+    </>
   )
 }
 

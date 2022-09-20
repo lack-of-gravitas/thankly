@@ -12,7 +12,6 @@ const Button = dynamic(() => import('@/components/ui/Button'))
 const Icon = dynamic(() => import('@/components/common/Icon'))
 
 import Link from 'next/link'
-import { data } from 'autoprefixer'
 
 interface Link {
   href: string
@@ -26,63 +25,368 @@ interface NavbarProps {
 }
 
 const Navbar: FC<NavbarProps> = ({ data }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   const [open, setOpen] = useState(false)
-  // console.log('navbar data->', data)
+  console.log('navbar data->', data)
   const [bannerVisible, setBannerVisible] = useState(true)
   const { header } = data
   return (
     <>
-      <Icon name={`arrow_forward`} />
-      <Icon name={`shopping_bag`} />
-      <Icon name={`menu`} />
-      <Icon name={`close`} />
-      <Logo className="w-auto h-10 align-middle" height={'25'} width={'100'} />
-      
+      <div className="bg-white">
+        {/* Mobile menu */}
+        <Transition.Root show={mobileMenuOpen} as={Fragment}>
+          <Dialog
+            as="div"
+            className="relative z-40 lg:hidden"
+            onClose={setMobileMenuOpen}
+          >
+            <Transition.Child
+              as={Fragment}
+              enter="transition-opacity ease-linear duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity ease-linear duration-300"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <div className="fixed inset-0 bg-black bg-opacity-25" />
+            </Transition.Child>
 
-      {data.banner && (
-        <Banner
-          className={cn(!bannerVisible ? `hidden ` : ``, `pb-2 sm:pb-5`)}
-          icon={
-            <span
-              style={{
-                backgroundColor: data.firstAccentColour
-                  ? data.firstAccentColour
-                  : '#fff',
-              }}
-              className="flex p-2 rounded-md"
-            >
-              <span
-                className="w-6 h-6 text-white material-symbols-outlined"
-                aria-hidden="true"
+            <div className="fixed inset-0 z-40 flex">
+              <Transition.Child
+                as={Fragment}
+                enter="transition ease-in-out duration-300 transform"
+                enterFrom="-translate-x-full"
+                enterTo="translate-x-0"
+                leave="transition ease-in-out duration-300 transform"
+                leaveFrom="translate-x-0"
+                leaveTo="-translate-x-full"
               >
-                {data.banner.icon}
-              </span>
-            </span>
-          }
-          content={
-            <span className="text-sm md:inline">{data.banner.content}</span>
-          }
-          dismiss={
-            <button
-              onClick={() => setBannerVisible(false)}
-              type="button"
-              className={cn(
-                `-mr-1 flex rounded-md p-2 hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-white`
+                <Dialog.Panel className="relative flex flex-col w-full max-w-xs pb-12 overflow-y-auto bg-white shadow-xl">
+                  <div className="flex px-4 pt-5 pb-2">
+                    <button
+                      type="button"
+                      className="inline-flex items-center justify-center p-2 -m-2 text-gray-400 rounded-md"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <span className="sr-only">Close menu</span>
+                      <Icon name={`close`} />
+                    </button>
+                  </div>
+
+                  <div className="px-4 py-6 space-y-6 ">
+                    <Link passHref href="/">
+                      <a>
+                        <span className="sr-only">{data.name}</span>
+                        <Logo
+                          className="w-auto h-8"
+                          height={'25'}
+                          width={'80'}
+                        />
+                      </a>
+                    </Link>
+                  </div>
+                  <div className="px-4 pb-6 space-y-6 ">
+                    {header.map(({ sort, collection, item }: any) => {
+                      let coll = ''
+
+                      switch (collection) {
+                        case 'posts':
+                          coll = 'blog/'
+                          break
+                        // case 'products':
+                        //   coll = item.type + 's/'
+                        //   break
+                      }
+                      return (
+                        <Link
+                          key={sort}
+                          passHref
+                          className="block p-2 -m-2 font-medium text-gray-900"
+                          href={
+                            ((item.slug === 'home' || item.slug === '') &&
+                              '/') ||
+                            (collection === 'CustomLinks'
+                              ? item.slug
+                              : '/' + coll + item.slug)
+                          }
+                        >
+                          <a>{item.name}</a>
+                        </Link>
+                      )
+                    })}
+                  </div>
+                  {/* mobile menu options */}
+                  {true === false ? (
+                    <div className="px-4 py-6 space-y-6 border-t border-gray-200">
+                      <div className="flow-root">
+                        <a
+                          href="#"
+                          className="block p-2 -m-2 font-medium text-gray-900"
+                        >
+                          Your account
+                        </a>
+                      </div>
+                      <div className="flow-root">
+                        <a
+                          href="#"
+                          className="block p-2 -m-2 font-medium text-gray-900"
+                        >
+                          Sign out
+                        </a>
+                      </div>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </Dialog>
+        </Transition.Root>
+
+        {/* Hero section */}
+        <div className="relative">
+          {/* Navigation */}
+          <header className="relative z-10">
+            <nav aria-label="Top">
+              {/* Top navigation */}
+              {data.banner && (
+                <Banner
+                  className={cn(!bannerVisible ? `hidden ` : ``, ``)}
+                  icon={
+                    <span className="mr-2">
+                      <Icon name={data.banner.icon} />
+                    </span>
+                  }
+                  content={
+                    <span className="text-sm text-slate-500 md:inline">
+                      {data.banner.content}
+                    </span>
+                  }
+                  dismiss={
+                    <button
+                      onClick={() => setBannerVisible(false)}
+                      type="button"
+                      className="flex pt-3 mr-4 text-slate-500 focus:outline-none focus:ring-2 focus:ring-white"
+                    >
+                      <span className="sr-only">Dismiss</span>
+                      <Icon className="hover:text-white" name={`close`} />
+                    </button>
+                  }
+                />
               )}
-            >
-              <span className="sr-only">Dismiss</span>
-              <span
-                className="w-6 h-6 material-symbols-outlined text-slate-500 hover:text-white"
-                aria-hidden="true"
-              >
-                close
-              </span>
-            </button>
-          }
-        />
-      )}
+
+              {/* Secondary navigation */}
+              <div className="bg-white bg-opacity-10 backdrop-blur-md backdrop-filter">
+                <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                  <div>
+                    <div className="flex items-center justify-between h-16">
+                      {/* Logo (lg+) */}
+                      <div className="hidden lg:flex lg:flex-1 lg:items-center">
+                        <Link passHref href="/">
+                          <a>
+                            <span className="sr-only">{data.name}</span>
+                            <Logo
+                              className="w-auto h-8"
+                              height={'25'}
+                              width={'80'}
+                            />
+                          </a>
+                        </Link>
+                      </div>
+
+                      <div className="hidden h-full lg:flex">
+                        {/* Flyout menus */}
+                        <Popover.Group className="inset-x-0 bottom-0 px-4">
+                          <div className="flex justify-center h-full space-x-8">
+                            {header.map(({ sort, collection, item }: any) => {
+                              let coll = ''
+
+                              switch (collection) {
+                                case 'posts':
+                                  coll = 'blog/'
+                                  break
+                                // case 'products':
+                                //   coll = item.type + 's/'
+                                //   break
+                              }
+                              return (
+                                <Link
+                                  key={sort}
+                                  passHref
+                                  className="flex items-center text-sm font-medium text-slate-500"
+                                  href={
+                                    ((item.slug === 'home' ||
+                                      item.slug === '') &&
+                                      '/') ||
+                                    (collection === 'CustomLinks'
+                                      ? item.slug
+                                      : '/' + coll + item.slug)
+                                  }
+                                >
+                                  <a>{item.name}</a>
+                                </Link>
+                              )
+                            })}
+
+                            {/* {navigation.pages.map((page) => (
+                              <a
+                                key={page.name}
+                                href={page.href}
+                                className="flex items-center text-sm font-medium text-slate-500"
+                              >
+                                {page.name}
+                              </a>
+                            ))} */}
+                          </div>
+                        </Popover.Group>
+                      </div>
+
+                      {/* Mobile menu and search (lg-) */}
+                      <div className="flex items-center flex-1 lg:hidden">
+                        <button
+                          type="button"
+                          className="p-2 -ml-2 text-slate-500"
+                          onClick={() => setMobileMenuOpen(true)}
+                        >
+                          <span className="sr-only">Open menu</span>
+                          {/* <Bars3Icon className="w-6 h-6" aria-hidden="true" /> */}
+                          <Icon name={`menu`} />
+                        </button>
+
+                        {/* Search */}
+                        {/* <a href="#" className="p-2 ml-2 text-white">
+                        <span className="sr-only">Search</span>
+                        <MagnifyingGlassIcon className="w-6 h-6" aria-hidden="true" />
+                      </a> */}
+                      </div>
+
+                      {/* Logo (lg-) */}
+                      <Link passHref href="/" className="lg:hidden">
+                        <a>
+                          <span className="sr-only">{data.name}</span>
+                          <Logo
+                            className="w-auto h-8"
+                            height={'25'}
+                            width={'80'}
+                          />
+                        </a>
+                      </Link>
+
+                      <div className="flex items-center justify-end flex-1">
+                        {/* <a
+                          href="#"
+                          className="hidden text-sm font-medium text-white lg:block"
+                        >
+                          Search
+                        </a> */}
+
+                        <div className="flex items-center lg:ml-8">
+                          {/* Cart */}
+
+                          {/* Profile dropdown */}
+                          {true === false ? (
+                            <Menu
+                              as="div"
+                              className="relative pr-4 ml-3 border-r border-slate-300 "
+                            >
+                              <div>
+                                <Menu.Button className="flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                  <span className="sr-only">
+                                    Open user menu
+                                  </span>
+                                  <img
+                                    className="w-8 h-8 rounded-full"
+                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                    alt=""
+                                  />
+                                </Menu.Button>
+                              </div>
+                              <Transition
+                                as={Fragment}
+                                enter="transition ease-out duration-100"
+                                enterFrom="transform opacity-0 scale-95"
+                                enterTo="transform opacity-100 scale-100"
+                                leave="transition ease-in duration-75"
+                                leaveFrom="transform opacity-100 scale-100"
+                                leaveTo="transform opacity-0 scale-95"
+                              >
+                                <Menu.Items className="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                  <Menu.Item>
+                                    {({ active }) => (
+                                      <a
+                                        href="#"
+                                        className={cn(
+                                          active ? 'bg-gray-100' : '',
+                                          'block px-4 py-2 text-sm text-gray-700'
+                                        )}
+                                      >
+                                        Your Account
+                                      </a>
+                                    )}
+                                  </Menu.Item>
+
+                                  <Menu.Item>
+                                    {({ active }) => (
+                                      <a
+                                        href="#"
+                                        className={cn(
+                                          active ? 'bg-gray-100' : '',
+                                          'block px-4 py-2 text-sm text-gray-700'
+                                        )}
+                                      >
+                                        Sign out
+                                      </a>
+                                    )}
+                                  </Menu.Item>
+                                </Menu.Items>
+                              </Transition>
+                            </Menu>
+                          ) : (
+                            <></>
+                          )}
+
+                          <div className="flow-root ml-4 lg:ml-4">
+                            <a
+                              href="#"
+                              className="flex items-center p-2 -m-2 group"
+                            >
+                              <Icon
+                                className="flex-shrink-0"
+                                name={`shopping_bag`}
+                              />
+
+                              {/* <ShoppingBagIcon className="flex-shrink-0 w-6 h-6 text-white" aria-hidden="true" /> */}
+                              <span className="ml-2 text-sm font-medium text-slate-500">
+                                0
+                              </span>
+                              <span className="sr-only">
+                                items in cart, view bag
+                              </span>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </nav>
+          </header>
+        </div>
+      </div>
     </>
   )
 }
 
 export default Navbar
+
+// const currencies = ['CAD', 'USD', 'AUD', 'EUR', 'GBP']
+const navigation = {
+  pages: [
+    { name: 'Company', href: '#' },
+    { name: 'Stores', href: '#' },
+  ],
+}
