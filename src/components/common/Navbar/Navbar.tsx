@@ -118,7 +118,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                     })}
                   </div>
                   {/* mobile menu options */}
-                  {true === false ? (
+                  {true  ? (
                     <div className="px-4 py-6 space-y-6 border-t border-gray-200">
                       <div className="flow-root">
                         <a
@@ -287,7 +287,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                           {/* Cart */}
 
                           {/* Profile dropdown */}
-                          {true === false ? (
+                          {true  ? (
                             <Menu
                               as="div"
                               className="relative pr-4 ml-3 border-r border-slate-300 "
