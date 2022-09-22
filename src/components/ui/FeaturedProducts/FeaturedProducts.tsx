@@ -13,7 +13,7 @@ interface FeaturedProductsProps {
 
 const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
   const brand = SwrBrand()
-  console.log('featured products data --> ', data)
+  // console.log('featured products data --> ', data)
 
   return (
     <>

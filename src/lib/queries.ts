@@ -6,7 +6,7 @@ export async function getBrand() {
       `${process.env.NEXT_PUBLIC_REST_API}/brands` +
         `?fields=name,tagline,logo,homepage.slug,` + //  brand fields
         `banner.*,` +
-        `textColour, backgroundColour, firstAccentColour, secondAccentColour,thirdAccentColour` +
+        `textColour, backgroundColour, firstAccentColour, secondAccentColour,thirdAccentColour,` +
         `header.item.id,header.item.slug,header.collection,header.item.name,` + // header fields
         `footer.id,footer.sort,footer.item.id,footer.item.name,` + // footer columns
         `footer.item.links.item.slug,footer.item.links.collection,footer.item.links.sort,footer.item.links.item.name` + // footer fields

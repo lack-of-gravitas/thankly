@@ -53,7 +53,7 @@ const Form: FC<FormProps> = ({ data }) => {
                       id="mce-FNAME"
                       autoComplete="name"
                       placeholder="Enter your name"
-                      className="block w-full px-4 py-3 text-gray-900 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      className="block w-full px-4 py-3 text-gray-900 border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500"
                     />
 
                     <span id="mce-FNAME-HELPERTEXT" className="helper_text" />
@@ -71,7 +71,7 @@ const Form: FC<FormProps> = ({ data }) => {
                       type="email"
                       defaultValue=""
                       name="EMAIL"
-                      className="block w-full px-4 py-3 text-gray-900 border-gray-300 rounded-md shadow-sm required email focus:border-indigo-500 focus:ring-indigo-500"
+                      className="block w-full px-4 py-3 text-gray-900 border-gray-300 rounded-md shadow-sm required email focus:border-slate-500 focus:ring-slate-500"
                       id="mce-EMAIL"
                       required
                       autoComplete="email"
@@ -93,7 +93,7 @@ const Form: FC<FormProps> = ({ data }) => {
                     defaultValue="Subscribe"
                     name="subscribe"
                     id="mc-embedded-subscribe"
-                    className="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-white border border-transparent rounded-md shadow-sm hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-white border border-transparent rounded-md shadow-sm hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
                   >
                     {`Let's talk`}
                   </button>

@@ -28,8 +28,8 @@ const Banner: FC<BannerProps> = ({
     <>
       <div
         style={{
-          backgroundColor: brand.secondAccentColour
-            ? brand.secondAccentColour
+          backgroundColor: brand.thirdAccentColour
+            ? brand.thirdAccentColour
             : '#fff',
         }}
         className={cn(

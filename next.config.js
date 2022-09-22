@@ -22,6 +22,7 @@ const nextConfig = {
       'thankly.azureedge.net',
       'images.unsplash.com',
       'thankly.fly.dev',
+      'thankly.com.au',
       'lh3.googleusercontent.com', // for google user profiles
     ],
   },

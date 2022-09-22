@@ -43,7 +43,7 @@ module.exports = {
         gray: colors.neutral,
       }),
       fontFamily: {
-        sans: ['Lato', ...defaultTheme.fontFamily.sans],
+        sans: ['Roboto', ...defaultTheme.fontFamily.sans],
         title: ['Roboto', ...defaultTheme.fontFamily.sans],
       },
       keyframes: {
@@ -76,5 +76,6 @@ module.exports = {
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/typography'), // adds prose class for niceness on std elements without effort
     require('@tailwindcss/line-clamp'), // restricts text to # lines
+
   ],
 }
