@@ -5,12 +5,11 @@
 #__next {
   min-height: 100%;
 }
-
 .embla {
   position: relative;
   background-color: #f7f7f7;
-  padding: 20px;
-  max-width: 670px;
+  padding: 0px;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -76,7 +75,7 @@
   height: 30px;
   justify-content: center;
   align-items: center;
-  fill: #1bcacd;
+  fill: #2e2e2e;
   padding: 0;
 }
 
@@ -112,7 +111,7 @@
   padding: 0;
   outline: 0;
   border: 0;
-  width: 30px;
+  width: 10px;
   height: 30px;
   margin-right: 7.5px;
   margin-left: 7.5px;
@@ -129,6 +128,6 @@
 }
 
 .embla__dot.is-selected:after {
-  background-color: #1bcacd;
+  background-color: #2e2e2e;
   opacity: 1;
 }

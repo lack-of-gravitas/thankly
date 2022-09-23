@@ -11,7 +11,7 @@ interface FormProps {
 }
 
 const Form: FC<FormProps> = ({ data }) => {
-  console.log('newsletter data --> ', data)
+  // console.log('newsletter data --> ', data)
   const brand = SwrBrand()
 
   return (

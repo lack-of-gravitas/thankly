@@ -24,7 +24,7 @@ export const Section: FC<SectionProps> = ({ data, className, children }) => {
   }
 
   // console.log('queryParams -- ', queryParams)
-  console.log('rendering:', data.collection)
+  // console.log('rendering:', data.collection)
 
   sectionData = SwrSection(queryParams)
   if (!sectionData) return null

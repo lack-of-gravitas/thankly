@@ -316,14 +316,15 @@ export async function getSection(params: any) {
   }
 }
 
-export async function getProduct(path: any) {
+export async function getProducts() {
   // console.log('query', path)
   return await (
     await fetch(
       `${process.env.NEXT_PUBLIC_REST_API}/products` +
-        `?fields=image,id,type,description,library_access,showcases,stripeId,slug,name,sections.*` + // key fields
-        `&filter[status][_eq]=published` +
-        `&filter[slug][_eq]=${path}`
+        `?fields=*,categories.item.*` + // key fields
+        `&filter[status][_eq]=active` +
+        `&filter[stockQty][_gt]=0` +
+        `&filter[type][_in]=card,gift`
     )
   ).json()
 }
