@@ -6,7 +6,7 @@ import {
 import { UserDetails } from '@/lib/types'
 import { Purchase } from '@/lib/types'
 import { SupabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
-import { getProduct } from '@/lib/queries'
+// import { getProduct } from '@/lib/queries'
 
 type UserContextType = {
   accessToken: string | null
@@ -54,19 +54,19 @@ export const MyUserContextProvider = (props: Props) => {
           let purchaseData: any[] = []
           let purchases = purchasePromise.value.data
 
-          purchases?.forEach(async (purchase: any) => {
-            let product = await getProduct(
-              purchase.metadata.productSlug.split('/').pop()
-            )
-            product = product.data[0]
-            // console.log('product ->', product)
-            if (product.type === 'course')
-              purchase.metadata.productSlug += '/content'
+          // purchases?.forEach(async (purchase: any) => {
+          //   let product = await getProduct(
+          //     purchase.metadata.productSlug.split('/').pop()
+          //   )
+          //   product = product.data[0]
+          //   // console.log('product ->', product)
+          //   if (product.type === 'course')
+          //     purchase.metadata.productSlug += '/content'
 
-            purchaseData.push({ ...purchase, ...product })
-            // console.log('purchaseData ->', purchaseData)
-            setPurchases(purchaseData)
-          })
+          //   purchaseData.push({ ...purchase, ...product })
+          //   // console.log('purchaseData ->', purchaseData)
+          //   setPurchases(purchaseData)
+          // })
 
           // setPurchases(purchasePromise.value.data)
         }

@@ -14,7 +14,7 @@ const Button = dynamic(() => import('@/components/ui/Button'))
 const Progress = dynamic(() => import('@/components/ui/Send/Progress'))
 
 export default function Send({ slug, preview, prefetchedData }: any) {
-  console.log('prefetchedData->', prefetchedData)
+  // console.log('prefetchedData->', prefetchedData)
   const brand = SwrBrand()
   const router = useRouter()
 
@@ -73,6 +73,11 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                   Back
                 </Button>
                 <Button
+                onClick={() =>
+                  currentStep === 3
+                    ? setCurrentStep(currentStep)
+                    : setCurrentStep(currentStep + 1)
+                }
                   style={{
                     backgroundColor: brand.firstAccentColour
                       ? brand.firstAccentColour
@@ -86,7 +91,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
               </div>
             </div>
             
-            <Progress currentStep={3} />
+            <Progress currentStep={currentStep} data={prefetchedData}/>
 
             {/* <Progress currentStep={currentStep} /> */}
           </div>
@@ -100,17 +105,17 @@ export default function Send({ slug, preview, prefetchedData }: any) {
 
 Send.Layout = Layout
 
-export async function getServerSideProps(context:any) {
+// export async function getServerSideProps(context:any) {
 
-  const data = await getProducts()
-console.log(data)
+//   const data = await getProducts()
+// console.log(data)
 
-  return {
-    props: {
-      preview: context.preview ? true : null,
-      prefetchedData: data && data.data.length > 0 ? data.data : null,
-    }, // will be passed to the page component as props
+//   return {
+//     props: {
+//       preview: context.preview ? true : null,
+//       prefetchedData: data && data.data.length > 0 ? data.data : null,
+//     }, // will be passed to the page component as props
     
-  }
+//   }
 
-}
+// }

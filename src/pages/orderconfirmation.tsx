@@ -46,8 +46,8 @@ export default function Home({ slug, preview, prefetchedData }: any) {
                 Thanks for ordering
               </p>
               <p className="mt-2 text-base text-gray-500">
-                We appreciate your order, we’re currently processing it. So hang
-                tight and we’ll send you confirmation very soon!
+                {`We appreciate your order, we’re currently processing it. So hang
+                tight and we'll send you confirmation very soon!`}
               </p>
 
               {/* <dl className="mt-16 text-sm font-medium">
@@ -115,10 +115,10 @@ export default function Home({ slug, preview, prefetchedData }: any) {
                         </h3>
                         <div className="max-w-xl mt-2 text-sm text-gray-500">
                           <p>
-                            Something doesn't look quite right? Get in touch
+                            {`Something doesn't look quite right? Get in touch
                             with us. If you chose to create an account with us,
                             you can check your order status on your Account
-                            Page.
+                            Page.`}
                           </p>
                         </div>
                       </div>

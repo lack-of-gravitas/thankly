@@ -318,15 +318,17 @@ export async function getSection(params: any) {
 
 export async function getProducts() {
   // console.log('query', path)
-  return await (
+  let data = await (
     await fetch(
       `${process.env.NEXT_PUBLIC_REST_API}/products` +
-        `?fields=*,categories.item.*` + // key fields
+        `?fields=*,categories.item.*,images.directus_files_id` + // key fields
         `&filter[status][_eq]=active` +
         `&filter[stockQty][_gt]=0` +
         `&filter[type][_in]=card,gift`
     )
   ).json()
+  data = data.data
+  return data
 }
 
 export async function getFeaturedProducts(type: any, limit: any) {
@@ -342,7 +344,7 @@ export async function getFeaturedProducts(type: any, limit: any) {
     )
   ).json()
   data = data.data[0]
-  return
+  return data
 }
 
 export async function getPosts(id: any, type: any) {

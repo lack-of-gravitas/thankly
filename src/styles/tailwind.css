@@ -5,6 +5,7 @@
 #__next {
   min-height: 100%;
 }
+
 .embla {
   position: relative;
   background-color: #f7f7f7;
@@ -46,7 +47,8 @@
 .embla__slide__inner {
   position: relative;
   overflow: hidden;
-  height: 190px;
+  height: 600px;
+  width:800px;
 }
 
 .embla__slide__img {
