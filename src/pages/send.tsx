@@ -7,7 +7,6 @@ import { useState, useRef } from 'react'
 import { SwrBrand } from '@/lib/swr-helpers'
 import Link from 'next/link'
 
-
 const Layout = dynamic(() => import('@/components/common/Layout'))
 const Icon = dynamic(() => import('@/components/common/Icon'))
 const Button = dynamic(() => import('@/components/ui/Button'))
@@ -63,7 +62,12 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                       : '#fff',
                   }}
                   disabled={currentStep === 1}
-                  className={cn(`inline-flex items-center px-4 py-2 ml-3 text-sm font-medium border border-transparent rounded-md shadow-sm   focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2`,currentStep===1 ? `bg-slate-100 border-gray-300 text-slate-300 ` :`hover:bg-slate-500 hover:text-white text-slate-500 `)}
+                  className={cn(
+                    `ml-3 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium shadow-sm   focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2`,
+                    currentStep === 1
+                      ? `border-gray-300 bg-slate-100 text-slate-300 `
+                      : `text-slate-500 hover:bg-slate-500 hover:text-white `
+                  )}
                   onClick={() =>
                     currentStep === 1
                       ? setCurrentStep(currentStep)
@@ -73,31 +77,35 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                   Back
                 </Button>
                 <Button
-                onClick={() =>
-                  currentStep === 3
-                    ? setCurrentStep(currentStep)
-                    : setCurrentStep(currentStep + 1)
-                }
+                  disabled={currentStep === 3}
+                  onClick={() => {
+                    currentStep === 3
+                      ? setCurrentStep(currentStep)
+                      : setCurrentStep(currentStep + 1)
+                  }}
                   style={{
                     backgroundColor: brand.firstAccentColour
                       ? brand.firstAccentColour
                       : '#fff',
                   }}
-                  className="inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-white border border-transparent rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+                  className={cn(
+                    `ml-3 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2`,
+                    currentStep === 3
+                      ? `border-gray-300 bg-slate-100 text-slate-300 `
+                      : `text-white hover:bg-slate-500 hover:text-white `
+                  )}
                   type="button"
                 >
                   Next Step
                 </Button>
               </div>
             </div>
-            
-            <Progress currentStep={currentStep} data={prefetchedData}/>
+
+            <Progress currentStep={currentStep} data={prefetchedData} />
 
             {/* <Progress currentStep={currentStep} /> */}
           </div>
         </section>
-
-       
       </div>
     </>
   )
@@ -115,7 +123,7 @@ Send.Layout = Layout
 //       preview: context.preview ? true : null,
 //       prefetchedData: data && data.data.length > 0 ? data.data : null,
 //     }, // will be passed to the page component as props
-    
+
 //   }
 
 // }

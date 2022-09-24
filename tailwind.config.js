@@ -7,6 +7,7 @@ module.exports = {
   content: [
     // './node_modules/tw-elements/dist/js/**/*.js',
     './src/**/*.{js,jsx,ts,tsx}',
+
   ],
 
   theme: {

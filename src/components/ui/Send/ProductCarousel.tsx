@@ -80,7 +80,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
         </div>
       </div> */}
       <div className="relative embla__viewport touch-auto" ref={viewportRef}>
-        <div className="relative flex bg-gray-200 embla__container ">
+        <div className="relative flex bg-gray-200 aspect-[4/3] embla__container ">
           {data.map(({ directus_files_id: image, index }: any) => (
             <Image
               key={index}
