@@ -81,75 +81,59 @@ const Step1: React.FC<Step1Props> = ({
       {/* Show if Cards Only is false */}
       {true && (
         <div className="border rounded-md border-gray-150 bg-gray-50">
-          <div className="px-4 py-5 mx-auto sm:flex sm:items-center sm:px-6 lg:px-8">
-            <h3 className="hidden text-sm font-semibold text-gray-500 xs:invisible md:block">
-              Search
-              <span className="sr-only">, active</span>
-            </h3>
-
-            <div className="w-full mt-2 sm:mt-0 sm:ml-4 ">
-              <div className="flex flex-wrap items-center -m-1">
-                <div className="flex w-full mt-1 rounded-md ">
-                  <div className="relative flex items-stretch flex-grow focus-within:z-10">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <Icon name="search" />
-                    </div>
-                    <input
-                      type="text"
-                      name="search"
-                      id="search"
-                      className="block w-full pl-10 border-gray-300 rounded-none rounded-l-md focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      placeholder="Search for a gift to start your Thankly..."
-                      // value={query}
-                      onChange={onSearch}
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    className="relative inline-flex items-center px-4 py-2 mr-3 -ml-px space-x-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
-                  >
-                    <span>Search</span>
-                  </button>
-                  <Switch.Group
-                    as="div"
-                    className="relative flex items-center pt-2 pb-5"
-                  >
-                    <Switch
-                      checked={enabled}
-                      onChange={() => {
-                        if (enabled === true) {
-                          setEnabled(false)
-                          updateResult(fuse.search('gift'))
-                        }
-                        if (enabled === false) {
-                          setEnabled(true)
-                          updateResult(fuse.search('card'))
-                        }
-                      }}
-                      className={cn(
-                        enabled ? 'bg-slate-600' : 'bg-gray-200',
-                        'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2'
-                      )}
-                    >
-                      <span
-                        aria-hidden="true"
-                        className={cn(
-                          enabled ? 'translate-x-5' : 'translate-x-0',
-                          'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
-                        )}
-                      />
-                    </Switch>
-                    <Switch.Label as="span" className="ml-3">
-                      <span className="text-sm font-medium text-gray-900">
-                        Show Cards Only
-                      </span>
-                      {/* <span className="text-sm text-gray-500">(Save 10%)</span> */}
-                    </Switch.Label>
-                  </Switch.Group>
-                </div>
+            <div className="relative flex flex-row px-3 py-3 focus-within:z-10 justify-items-center">
+              <div className="grow basis-1/2">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 ml-2 pointer-events-none grow ">
+                <Icon name={'search'} />
               </div>
+              <input
+                type="text"
+                name="search"
+                id="search"
+                className="flex max-w-full min-w-full pl-10 font-medium tracking-tight border-gray-300 rounded-md grow txt-slate-500 focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                placeholder="Start searching here..."
+                onChange={onSearch}
+              />
+              </div>
+              <div className="basis-1/8">
+              <Switch.Group
+                as="div"
+                className="relative flex items-center ml-3 tracking-tight"
+              >
+                <Switch
+                  checked={enabled}
+                  onChange={() => {
+                    if (enabled === true) {
+                      setEnabled(false)
+                      updateResult(fuse.search('gift'))
+                    }
+                    if (enabled === false) {
+                      setEnabled(true)
+                      updateResult(fuse.search('card'))
+                    }
+                  }}
+                  className={cn(
+                    enabled ? 'bg-slate-600' : 'bg-gray-200',
+                    'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2'
+                  )}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      enabled ? 'translate-x-5' : 'translate-x-0',
+                      'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                    )}
+                  />
+                </Switch>
+                <Switch.Label as="span" className="flex ml-3">
+                  <span className="text-sm font-medium leading-tight text-gray-900">
+                    <span className="hidden leading-tight md:block">{`Show `}</span>
+                    Cards Only
+                  </span>
+                  {/* <span className="text-sm text-gray-500">(Save 10%)</span> */}
+                </Switch.Label>
+              </Switch.Group></div>
             </div>
-          </div>
         </div>
       )}
       <div className="grid grid-cols-1 pt-5 mx-auto gap-x-2 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8">

@@ -79,15 +79,15 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
           ))}
         </div>
       </div> */}
-      <div className="relative " ref={viewportRef}>
-        <div className="relative flex bg-gray-200 ">
+      <div className="relative embla__viewport touch-auto" ref={viewportRef}>
+        <div className="relative flex bg-gray-200 embla__container ">
           {data.map(({ directus_files_id: image, index }: any) => (
             <Image
               key={index}
               className="object-cover object-center min-w-full"
               src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${image}`}
               width={900}
-              height={1000}
+              height={900}
             />
           ))}
         </div>

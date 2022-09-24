@@ -58,10 +58,10 @@ const Progress: React.FC<ProgressProps> = ({
                         ? brand.firstAccentColour
                         : '#2e2e2e',
                     }}
-                    className="ml-2 text-sm font-semibold md:text-lg ">
+                    className="ml-2 text-sm font-semibold md:text-md ">
                       {step.name}
                     </span>
-                    <span className="ml-2 text-sm font-medium text-gray-500">
+                    <span className="hidden ml-2 text-sm font-medium leading-tight text-gray-500 md:block">
                       {step.description}
                     </span>
                   </span>
@@ -79,7 +79,7 @@ const Progress: React.FC<ProgressProps> = ({
                       ? brand.firstAccentColour
                       : '#2e2e2e'
                   }}
-                className="flex items-center justify-center flex-shrink-0 w-10 h-10 text-2xl rounded-full">
+                className="flex items-center justify-center flex-shrink-0 w-8 h-8 text-2xl rounded-full">
                   <span 
                    style={{
                     color: brand.firstAccentColour
@@ -90,34 +90,34 @@ const Progress: React.FC<ProgressProps> = ({
                     {step.id}
                   </span>
                 </span>
-                <span className="mt-0.5 ml-2 flex min-w-0 flex-col">
+                <span className=" mt-0.5 ml-2 flex min-w-0 flex-col">
                   <span 
                     style={{
                       color: brand.firstAccentColour
                         ? brand.firstAccentColour
                         : '#2e2e2e',
                     }}
-                  className="ml-2 text-sm font-semibold md:text-lg ">
+                  className="ml-2 text-sm font-semibold md:text-md ">
                     {step.name}
                   </span>
-                  <span className="ml-2 text-sm font-medium text-gray-500">
+                  <span className="hidden ml-2 text-sm font-medium leading-tight text-gray-500 md:block">
                     {step.description}
                   </span>
                 </span>
               </a>
             ) : (
-              <a href={step.href} className="flex items-center group">
+              <a href={step.href} className="flex items-center group ">
                 <span className="flex items-center px-4 py-2 text-sm font-medium">
-                  <span className="flex items-center justify-center flex-shrink-0 w-10 h-10 border-2 border-gray-300 rounded-full group-hover:border-gray-400">
+                  <span className="flex items-center justify-center flex-shrink-0 w-8 h-8 border-2 border-gray-300 rounded-full group-hover:border-gray-400">
                     <span className="text-gray-500 group-hover:text-gray-900">
                       {step.id}
                     </span>
                   </span>
                   <span className="mt-0.5 ml-2 flex min-w-0 flex-col">
-                    <span className="ml-2 text-sm font-semibold text-gray-500 md:text-lg group-hover:text-gray-900">
+                    <span className="ml-2 text-sm font-semibold text-gray-500 md:text-md group-hover:text-gray-900">
                       {step.name}
                     </span>
-                    <span className="ml-2 text-sm font-medium text-gray-500">
+                    <span className="hidden ml-2 text-sm font-medium leading-tight text-gray-500 md:block">
                       {step.description}
                     </span>
                   </span>
