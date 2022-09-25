@@ -1,11 +1,13 @@
 import cn from 'clsx'
 import Fuse from 'fuse.js'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import { mergeRefs } from 'react-merge-refs'
 import { SwrBrand } from '@/lib/swr-helpers'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import Script from 'next/script'
+
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
@@ -13,11 +15,11 @@ import usePlacesAutocomplete, {
   getDetails,
 } from 'use-places-autocomplete'
 import useOnclickOutside from 'react-cool-onclickoutside'
+
 import { Switch } from '@headlessui/react'
+import { useForm } from 'react-hook-form'
 
 const Icon = dynamic(() => import('@/components/common/Icon'))
-
-import Script from 'next/script'
 
 interface Step3Props {
   // children?: React.ReactNode[]
@@ -28,7 +30,16 @@ interface Step3Props {
 // eslint-disable-next-line react/display-name
 const Step3: React.FC<Step3Props> = ({ className }) => {
   const brand = SwrBrand()
+
+  const [uiDisabled,setUiDisabled] = useState(false) // disable all inputs and controls on form
   const [manualAddress, setManualAddress] = useState(false)
+  const [address, setAddress]: any = useState({})
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    formState,
+  } = useForm() // register react-hook form
 
   // https://github.com/wellyshen/use-places-autocomplete?ref=hackernoon.com#api
   const {
@@ -40,7 +51,6 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
   } = usePlacesAutocomplete({
     requestOptions: {
       types: ['address'],
-
       componentRestrictions: { country: 'au' },
     },
     debounce: 300,
@@ -57,27 +67,65 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
     setValue(e.target.value)
   }
 
-  const handleSelect =
-    ({ description }: any) =>
-    () => {
-      // Get latitude and longitude via utility functions
-      getGeocode({
-        address: description,
-        componentRestrictions: { country: 'au' },
-      }).then((results) => {
-        // const { lat, lng } = getLatLng(results[0])
-        // console.log('📍 Coordinates: ', { lat, lng })
-        const zipCode = getZipCode(results[0], false)
-        description += `, ` + zipCode
-        console.log('Description: ', description)
-        setValue(description, false)
+  const handleSelect = (data: any) => () => {
+    console.log('data -', data)
+    // Get latitude and longitude via utility functions
+    var circle: any
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        var geolocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        }
+        circle = new window.google.maps.Circle({
+          center: geolocation,
+          radius: position.coords.accuracy,
+        })
+        // autoComplete.setBounds(circle.getBounds());
       })
-
-      // When user selects a place, we can replace the keyword without request data from API
-      // by setting the second parameter to "false"
-      // setValue(description, false)
-      clearSuggestions()
     }
+
+    getGeocode({
+      address: data.description,
+      bounds: circle?.getBounds(),
+      componentRestrictions: { country: 'au' },
+    }).then((results) => {
+      // const { lat, lng } = getLatLng(results[0])
+      // console.log('📍 Coordinates: ', { lat, lng })
+      const zipCode = getZipCode(results[0], false)
+      data.description += `, ` + zipCode
+      console.log('Description: ', data.description)
+      setValue(data.description, false)
+
+      const parameter = {
+        // Use the "place_id" of suggestion from the dropdown (object), here just taking first suggestion for brevity
+        placeId: data.place_id,
+        fields: ['formatted_address', 'address_component'], // Specify the return data that you want (optional)
+      }
+      getDetails(parameter)
+        .then((addressObject: any) => {
+          console.log('Details: ', addressObject)
+          setAddress({
+            street_number: addressObject.address_components[0].short_name,
+            street_name: addressObject.address_components[1].short_name,
+            suburb: addressObject.address_components[2].short_name,
+            state: addressObject.address_components[4].short_name,
+            postcode: addressObject.address_components[6].short_name,
+            country: addressObject.address_components[5].long_name,
+            fulladdress: addressObject.formatted_address,
+          })
+          console.log('addressObj //', address)
+        })
+        .catch((error) => {
+          console.log('Error: ', error)
+        })
+    })
+
+    // When user selects a place, we can replace the keyword without request data from API
+    // by setting the second parameter to "false"
+    // setValue(description, false)
+    clearSuggestions()
+  }
 
   const renderSuggestions = () =>
     data.map((suggestion: any) => {
@@ -93,8 +141,28 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
       )
     })
 
+  const onSubmit = async (data: any, e: any) => {
+    e.preventDefault()
+
+    // check if gifts are selected
+    // check if card is selected
+    // check message field has been supplied
+    // check shipping option selected / calculations are completed
+    // check voucher calculations done and order line items exist
+    // create / update draft order
+    // if balance remains, instatiate Stripe Checkout and supply info for remaining payment
+
+  }
+
   return (
     <div className="bg-white">
+      {/* <Script
+        strategy="beforeInteractive"
+        id="googlemaps"
+        type="text/javascript"
+        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_PLACES_AUTOCOMPLETE}&libraries=places`}
+      /> */}
+
       <div className="max-w-2xl pt-5 pb-24 mx-auto lg:max-w-7xl ">
         {/* <div className="border rounded-md border-gray-150 bg-gray-50">
         <div className="px-4 py-5 sm:p-6">
@@ -131,93 +199,119 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
           </div>
         </div>
 
-        <form className="mt-10 lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
+        <form
+          id="address-form"
+          action=""
+          method="get"
+          autoComplete="off"
+          className="mt-10 lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div>
-            <div className="mt-10 lg:mt-0">
-              <h2 className="text-lg font-medium text-gray-900">
+            <div>
+              <h3
+                id="contact-info-heading"
+                className="text-lg font-medium text-gray-900"
+              >
                 Recipient Details
-              </h2>
+              </h3>
 
-              <div className="grid grid-cols-2 mt-4 gap-x-2 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                <div>
+              <div className="grid grid-cols-4 mt-6 gap-y-6 gap-x-4 sm:grid-cols-4">
+                <div className="col-span-2 sm:col-span-2">
                   <label
-                    htmlFor="first-name"
+                    htmlFor="expiration-date"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    First name
+                    First Name
                   </label>
+
                   <div className="mt-1">
                     <input
                       type="text"
-                      id="first-name"
-                      name="first-name"
+                      id="firstname"
+                      // name="firstname"
                       autoComplete="given-name"
+                      placeholder="John"
+                      aria-invalid="true"
+                      aria-describedby="name-error"
+                      {...register('firstname', { required: true })}
                       className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      // className="block w-full pr-10 text-gray-500 placeholder-red-500 border-red-500 rounded-md focus:border-red-500 focus:outline-none focus:ring-red-500 sm:text-sm"
                     />
+
+                    <p className="mt-2 text-xs text-red-600" id="email-error">
+                      {errors.firstname && 'Name is mandatory.'}
+                    </p>
                   </div>
                 </div>
 
-                <div>
+                <div className="col-span-2 sm:col-span-2">
                   <label
-                    htmlFor="last-name"
+                    htmlFor="cvc"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Last name
+                    Last Name
                   </label>
                   <div className="mt-1">
                     <input
                       type="text"
-                      id="last-name"
-                      name="last-name"
+                      id="lastname"
+                      // name="lastname"
                       autoComplete="family-name"
+                      {...register('lastname', { required: true })}
+                      placeholder="Smith"
                       className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     />
+                    <p className="mt-2 text-xs text-red-600" id="email-error">
+                      {errors.lastname && 'Name is mandatory.'}
+                    </p>
                   </div>
                 </div>
 
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor="company"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Company
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      name="company"
-                      id="company"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div>
+                <div className="col-span-4">
                   <div className="flex justify-between">
                     <label
                       htmlFor="email"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Email
+                      Company
                     </label>
-                    <span className="text-sm text-gray-500" id="email-optional">
+                    <span
+                      className="text-sm text-gray-500"
+                      id="company-optional"
+                    >
                       Optional
                     </span>
                   </div>
+
                   <div className="mt-1">
                     <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      placeholder="you@example.com"
-                      aria-describedby="email-optional"
+                      type="text"
+                      name="company"
+                      id="company"
+                      placeholder="ACME Limited"
+                      aria-describedby="company-optional"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     />
                   </div>
                 </div>
+              </div>
+            </div>
 
-                {/* TODO: https://github.com/wellyshen/use-places-autocomplete?ref=hackernoon.com#api */}
-                <div className="sm:col-span-2">
+            <div className="mt-10">
+              <h3
+                id="shipping-heading"
+                className="text-lg font-medium text-gray-900"
+              >
+                Shipping address
+              </h3>
+              <p className="mt-2 text-sm text-gray-500" id="email-description">
+                At this time, we only deliver Thanklys to addresses in
+                Australia. Parcel Lockers and PO Boxes have to be entered
+                manually.
+              </p>
+              <div className="grid grid-cols-1 mt-6 gap-y-6 gap-x-4 sm:grid-cols-3">
+                <div className="sm:col-span-3">
                   <label
                     htmlFor="address"
                     className="block text-sm font-medium text-gray-700"
@@ -230,15 +324,112 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       onChange={handleInput}
                       disabled={!ready}
                       type="text"
-                      name="ship-address"
-                      id="ship-address"
-                      required
+                      // id="ship-address"
+                      // name="ship-address"
+                      // required
+                      placeholder="Enter street address"
                       autoComplete="off"
                       className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     />
-                    {/* We can use the "status" to decide whether we should display the dropdown or not */}
                     {status === 'OK' && <ul>{renderSuggestions()}</ul>}
-                    <Switch.Group
+                  </div>
+                </div>
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="address"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Apartment, suite, PO Box, Parcel Locker etc
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      id="address2"
+                      name="address2"
+                      placeholder="Enter your Parcel Locker or PO Box # here"
+                      // autoComplete="street-address"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="city"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Suburb
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      id="locality"
+                      // name="locality"
+                      value={address.suburb ? address.suburb : ''}
+                      // autoComplete="address-level2"
+                      {...register('locality', { required: true })}
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                    />
+                    <p className="mt-2 text-xs text-red-600" id="email-error">
+                      {errors.locality && 'Suburb is mandatory.'}
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="region"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    State
+                  </label>
+                  <div className="mt-1">
+                    <select
+                      id="state"
+                      name="state"
+                      required
+                      autoComplete="state"
+                      value={address.state ? address.state : 'NSW'}
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                    >
+                      <option>NSW</option>
+                      <option>VIC</option>
+                      <option>QLD</option>
+                      <option>SA</option>
+                      <option>WA</option>
+                      <option>TAS</option>
+                      <option>NT</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="postal-code"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Postcode
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      id="postcode"
+                      // name="postcode"
+                      required
+                      value={address.postcode ? address.postcode : ''}
+                      autoComplete="postal-code"
+                      {...register('postcode', { required: true })}
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                    />{' '}
+                    <p className="mt-2 text-xs text-red-600" id="email-error">
+                      {errors.postcode && 'Postcode is mandatory.'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* <Switch.Group
                       as="div"
                       className="relative flex items-center ml-3 tracking-tight"
                     >
@@ -270,108 +461,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                           Enter address manually.
                         </span>
                       </Switch.Label>
-                    </Switch.Group>
-                  </div>
-                  <p
-                    className="mt-2 text-sm text-gray-500"
-                    id="email-description"
-                  >
-                    At this time, we only deliver Thanklys to addresses in
-                    Australia. Please type Parcel Lockers and PO Boxes in
-                    manually.
-                  </p>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor="apartment"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Apartment, suite, etc.
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      id="address2"
-                      name="address2"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="city"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    City
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      id="locality"
-                      name="locality"
-                      required
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="region"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    State
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      id="state"
-                      name="state"
-                      required
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="postal-code"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Postal code
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      id="postcode"
-                      name="postcode"
-                      required
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                {/* <div className="sm:col-span-2">
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Phone
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      name="phone"
-                      id="phone"
-                      autoComplete="tel"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    />
-                  </div>
-                </div> */}
-              </div>
-            </div>
+                    </Switch.Group> */}
           </div>
 
           {/* Order summary */}
@@ -444,8 +534,8 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                   <dd className="text-sm font-medium text-gray-900">($5.52)</dd>
                 </div>
                 <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-                  <dt className="text-base font-medium">Total Due</dt>
-                  <dd className="text-base font-medium text-gray-900">
+                  <dt className="text-base font-semibold">Total Due</dt>
+                  <dd className="text-base font-semibold text-gray-900">
                     $75.52
                   </dd>
                 </div>

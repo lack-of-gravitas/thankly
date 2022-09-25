@@ -158,7 +158,7 @@ export async function getSection(params: any) {
       products = await (
         await fetch(
           `${process.env.NEXT_PUBLIC_REST_API}/products` +
-            `?fields=*` +
+            `?fields=*,images.directus_files_id` +
             `&filter[featured][_eq]=true` +
             `&filter[status][_eq]=active` +
             `&filter[stockQty][_gt]=0` +
@@ -335,7 +335,8 @@ export async function getFeaturedProducts(type: any, limit: any) {
   let data = await (
     await fetch(
       `${process.env.NEXT_PUBLIC_REST_API}/products` +
-        `?fields=*` +
+        `?fields=*,images.*` +
+        `&filter[featured][_eq]=true` +
         `&filter[status][_eq]=active` +
         `&filter[stockQty][_gt]=0` +
         `&filter[type][_in]=${type ? type.toString() : `card,gift`}` +
@@ -343,7 +344,7 @@ export async function getFeaturedProducts(type: any, limit: any) {
         `&limit=${limit ? limit : 3}`
     )
   ).json()
-  data = data.data[0]
+  data = data.data
   return data
 }
 

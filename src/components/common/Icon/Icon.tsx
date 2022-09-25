@@ -3,7 +3,7 @@ export default function Icon({ className = '', ...props }) {
     <>
       <span
         className={
-          className + ` material-symbols-outlined h-6 w-6 text-slate-500`
+          className + ` material-symbols-outlined h-6 w-6 `
         }
         aria-hidden="true"
       >

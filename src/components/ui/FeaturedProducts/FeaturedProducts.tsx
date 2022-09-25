@@ -3,7 +3,7 @@ import { Button, Container } from '@/components/ui'
 import Link from 'next/link'
 import parse from 'html-react-parser'
 import Image from 'next/future/image'
-import { SwrBrand, SwrFeaturedProducts } from '@/lib/swr-helpers'
+import { SwrBrand } from '@/lib/swr-helpers'
 import cn from 'clsx'
 
 interface FeaturedProductsProps {
@@ -13,7 +13,7 @@ interface FeaturedProductsProps {
 
 const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
   const brand = SwrBrand()
-  // console.log('featured products data --> ', data)
+  console.log('featured products data --> ', data)
 
   return (
     <>
@@ -50,10 +50,10 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                     className="relative flex flex-col overflow-hidden bg-white rounded-md group"
                   >
                     <div className="bg-gray-200 aspect-w-3 aspect-h-4 group-hover:opacity-75 sm:aspect-none sm:h-96">
-                      {product.mainImage && product.mainImage !== '' ? (
+                      {product.images && product.images[0]?.directus_files_id !== '' ? (
                         <Image
                           className="object-cover object-center w-full h-full sm:h-full sm:w-full"
-                          src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${product.mainImage}`}
+                          src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${product.images[0].directus_files_id}`}
                           // layout="fill"
                           width={1000}
                           height={900}
