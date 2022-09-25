@@ -1,26 +1,100 @@
 import cn from 'clsx'
 import Fuse from 'fuse.js'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { mergeRefs } from 'react-merge-refs'
 import { SwrBrand } from '@/lib/swr-helpers'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import usePlacesAutocomplete, {
+  getGeocode,
+  getLatLng,
+  getZipCode,
+  getDetails,
+} from 'use-places-autocomplete'
+import useOnclickOutside from 'react-cool-onclickoutside'
+import { Switch } from '@headlessui/react'
 
 const Icon = dynamic(() => import('@/components/common/Icon'))
+
+import Script from 'next/script'
 
 interface Step3Props {
   // children?: React.ReactNode[]
   className?: string
-  data?: any
+  // data?: any
 }
 
 // eslint-disable-next-line react/display-name
-const Step3: React.FC<Step3Props> = ({ className, data }) => {
-    const brand = SwrBrand()
+const Step3: React.FC<Step3Props> = ({ className }) => {
+  const brand = SwrBrand()
+  const [manualAddress, setManualAddress] = useState(false)
 
-    
+  // https://github.com/wellyshen/use-places-autocomplete?ref=hackernoon.com#api
+  const {
+    ready,
+    value,
+    suggestions: { status, data },
+    setValue,
+    clearSuggestions,
+  } = usePlacesAutocomplete({
+    requestOptions: {
+      types: ['address'],
+
+      componentRestrictions: { country: 'au' },
+    },
+    debounce: 300,
+    cache: 24 * 60 * 60, // Provide the cache time in seconds, default is 24 hours
+  })
+  const ref = useOnclickOutside(() => {
+    // When user clicks outside of the component, we can dismiss
+    // the searched suggestions by calling this method
+    clearSuggestions()
+  })
+
+  // Update the keyword of the input element
+  const handleInput = (e: any) => {
+    setValue(e.target.value)
+  }
+
+  const handleSelect =
+    ({ description }: any) =>
+    () => {
+      // Get latitude and longitude via utility functions
+      getGeocode({
+        address: description,
+        componentRestrictions: { country: 'au' },
+      }).then((results) => {
+        // const { lat, lng } = getLatLng(results[0])
+        // console.log('📍 Coordinates: ', { lat, lng })
+        const zipCode = getZipCode(results[0], false)
+        description += `, ` + zipCode
+        console.log('Description: ', description)
+        setValue(description, false)
+      })
+
+      // When user selects a place, we can replace the keyword without request data from API
+      // by setting the second parameter to "false"
+      // setValue(description, false)
+      clearSuggestions()
+    }
+
+  const renderSuggestions = () =>
+    data.map((suggestion: any) => {
+      const {
+        place_id,
+        structured_formatting: { main_text, secondary_text },
+      } = suggestion
+
       return (
-        <div className="bg-white">
+        <li key={place_id} onClick={handleSelect(suggestion)}>
+          <span className="text-sm">{`${main_text}, ${secondary_text}`}</span>
+        </li>
+      )
+    })
+
+  return (
+    <div className="bg-white">
       <div className="max-w-2xl pt-5 pb-24 mx-auto lg:max-w-7xl ">
         {/* <div className="border rounded-md border-gray-150 bg-gray-50">
         <div className="px-4 py-5 sm:p-6">
@@ -118,7 +192,31 @@ const Step3: React.FC<Step3Props> = ({ className, data }) => {
                   </div>
                 </div>
 
-{/* TODO: https://stackoverflow.com/questions/52907859/using-google-place-autocomplete-api-in-react */}
+                <div>
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Email
+                    </label>
+                    <span className="text-sm text-gray-500" id="email-optional">
+                      Optional
+                    </span>
+                  </div>
+                  <div className="mt-1">
+                    <input
+                      type="email"
+                      name="email"
+                      id="email"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      placeholder="you@example.com"
+                      aria-describedby="email-optional"
+                    />
+                  </div>
+                </div>
+
+                {/* TODO: https://github.com/wellyshen/use-places-autocomplete?ref=hackernoon.com#api */}
                 <div className="sm:col-span-2">
                   <label
                     htmlFor="address"
@@ -126,15 +224,62 @@ const Step3: React.FC<Step3Props> = ({ className, data }) => {
                   >
                     Address
                   </label>
-                  <div className="mt-1">
+                  <div className="mt-1" ref={ref}>
                     <input
+                      value={value}
+                      onChange={handleInput}
+                      disabled={!ready}
                       type="text"
-                      name="address"
-                      id="address"
-                      autoComplete="street-address"
+                      name="ship-address"
+                      id="ship-address"
+                      required
+                      autoComplete="off"
                       className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     />
+                    {/* We can use the "status" to decide whether we should display the dropdown or not */}
+                    {status === 'OK' && <ul>{renderSuggestions()}</ul>}
+                    <Switch.Group
+                      as="div"
+                      className="relative flex items-center ml-3 tracking-tight"
+                    >
+                      <Switch
+                        checked={manualAddress}
+                        onChange={() => {
+                          if (manualAddress === true) {
+                            setManualAddress(false)
+                          }
+                          if (manualAddress === false) {
+                            setManualAddress(true)
+                          }
+                        }}
+                        className={cn(
+                          manualAddress ? 'bg-slate-600' : 'bg-gray-200',
+                          'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2'
+                        )}
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            manualAddress ? 'translate-x-5' : 'translate-x-0',
+                            'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                          )}
+                        />
+                      </Switch>
+                      <Switch.Label as="span" className="flex ml-3">
+                        <span className="text-sm font-medium leading-tight text-gray-900">
+                          Enter address manually.
+                        </span>
+                      </Switch.Label>
+                    </Switch.Group>
                   </div>
+                  <p
+                    className="mt-2 text-sm text-gray-500"
+                    id="email-description"
+                  >
+                    At this time, we only deliver Thanklys to addresses in
+                    Australia. Please type Parcel Lockers and PO Boxes in
+                    manually.
+                  </p>
                 </div>
 
                 <div className="sm:col-span-2">
@@ -147,8 +292,8 @@ const Step3: React.FC<Step3Props> = ({ className, data }) => {
                   <div className="mt-1">
                     <input
                       type="text"
-                      name="apartment"
-                      id="apartment"
+                      id="address2"
+                      name="address2"
                       className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     />
                   </div>
@@ -164,9 +309,9 @@ const Step3: React.FC<Step3Props> = ({ className, data }) => {
                   <div className="mt-1">
                     <input
                       type="text"
-                      name="city"
-                      id="city"
-                      autoComplete="address-level2"
+                      id="locality"
+                      name="locality"
+                      required
                       className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     />
                   </div>
@@ -177,14 +322,14 @@ const Step3: React.FC<Step3Props> = ({ className, data }) => {
                     htmlFor="region"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    State / Province
+                    State
                   </label>
                   <div className="mt-1">
                     <input
                       type="text"
-                      name="region"
-                      id="region"
-                      autoComplete="address-level1"
+                      id="state"
+                      name="state"
+                      required
                       className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     />
                   </div>
@@ -200,34 +345,14 @@ const Step3: React.FC<Step3Props> = ({ className, data }) => {
                   <div className="mt-1">
                     <input
                       type="text"
-                      name="postal-code"
-                      id="postal-code"
-                      autoComplete="postal-code"
+                      id="postcode"
+                      name="postcode"
+                      required
                       className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label
-                    htmlFor="country"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Country
-                  </label>
-                  <div className="mt-1">
-                    <select
-                      id="country"
-                      name="country"
-                      autoComplete="country-name"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    >
-                      <option>United States</option>
-                      <option>Canada</option>
-                      <option>Mexico</option>
-                    </select>
-                  </div>
-                </div>
                 {/* <div className="sm:col-span-2">
                   <label
                     htmlFor="phone"
@@ -333,8 +458,8 @@ const Step3: React.FC<Step3Props> = ({ className, data }) => {
                     Thankly Voucher
                   </h2>
                   <p className="block pt-2 text-sm font-medium text-gray-700">
-                    If you would like to use a Thankly Voucher for this
-                    purchase, please enter it here.{' '}
+                    {`If you would like to use a Thankly Voucher for this
+                    purchase, please enter it here.`}
                     <span className="font-semibold">{` If Voucher Balance is insufficient, you will be directed to Stripe to collect card details for the remaining amount.`}</span>
                   </p>
 
@@ -374,75 +499,84 @@ const Step3: React.FC<Step3Props> = ({ className, data }) => {
                   <Icon
                     className="mr-3 -mt-1 text-white align-middle"
                     name={'credit_card'}
-                  />{' '}
-                  Confirm order
+                  />
+                  {`Confirm order`}
                 </button>
+                <p className="justify-center mt-3 text-sm font-medium text-gray-500 ">
+                  <Icon
+                    name={'lock'}
+                    className="mr-1.5 h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  We use{' '}
+                  <Link className="underline" href="https://stripe.com/au">
+                    <a>Stripe</a>
+                  </Link>{' '}
+                  to securely process your payments.
+                </p>
               </div>
             </div>
           </div>
         </form>
       </div>
     </div>
-      )
+  )
 }
 
 export default Step3
 
-
-
 const products = [
-    {
-      id: 1,
-      name: 'Basic Tee 8-Pack',
-      href: '#',
-      price: '$256',
-      description:
-        'Get the full lineup of our Basic Tees. Have a fresh shirt all week, and an extra for laundry day.',
-      options: '8 colors',
-      images: [
-        'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-01.jpg',
-        'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-02.jpg',
-        'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-03.jpg',
-      ],
-      imageSrc:
-        'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-01.jpg',
-      imageAlt:
-        'Eight shirts arranged on table in black, olive, grey, blue, white, red, mustard, and green.',
-    },
-    {
-      id: 2,
-      name: 'Basic Tee',
-      href: '#',
-      price: '$32',
-      description:
-        'Look like a visionary CEO and wear the same black t-shirt every day.',
-      options: 'Black',
-      images: [
-        'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-01.jpg',
-        'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-02.jpg',
-        'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-03.jpg',
-      ],
-      imageSrc:
-        'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-02.jpg',
-      imageAlt: 'Front of plain black t-shirt.',
-    },
-    {
-      id: 2,
-      name: 'Basic Tee',
-      href: '#',
-      price: '$32',
-      description:
-        'Look like a visionary CEO and wear the same black t-shirt every day.',
-      options: 'Black',
-      images: [
-        'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-01.jpg',
-        'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-02.jpg',
-        'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-03.jpg',
-      ],
-      imageSrc:
-        'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-02.jpg',
-      imageAlt: 'Front of plain black t-shirt.',
-    },
-    // More products...
-  ]
-  
+  {
+    id: 1,
+    name: 'Basic Tee 8-Pack',
+    href: '#',
+    price: '$256',
+    description:
+      'Get the full lineup of our Basic Tees. Have a fresh shirt all week, and an extra for laundry day.',
+    options: '8 colors',
+    images: [
+      'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-01.jpg',
+      'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-02.jpg',
+      'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-03.jpg',
+    ],
+    imageSrc:
+      'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-01.jpg',
+    imageAlt:
+      'Eight shirts arranged on table in black, olive, grey, blue, white, red, mustard, and green.',
+  },
+  {
+    id: 2,
+    name: 'Basic Tee',
+    href: '#',
+    price: '$32',
+    description:
+      'Look like a visionary CEO and wear the same black t-shirt every day.',
+    options: 'Black',
+    images: [
+      'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-01.jpg',
+      'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-02.jpg',
+      'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-03.jpg',
+    ],
+    imageSrc:
+      'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-02.jpg',
+    imageAlt: 'Front of plain black t-shirt.',
+  },
+  {
+    id: 2,
+    name: 'Basic Tee',
+    href: '#',
+    price: '$32',
+    description:
+      'Look like a visionary CEO and wear the same black t-shirt every day.',
+    options: 'Black',
+    images: [
+      'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-01.jpg',
+      'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-02.jpg',
+      'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-03.jpg',
+    ],
+    imageSrc:
+      'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-02.jpg',
+    imageAlt: 'Front of plain black t-shirt.',
+  },
+  // More products...
+]

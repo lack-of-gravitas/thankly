@@ -78,71 +78,72 @@ const Step1: React.FC<Step1Props> = ({
         </div>
       </div> */}
 
-      {/* Show if Cards Only is false */}
-      {true && (
-        <div className="border rounded-md border-gray-150 bg-gray-50">
-          <div className="relative flex flex-row px-3 py-3 justify-items-center focus-within:z-10">
-            <div className="grow basis-1/2">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 ml-2 pointer-events-none grow ">
-                <Icon name={'search'} />
-              </div>
-              <input
-                type="text"
-                name="search"
-                id="search"
-                className="flex max-w-full min-w-full pl-10 font-medium tracking-tight border-gray-300 rounded-md txt-slate-500 grow focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                placeholder="Start searching here..."
-                onChange={onSearch}
-              />
+      <div className="border rounded-md border-gray-150 bg-gray-50">
+        <div className="relative flex flex-row px-3 py-3 justify-items-center focus-within:z-10">
+          <div className="grow basis-1/2">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 ml-2 pointer-events-none grow ">
+              <Icon name={'search'} />
             </div>
-            <div className="basis-1/8">
-              <Switch.Group
-                as="div"
-                className="relative flex items-center ml-3 tracking-tight"
-              >
-                <Switch
-                  checked={enabled}
-                  onChange={() => {
-                    if (enabled === true) {
-                      setEnabled(false)
-                      updateResult(fuse.search('gift'))
-                    }
-                    if (enabled === false) {
-                      setEnabled(true)
-                      updateResult(fuse.search('card'))
-                    }
-                  }}
-                  className={cn(
-                    enabled ? 'bg-slate-600' : 'bg-gray-200',
-                    'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2'
-                  )}
-                >
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      enabled ? 'translate-x-5' : 'translate-x-0',
-                      'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
-                    )}
-                  />
-                </Switch>
-                <Switch.Label as="span" className="flex ml-3">
-                  <span className="text-sm font-medium leading-tight text-gray-900">
-                    <span className="hidden leading-tight md:block">{`Show `}</span>
-                    Cards Only
-                  </span>
-                  {/* <span className="text-sm text-gray-500">(Save 10%)</span> */}
-                </Switch.Label>
-              </Switch.Group>
-            </div>
+            <input
+              type="text"
+              name="search"
+              id="search"
+              className="flex max-w-full min-w-full pl-10 font-medium tracking-tight border-gray-300 rounded-md txt-slate-500 grow focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+              placeholder="Start searching here..."
+              onChange={onSearch}
+            />
           </div>
-          <div className="px-4 py-2 text-sm italic leading-tight text-gray-500 grow">
-            <p>
-              <Icon className="hidden mb-1 mr-3 font-medium align-middle md:inline" name={`shopping_basket`} />
-              {`You can add more than one product to your Thankly by choosing multiple items. Or simply search for and select from one of our thoughtfully designed cards.`}
-            </p>
+          <div className="basis-1/8">
+            <Switch.Group
+              as="div"
+              className="relative flex items-center ml-3 tracking-tight"
+            >
+              <Switch
+                checked={enabled}
+                onChange={() => {
+                  if (enabled === true) {
+                    setEnabled(false)
+                    updateResult(fuse.search('gift'))
+                  }
+                  if (enabled === false) {
+                    setEnabled(true)
+                    updateResult(fuse.search('card'))
+                  }
+                }}
+                className={cn(
+                  enabled ? 'bg-slate-600' : 'bg-gray-200',
+                  'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2'
+                )}
+              >
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    enabled ? 'translate-x-5' : 'translate-x-0',
+                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                  )}
+                />
+              </Switch>
+              <Switch.Label as="span" className="flex ml-3">
+                <span className="text-sm font-medium leading-tight text-gray-900">
+                  <span className="hidden leading-tight md:block">{`Show `}</span>
+                  Cards Only
+                </span>
+                {/* <span className="text-sm text-gray-500">(Save 10%)</span> */}
+              </Switch.Label>
+            </Switch.Group>
           </div>
         </div>
-      )}
+        <div className="px-4 py-2 text-sm italic leading-tight text-gray-500 grow">
+          <p>
+            <Icon
+              className="hidden mb-1 mr-3 font-medium align-middle md:inline"
+              name={`shopping_basket`}
+            />
+            {`You can add more than one product to your Thankly by choosing multiple items. Or simply search for and select from one of our thoughtfully designed cards.`}
+          </p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 pt-5 mx-auto gap-x-2 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8">
         {!result &&
           products?.map((product: any) => (
@@ -184,7 +185,7 @@ const Step1: React.FC<Step1Props> = ({
               key={product.item.id}
               className={` relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white`}
             >
-               <ProductCarousel data={product.item.images} />
+              <ProductCarousel data={product.item.images} />
 
               <div className="flex flex-col flex-1 p-4 space-y-2">
                 <div className="flex items-center justify-between mt-4 space-x-8 text-base font-medium text-gray-900">
