@@ -20,10 +20,7 @@ export default function Document(props: any) {
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
         />
 
-        {/* <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqgXOqgmO4HS1rnXYpbZ9Lce4QF0Be5eI&libraries=places&callback=initMap"></script> */}
-
-        {/* <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqgXOqgmO4HS1rnXYpbZ9Lce4QF0Be5eI&libraries=places"></script> */}
-
+    
         {/* <script
             dangerouslySetInnerHTML={{
               __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-MN6W52S');`,
