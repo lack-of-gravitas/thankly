@@ -3,6 +3,7 @@ import {
   getBrand,
   getBrandColors,
   getSection,
+  getWritingStyles,
   getProducts,
   getFeaturedProducts,
 } from '@/lib/queries'
@@ -30,6 +31,10 @@ export function SwrProducts() {
   let { data } = useSWR('products', () => getProducts(), {
     revalidateOnReconnect: false,
   })
+  // console.log('data --', data)
+  // add key to manage state of "choose / chosen button"
+  if (data) data = data.map((v: any) => ({ ...v, chosen: false }))
+  // console.log('data --', data)
 
   return data
 }
@@ -46,10 +51,10 @@ export function SwrFeaturedProducts(type: any, limit: any) {
   return data
 }
 
-// export function SwrGetProduct(slug: string) {
-//   let { data } = useSWR([slug], () => getProduct(slug), {
-//     revalidateOnReconnect: false,
-//   })
-//   // console.log('data->', data)
-//   return data
-// }
+export function SwrWritingStyles() {
+  let { data } = useSWR('writingStyles', () => getWritingStyles(), {
+    revalidateOnReconnect: false,
+  })
+  // console.log('getWritingStyles->', data)
+  return data
+}

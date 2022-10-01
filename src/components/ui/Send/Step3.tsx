@@ -1,6 +1,6 @@
 import cn from 'clsx'
 import Fuse from 'fuse.js'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
 
 import { mergeRefs } from 'react-merge-refs'
 import { SwrBrand } from '@/lib/swr-helpers'
@@ -18,6 +18,7 @@ import useOnclickOutside from 'react-cool-onclickoutside'
 
 import { Switch } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
+import { Store } from '@/lib/Store'
 
 const Icon = dynamic(() => import('@/components/common/Icon'))
 
@@ -30,8 +31,12 @@ interface Step3Props {
 // eslint-disable-next-line react/display-name
 const Step3: React.FC<Step3Props> = ({ className }) => {
   const brand = SwrBrand()
+  const { state, dispatch } = useContext(Store)
+  const {
+    cart: { cartItems },
+  } = state
 
-  const [uiDisabled,setUiDisabled] = useState(false) // disable all inputs and controls on form
+  const [uiDisabled, setUiDisabled] = useState(false) // disable all inputs and controls on form
   const [manualAddress, setManualAddress] = useState(false)
   const [address, setAddress]: any = useState({})
   const {
@@ -151,7 +156,6 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
     // check voucher calculations done and order line items exist
     // create / update draft order
     // if balance remains, instatiate Stripe Checkout and supply info for remaining payment
-
   }
 
   return (

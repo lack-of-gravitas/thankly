@@ -331,6 +331,15 @@ export async function getProducts() {
   return data
 }
 
+export async function getWritingStyles() {
+  // console.log('query', path)
+  let data = await (
+    await fetch(`${process.env.NEXT_PUBLIC_REST_API}/writingStyle`)
+  ).json()
+  data = data.data
+  return data
+}
+
 export async function getFeaturedProducts(type: any, limit: any) {
   let data = await (
     await fetch(

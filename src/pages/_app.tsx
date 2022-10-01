@@ -8,6 +8,7 @@ import { SwrBrand } from '@/lib/swr-helpers'
 import { UserProvider } from '@supabase/supabase-auth-helpers/react'
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import { MyUserContextProvider } from '@/lib/hooks/useUser'
+import { StoreProvider } from '@/lib/Store'
 
 const Noop: FC = ({ children }: any) => <>{children}</>
 
@@ -31,9 +32,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               dedupingInterval: 15000,
             }}
           >
-            <Layout pageProps={pageProps} brand={brand}>
-              <Component {...pageProps} />
-            </Layout>
+            <StoreProvider>
+              <Layout pageProps={pageProps} brand={brand}>
+                <Component {...pageProps} />
+              </Layout>
+            </StoreProvider>
           </SWRConfig>
         </MyUserContextProvider>
       </UserProvider>

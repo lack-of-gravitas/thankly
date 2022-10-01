@@ -6,11 +6,14 @@ import cn from 'clsx'
 import { useState, useRef } from 'react'
 import { SwrBrand } from '@/lib/swr-helpers'
 import Link from 'next/link'
+import React, { useContext } from 'react'
+import { Store } from '@/lib/Store'
 
 const Layout = dynamic(() => import('@/components/common/Layout'))
 const Icon = dynamic(() => import('@/components/common/Icon'))
 const Button = dynamic(() => import('@/components/ui/Button'))
 const Progress = dynamic(() => import('@/components/ui/Send/Progress'))
+const Modal = dynamic(() => import('@/components/ui/Modal'))
 
 export default function Send({ slug, preview, prefetchedData }: any) {
   // console.log('prefetchedData->', prefetchedData)
@@ -18,10 +21,57 @@ export default function Send({ slug, preview, prefetchedData }: any) {
   const router = useRouter()
 
   const [currentStep, setCurrentStep] = useState(1)
+  const [modal, setModal] = useState(false)
+  const [showError, setShowError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState({})
 
-  //   if (!prefetchedData) {
-  //     router.push('/404')
-  //   }
+  const { state, dispatch } = useContext(Store)
+
+  const handleNextStep = () => {
+    switch (currentStep) {
+      case 1:
+        console.log('currentStep // ', currentStep)
+        // check if at least card is selected
+        const existCard = state.cart.cartItems.find(
+          (x: any) => x.type === 'card'
+        )
+        if (existCard) {
+          // console.log('card picked')
+          setCurrentStep(currentStep + 1)
+        }
+
+        if (!existCard) {
+          // console.log('card not picked')
+          setShowError(true)
+          setErrorMessage({
+            title: 'Card not selected',
+            description:
+              'You need to select at least one Card to send as your Thankly. Please select from one of our cards and click Next Step.',
+          })
+          setCurrentStep(currentStep)
+        }
+
+        break
+      case 2:
+        if (state.cart.message != '') {
+          setCurrentStep(currentStep + 1)
+        }
+
+        if (state.cart.message === '') {
+          setErrorMessage({
+            title: 'Message not provided',
+            description:
+              'You need to provide a message to put on the card select at least one Card to send as your Thankly. Please write a message to your recipient and click Next Step.',
+          })
+          setShowError(true)
+          setCurrentStep(currentStep)
+        }
+
+        break
+      case 3:
+        break
+    }
+  }
 
   return (
     <>
@@ -78,11 +128,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                 </Button>
                 <Button
                   disabled={currentStep === 3}
-                  onClick={() => {
-                    currentStep === 3
-                      ? setCurrentStep(currentStep)
-                      : setCurrentStep(currentStep + 1)
-                  }}
+                  onClick={handleNextStep}
                   style={{
                     backgroundColor: brand.firstAccentColour
                       ? brand.firstAccentColour
@@ -102,8 +148,38 @@ export default function Send({ slug, preview, prefetchedData }: any) {
             </div>
 
             <Progress currentStep={currentStep} data={prefetchedData} />
-
-            {/* <Progress currentStep={currentStep} /> */}
+            <Modal
+              show={showError}
+              icon={
+                <Icon
+                  className="text-red-600"
+                  aria-hidden="true"
+                  name="warning"
+                />
+              }
+              content={errorMessage}
+              buttons={
+                <>
+                  <Button
+                    onClick={() => setShowError(false)}
+                    style={{
+                      backgroundColor: brand.firstAccentColour
+                        ? brand.firstAccentColour
+                        : '#fff',
+                    }}
+                    className={cn(
+                      `ml-3 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2`,
+                      currentStep === 3
+                        ? `border-gray-300 bg-slate-100 text-slate-300 `
+                        : `text-white hover:bg-slate-500 hover:text-white `
+                    )}
+                    type="button"
+                  >
+                    OK
+                  </Button>
+                </>
+              }
+            />
           </div>
         </section>
       </div>
@@ -112,18 +188,3 @@ export default function Send({ slug, preview, prefetchedData }: any) {
 }
 
 Send.Layout = Layout
-
-// export async function getServerSideProps(context:any) {
-
-//   const data = await getProducts()
-// console.log(data)
-
-//   return {
-//     props: {
-//       preview: context.preview ? true : null,
-//       prefetchedData: data && data.data.length > 0 ? data.data : null,
-//     }, // will be passed to the page component as props
-
-//   }
-
-// }
