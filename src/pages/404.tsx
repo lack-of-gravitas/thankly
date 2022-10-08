@@ -6,14 +6,14 @@ export default function NotFound() {
   return (
     <>
       <main
-        className='h-screen min-h-full bg-top bg-cover bg-pink-50 sm:bg-top'
+        className='h-screen min-h-full bg-top bg-cover sm:bg-top'
         // style={{
         //   backgroundImage:
         //     'url('https://images.unsplash.com/photo-1545972154-9bb223aac798?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3050&q=80&exp=8&con=-15&sat=-75')',
         // }}
       >
         <div className='grid px-4 py-16 mx-auto text-center justify-items-center max-w-7xl sm:px-6 sm:py-24 lg:px-8 lg:py-48'>
-        <Logo className='w-auto h-8 mx-auto mt-2 mb-10 text-4xl font-extrabold tracking-tight font-title sm:text-5xl sm:tracking-tight' width={50} height={50} />
+        <Logo className='w-auto h-8 mx-auto mt-2 mb-10 text-4xl font-extrabold tracking-tight font-title sm:text-5xl sm:tracking-tight' width={150} height={150} />
 
           {/* <p className='mt-2 mb-10 text-4xl font-extrabold tracking-tight font-title sm:text-5xl sm:tracking-tight'>
             {`:(`}

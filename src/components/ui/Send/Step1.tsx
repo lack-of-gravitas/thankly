@@ -7,9 +7,6 @@ import dynamic from 'next/dynamic'
 import Fuse from 'fuse.js'
 
 const Icon = dynamic(() => import('@/components/common/Icon'))
-const ProductCarousel = dynamic(
-  () => import('@/components/ui/Send/ProductCarousel')
-)
 const ProductCard = dynamic(() => import('@/components/ui/ProductCard'))
 interface Step1Props {
   className?: string
@@ -50,7 +47,7 @@ const Step1: React.FC<Step1Props> = ({ className, data }) => {
     let newResult = response.map((item: any) => {
       return item.item
     })
-    console.log('new result', newResult)
+    // console.log('new result', newResult)
     updateSearchResults(newResult)
 
     // updateResult(fuse.search(query))
@@ -131,7 +128,7 @@ const Step1: React.FC<Step1Props> = ({ className, data }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 pt-5 mx-auto gap-x-2 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8">
+      <div className="grid grid-cols-1 pt-5 mx-auto gap-x-2 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 xl:grid-cols-4 lg:gap-x-4 xl:gap-x-4">
         {searchResults
           ? searchResults?.map((product: any) => (
               <ProductCard key={product.name} product={product} />

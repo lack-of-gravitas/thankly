@@ -1,15 +1,15 @@
 // brand
-
 export async function getBrand() {
   let brand = await (
     await fetch(
-      `${process.env.NEXT_PUBLIC_REST_API}/brands` +
-        `?fields=name,tagline,logo,homepage.slug,` + //  brand fields
-        `banner.*,` +
-        `textColour, backgroundColour, firstAccentColour, secondAccentColour,thirdAccentColour,` +
-        `header.item.id,header.item.slug,header.collection,header.item.name,` + // header fields
-        `footer.id,footer.sort,footer.item.id,footer.item.name,` + // footer columns
-        `footer.item.links.item.slug,footer.item.links.collection,footer.item.links.sort,footer.item.links.item.name` + // footer fields
+      `${process.env.NEXT_PUBLIC_REST_API}/brands?fields=` +
+        `*,banner.*,header.*,header.item.id,header.item.name,header.item.slug,footer.*,footer.item.*,footer.item.links.*,footer.item.links.item.slug,footer.item.links.item.name` +
+        // `?fields=name,tagline,logo,homepage.slug,` + //  brand fields
+        // `banner.*,` +
+        // `textColour, backgroundColour, firstAccentColour, secondAccentColour,thirdAccentColour,` +
+        // `header.item.id,header.item.slug,header.collection,header.item.name,` + // header fields
+        // `footer.id,footer.sort,footer.item.id,footer.item.name,` + // footer columns
+        // `footer.item.links.item.slug,footer.item.links.collection,footer.item.links.sort,footer.item.links.item.name` + // footer fields
         `&filter[domain][_eq]=${process.env.NEXT_PUBLIC_BRAND}`
     )
   ).json()
@@ -17,6 +17,20 @@ export async function getBrand() {
   // console.log('brand query--', brand)
 
   return brand
+}
+
+export async function getVoucher(voucher: any) {
+  let data = await (
+    await fetch(
+      `${process.env.NEXT_PUBLIC_REST_API}/vouchers?fields=*` +
+        `&filter[code][_eq]=${voucher}` +
+        `&filter[status][_eq]=published`
+    )
+  ).json()
+  data = data.data
+  // console.log('voucher query--', data)
+
+  return data
 }
 
 // colors

@@ -97,9 +97,6 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                         case 'posts':
                           coll = 'blog/'
                           break
-                        // case 'products':
-                        //   coll = item.type + 's/'
-                        //   break
                       }
                       return (
                         <Link
@@ -183,90 +180,9 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
               {/* Secondary navigation */}
               <div className="bg-white bg-opacity-10 backdrop-blur-md backdrop-filter">
                 <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                  <div>
-                    <div className="flex items-center justify-between h-16">
-                      {/* Logo (lg+) */}
-                      <div className="hidden lg:flex lg:flex-1 lg:items-center">
-                        <Link passHref href="/">
-                          <a>
-                            <span className="sr-only">{data.name}</span>
-                            <Logo
-                              className="w-auto h-8"
-                              height={'25'}
-                              width={'80'}
-                            />
-                          </a>
-                        </Link>
-                      </div>
-
-                      <div className="hidden h-full lg:flex">
-                        {/* Flyout menus */}
-                        <Popover.Group className="inset-x-0 bottom-0 px-4">
-                          <div className="flex justify-center h-full space-x-8">
-                            {header.map(({ sort, collection, item }: any) => {
-                              let coll = ''
-
-                              switch (collection) {
-                                case 'posts':
-                                  coll = 'blog/'
-                                  break
-                                // case 'products':
-                                //   coll = item.type + 's/'
-                                //   break
-                              }
-                              return (
-                                <Link
-                                  key={sort}
-                                  passHref
-                                  className="flex items-center text-sm font-medium text-slate-500"
-                                  href={
-                                    ((item.slug === 'home' ||
-                                      item.slug === '') &&
-                                      '/') ||
-                                    (collection === 'CustomLinks'
-                                      ? item.slug
-                                      : '/' + coll + item.slug)
-                                  }
-                                >
-                                  <a>{item.name}</a>
-                                </Link>
-                              )
-                            })}
-
-                            {/* {navigation.pages.map((page) => (
-                              <a
-                                key={page.name}
-                                href={page.href}
-                                className="flex items-center text-sm font-medium text-slate-500"
-                              >
-                                {page.name}
-                              </a>
-                            ))} */}
-                          </div>
-                        </Popover.Group>
-                      </div>
-
-                      {/* Mobile menu and search (lg-) */}
-                      <div className="flex items-center flex-1 lg:hidden">
-                        <button
-                          type="button"
-                          className="p-2 -ml-2 text-slate-500"
-                          onClick={() => setMobileMenuOpen(true)}
-                        >
-                          <span className="sr-only">Open menu</span>
-                          {/* <Bars3Icon className="w-6 h-6" aria-hidden="true" /> */}
-                          <Icon name={`menu`} />
-                        </button>
-
-                        {/* Search */}
-                        {/* <a href="#" className="p-2 ml-2 text-white">
-                        <span className="sr-only">Search</span>
-                        <MagnifyingGlassIcon className="w-6 h-6" aria-hidden="true" />
-                      </a> */}
-                      </div>
-
-                      {/* Logo (lg-) */}
-                      <Link passHref href="/" className="lg:hidden">
+                  <div className="flex items-center justify-between h-16">
+                    <div className="hidden lg:flex lg:flex-1 lg:items-center">
+                      <Link passHref href="/">
                         <a>
                           <span className="sr-only">{data.name}</span>
                           <Logo
@@ -276,79 +192,122 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                           />
                         </a>
                       </Link>
+                    </div>
 
-                      <div className="flex items-center justify-end flex-1">
-                        {/* <a
-                          href="#"
-                          className="hidden text-sm font-medium text-white lg:block"
-                        >
-                          Search
-                        </a> */}
+                    <div className="hidden h-full lg:flex">
+                      <Popover.Group className="inset-x-0 bottom-0 px-4">
+                        <div className="flex justify-center h-full space-x-8">
+                          {header.map(({ sort, collection, item }: any) => {
+                            let coll = ''
 
-                        <div className="flex items-center lg:ml-8">
-                          {/* Cart */}
-
-                          {/* Profile dropdown */}
-                          {true ? (
-                            <Menu as="div" className="relative ml-3 ">
-                              <div>
-                                <Menu.Button className="flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                                  <span className="sr-only">
-                                    Open user menu
-                                  </span>
-                                  <img
-                                    className="w-8 h-8 rounded-full"
-                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                    alt=""
-                                  />
-                                </Menu.Button>
-                              </div>
-                              <Transition
-                                as={Fragment}
-                                enter="transition ease-out duration-100"
-                                enterFrom="transform opacity-0 scale-95"
-                                enterTo="transform opacity-100 scale-100"
-                                leave="transition ease-in duration-75"
-                                leaveFrom="transform opacity-100 scale-100"
-                                leaveTo="transform opacity-0 scale-95"
+                            switch (collection) {
+                              case 'posts':
+                                coll = 'blog/'
+                                break
+                            }
+                            return (
+                              <Link
+                                key={sort}
+                                passHref
+                                className="flex items-center text-sm font-medium text-slate-500"
+                                href={
+                                  ((item.slug === 'home' || item.slug === '') &&
+                                    '/') ||
+                                  (collection === 'CustomLinks'
+                                    ? item.slug
+                                    : '/' + coll + item.slug)
+                                }
                               >
-                                <Menu.Items className="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                  <Menu.Item>
-                                    {({ active }) => (
-                                      <a
-                                        href="#"
-                                        className={cn(
-                                          active ? 'bg-gray-100' : '',
-                                          'block px-4 py-2 text-sm text-gray-700'
-                                        )}
-                                      >
-                                        Your Account
-                                      </a>
-                                    )}
-                                  </Menu.Item>
+                                <a>{item.name}</a>
+                              </Link>
+                            )
+                          })}
+                        </div>
+                      </Popover.Group>
+                    </div>
 
-                                  <Menu.Item>
-                                    {({ active }) => (
-                                      <a
-                                        href="#"
-                                        className={cn(
-                                          active ? 'bg-gray-100' : '',
-                                          'block px-4 py-2 text-sm text-gray-700'
-                                        )}
-                                      >
-                                        Sign out
-                                      </a>
-                                    )}
-                                  </Menu.Item>
-                                </Menu.Items>
-                              </Transition>
-                            </Menu>
-                          ) : (
-                            <></>
-                          )}
+                    {/* Mobile menu and search (lg-) */}
+                    <div className="flex items-center flex-1 lg:hidden">
+                      <button
+                        type="button"
+                        className="p-2 -ml-2 text-slate-500"
+                        onClick={() => setMobileMenuOpen(true)}
+                      >
+                        <span className="sr-only">Open menu</span>
+                        <Icon name={`menu`} />
+                      </button>
+                    </div>
 
-                          <div className="flow-root ml-4 lg:ml-4">
-                            {cart.cartItems?.length > 0 && (
+                    <Link passHref href="/" className="lg:hidden">
+                      <a>
+                        <span className="sr-only">{data.name}</span>
+                        <Logo
+                          className="w-auto h-8"
+                          height={'25'}
+                          width={'80'}
+                        />
+                      </a>
+                    </Link>
+
+                    <div className="flex items-center justify-end flex-1">
+                      <div className="flex items-center lg:ml-8">
+                        {true ? (
+                          <Menu as="div" className="relative ml-3 ">
+                            <Menu.Button className="flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                              <span className="sr-only">Open user menu</span>
+                              <img
+                                className="w-8 h-8 rounded-full"
+                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                alt=""
+                              />
+                            </Menu.Button>
+
+                            <Transition
+                              as={Fragment}
+                              enter="transition ease-out duration-100"
+                              enterFrom="transform opacity-0 scale-95"
+                              enterTo="transform opacity-100 scale-100"
+                              leave="transition ease-in duration-75"
+                              leaveFrom="transform opacity-100 scale-100"
+                              leaveTo="transform opacity-0 scale-95"
+                            >
+                              <Menu.Items className="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <Menu.Item>
+                                  {({ active }) => (
+                                    <a
+                                      href="#"
+                                      className={cn(
+                                        active ? 'bg-gray-100' : '',
+                                        'block px-4 py-2 text-sm text-gray-700'
+                                      )}
+                                    >
+                                      Your Account
+                                    </a>
+                                  )}
+                                </Menu.Item>
+
+                                <Menu.Item>
+                                  {({ active }) => (
+                                    <a
+                                      href="#"
+                                      className={cn(
+                                        active ? 'bg-gray-100' : '',
+                                        'block px-4 py-2 text-sm text-gray-700'
+                                      )}
+                                    >
+                                      Sign out
+                                    </a>
+                                  )}
+                                </Menu.Item>
+                              </Menu.Items>
+                            </Transition>
+                          </Menu>
+                        ) : (
+                          <></>
+                        )}
+
+                        {/* <div className="flow-root ml-4 lg:ml-4">
+                            {cart.items?.length > 0 && (
                               <Popover className="flow-root pl-3 text-sm border-l border-slate-300 lg:relative">
                                 <Popover.Button className="flex items-center p-2 -m-2 group">
                                   <Icon
@@ -357,7 +316,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                   />
 
                                   <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                                    {cart.cartItems.reduce(
+                                    {cart.items.reduce(
                                       (a: any, c: any) => a + c.quantity,
                                       0
                                     )}
@@ -406,45 +365,13 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                           </li>
                                         ))}
                                       </ul>
-
-                                      {/* <button
-                                        type="submit"
-                                        className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                                      >
-                                        Checkout
-                                      </button>
-
-                                      <p className="mt-6 text-center">
-                                        <a
-                                          href="#"
-                                          className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                                        >
-                                          View Shopping Bag
-                                        </a>
-                                      </p> */}
                                     </form>
                                   </Popover.Panel>
                                 </Transition>
                               </Popover>
                             )}
-                            {/* <a
-                              href="#"
-                              className="flex items-center p-2 -m-2 group"
-                            >
-                              <Icon
-                                className="flex-shrink-0"
-                                name={`shopping_bag`}
-                              />
-
-                              <span className="ml-2 text-sm font-medium text-slate-500">
-                                0
-                              </span>
-                              <span className="sr-only">
-                                items in cart, view bag
-                              </span>
-                            </a> */}
-                          </div>
-                        </div>
+                           
+                          </div> */}
                       </div>
                     </div>
                   </div>
@@ -459,27 +386,3 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
 }
 
 export default Navbar
-
-const products = [
-  {
-    id: 1,
-    name: 'Throwback Hip Bag',
-    href: '#',
-    color: 'Salmon',
-    imageSrc:
-      'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-    imageAlt:
-      'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-  },
-  {
-    id: 2,
-    name: 'Medium Stuff Satchel',
-    href: '#',
-    color: 'Blue',
-    imageSrc:
-      'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
-    imageAlt:
-      'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-  },
-  // More products...
-]

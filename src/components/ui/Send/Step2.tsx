@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import { RadioGroup } from '@headlessui/react'
 import { useContext, useEffect } from 'react'
 import { Store } from '@/lib/Store'
+import debounce from 'lodash/debounce'
 
 const Icon = dynamic(() => import('@/components/common/Icon'))
 
@@ -20,27 +21,16 @@ interface Step2Props {
 const Step2: React.FC<Step2Props> = ({ className, data }) => {
   const brand = SwrBrand()
   const writingStyles = SwrWritingStyles()
-  // console.log(writingStyles)
   const { state, dispatch } = useContext(Store)
-  console.log(state.cart)
-
-  const [selectedWritingStyle, setSelectedWritingStyle] = useState()
-//https://medium.com/swlh/debouncing-in-react-js-83befe93a5ee
-  const debounce = (func: any, delay: any) => {
-    let debounceTimer: any
-    return () => {
-      const context: any = this
-      //const args = arguments
-      clearTimeout(debounceTimer)
-      debounceTimer = setTimeout(() => func.apply(context, ), delay)
-    }
-  }
+  const [selectedWritingStyle, setSelectedWritingStyle] = useState(
+    state.cart.style
+  )
 
   return (
     <div className="">
       <div className="max-w-2xl pt-16 pb-24 mx-auto lg:max-w-7xl ">
         <form className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
-          <div className="mt-10 lg:mt-0 ">
+          <div className="mt-10 lgmt-0 ">
             <h2 className="text-lg font-medium text-gray-900">Message</h2>
 
             <div className="grid grid-cols-1 mt-4 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
@@ -58,14 +48,14 @@ const Step2: React.FC<Step2Props> = ({ className, data }) => {
                     name="message"
                     id="message"
                     className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    defaultValue={''}
+                    defaultValue={state.cart.message}
                     onChange={debounce((e: any) => {
-                      console.log(e.target.value)
+                      // console.log(e)
                       dispatch({
-                        type: 'CART_SET_MESSAGE',
+                        type: 'SET_MESSAGE',
                         payload: e.target.value,
                       })
-                    }, 1000)}
+                    }, 300)}
                   />
                 </div>
               </div>
@@ -84,14 +74,14 @@ const Step2: React.FC<Step2Props> = ({ className, data }) => {
                     name="instructions"
                     id="instructions"
                     className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    defaultValue={''}
+                    defaultValue={state.cart.instructions}
                     onChange={debounce((e: any) => {
-                      console.log(e.target.value)
+                      // console.log(e)
                       dispatch({
-                        type: 'CART_SET_INSTRUCTIONS',
+                        type: 'SET_INSTRUCTIONS',
                         payload: e.target.value,
                       })
-                    }, 1000)}
+                    }, 300)}
                   />
                 </div>
               </div>
@@ -104,7 +94,7 @@ const Step2: React.FC<Step2Props> = ({ className, data }) => {
               onChange={(style: any) => {
                 setSelectedWritingStyle(style)
                 dispatch({
-                  type: 'CART_SET_STYLE',
+                  type: 'SET_STYLE',
                   payload: { style },
                 })
               }}

@@ -15,6 +15,7 @@ interface ModalProps {
   icon?: React.ReactNode
   content?: any
   buttons?: React.ReactNode
+  readOnly?: boolean
 }
 
 const Modal: FC<ModalProps> = ({
@@ -23,6 +24,7 @@ const Modal: FC<ModalProps> = ({
   icon,
   content,
   buttons,
+  readOnly,
   // ...props
 }) => {
   const brand: any = SwrBrand()
@@ -40,12 +42,12 @@ const Modal: FC<ModalProps> = ({
   return (
     <>
       <span className={className + ` `}>
-        <Transition.Root show={show} as={Fragment} >
+        <Transition.Root show={show} as={Fragment}>
           <Dialog
             as="div"
             className="relative z-10"
             initialFocus={cancelButtonRef}
-            onClose={handleClose}
+            onClose={() => (readOnly ? null : handleClose)}
           >
             <Transition.Child
               as={Fragment}
@@ -102,6 +104,8 @@ const Modal: FC<ModalProps> = ({
                     <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                       {buttons ? (
                         buttons
+                      ) : readOnly ? (
+                        <></>
                       ) : (
                         <Button
                           onClick={() => setOpen(false)}

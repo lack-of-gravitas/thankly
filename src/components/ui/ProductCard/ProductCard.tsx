@@ -15,30 +15,16 @@ const ProductCarousel = dynamic(
 interface ProductCardProps {
   className?: string
   product?: any
+  carousel?: boolean
 }
 
 const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
   const brand: any = SwrBrand()
   const { state, dispatch } = useContext(Store)
-  const [added, setAdded] = useState(true)
-  console.log( state.cart)
-  // ADD TO CART HANDLER
-  const addToCartHandler = (product: any) => {
-    const existItem = state.cart.cartItems.find(
-      (x: any) => x.stripeId === product.stripeId
-    )
+  const [productAdded, setProductAdded] = useState(
+    inCart(product.stripeId) ? true : false
+  )
 
-    if (existItem && product.stockQty < existItem.quantity) {
-      alert('Sorry. Product is out of stock')
-      return
-    }
-
-    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity: 1 } })
-  }
-
-  const removeFromCartHandler = (product: any) => {
-    dispatch({ type: 'CART_REMOVE_ITEM', payload: { ...product } })
-  }
   return (
     <div
       key={product.id}
@@ -50,11 +36,8 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
       <ProductCarousel data={product.images} />
 
       <div className="flex flex-col flex-1 p-4 space-y-2">
-        <div className="flex items-center justify-between mt-4 space-x-8 text-base font-medium text-gray-900">
-          <h3>
-            <span aria-hidden="true" className="absolute inset-0" />
-            {product.name}
-          </h3>
+        <div className="flex items-center justify-between mt-4 space-x-8 text-gray-900">
+          <h3 className="text-base font-bold text-slate-700">{product.name}</h3>
           <p>{product.price}</p>
         </div>
 
@@ -62,12 +45,11 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
       </div>
 
       <div className="mt-3">
-        {added ? (
+        {productAdded === false ? (
           <button
             onClick={() => {
-              // check if product is in the cart, if yes then show
-              addToCartHandler(product)
-              setAdded(false)
+              addItem(product)
+              setProductAdded(true)
             }}
             className="relative flex items-center justify-center w-full px-8 py-2 text-xs font-semibold tracking-wider text-gray-900 uppercase bg-gray-100 border border-transparent hover:bg-gray-200"
           >
@@ -78,9 +60,8 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
         ) : (
           <button
             onClick={() => {
-              // check if product is in the cart, if yes then show
-              removeFromCartHandler(product)
-              setAdded(true)
+              removeItem(product)
+              setProductAdded(false)
             }}
             className="relative flex items-center justify-center w-full px-8 py-2 text-xs font-semibold tracking-wider text-gray-900 uppercase bg-gray-100 border border-transparent hover:bg-gray-200"
           >
@@ -92,6 +73,25 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
       </div>
     </div>
   )
+
+  // cart functions
+  function addItem(product: any) {
+    dispatch({
+      type: 'ADD_ITEM',
+      payload: { ...product },
+    })
+  }
+
+  function removeItem(product: any) {
+    dispatch({ type: 'REMOVE_ITEM', payload: { ...product } })
+  }
+
+  function inCart(stripeId: any) {
+    const existItem = state.cart.items?.find(
+      (x: any) => x.stripeId === stripeId
+    )
+    return existItem ? true : false
+  }
 }
 
 export default ProductCard

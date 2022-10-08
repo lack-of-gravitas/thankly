@@ -26,15 +26,14 @@ export default function Send({ slug, preview, prefetchedData }: any) {
   const [errorMessage, setErrorMessage] = useState({})
 
   const { state, dispatch } = useContext(Store)
+  console.log('current cart', state.cart)
 
   const handleNextStep = () => {
     switch (currentStep) {
       case 1:
-        console.log('currentStep // ', currentStep)
+        // console.log('currentStep // ', currentStep)
         // check if at least card is selected
-        const existCard = state.cart.cartItems.find(
-          (x: any) => x.type === 'card'
-        )
+        const existCard = state.cart.items.find((x: any) => x.type === 'card')
         if (existCard) {
           // console.log('card picked')
           setCurrentStep(currentStep + 1)
@@ -100,6 +99,9 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                   <Button
                     className="inline-flex items-center px-4 py-2 text-sm font-medium border border-gray-300 rounded-md shadow-sm bg-slate-100 text-slate-600 hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
                     type="button"
+                    onClick={() => {
+                      dispatch({ type: 'CLEAR_CART' })
+                    }}
                   >
                     Cancel
                   </Button>

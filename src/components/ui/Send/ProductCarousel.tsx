@@ -5,8 +5,6 @@ import dynamic from 'next/dynamic'
 import useEmblaCarousel from 'embla-carousel-react'
 import Image from 'next/future/image'
 
-const Icon = dynamic(() => import('@/components/common/Icon'))
-
 interface ProductCarouselProps {
   // children?: React.ReactNode[]
   className?: string
@@ -50,40 +48,11 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
 
   return (
     <>
-      {/* <div className="relative embla">
-        <div className="embla__viewport " ref={viewportRef}>
-          <div className="embla__container ">
-            {data.map(({ directus_files_id: image, index }: any) => (
-              <div className="embla__slide " key={index}>
-                <div className="embla__slide__inner ">
-                  <img
-                    className="embla__slide__img "
-                    src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${image}`}
-                    alt="A cool cat."
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <PrevButton onClick={scrollPrev} enabled={prevBtnEnabled} />
-        <NextButton onClick={scrollNext} enabled={nextBtnEnabled} />
-        <div className="embla__dots">
-          {scrollSnaps.map((_, index) => (
-            <DotButton
-              key={index}
-              selected={index === selectedIndex}
-              onClick={() => scrollTo(index)}
-            />
-          ))}
-        </div>
-      </div> */}
       <div  className="relative embla__viewport touch-auto" ref={viewportRef}>
         <div className="relative flex bg-gray-200 aspect-[4/3] embla__container ">
           {data.map(({ directus_files_id: image, index }: any) => (
             <Image
-              key={index}
+              key={image}
               className="object-cover object-center min-w-full"
               src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${image}`}
               width={900}

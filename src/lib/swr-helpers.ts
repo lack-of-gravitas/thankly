@@ -6,6 +6,7 @@ import {
   getWritingStyles,
   getProducts,
   getFeaturedProducts,
+  getVoucher,
 } from '@/lib/queries'
 
 export function SwrBrand() {
@@ -13,6 +14,13 @@ export function SwrBrand() {
     revalidateOnReconnect: false,
   })
   return data
+}
+
+export function SwrVoucher(voucher: any) {
+  let { data } = useSWR(['voucher',voucher], () => getVoucher(voucher), {
+    revalidateOnReconnect: false,
+  })
+  return data.length === 1 ?  data.data[0] :  null
 }
 
 export function SwrSection(queryParams: any) {
