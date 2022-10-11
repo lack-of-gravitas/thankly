@@ -7,7 +7,6 @@ import Link from 'next/link'
 import Script from 'next/script'
 import Image from 'next/future/image'
 import debounce from 'lodash/debounce'
-
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
@@ -15,10 +14,8 @@ import usePlacesAutocomplete, {
   getDetails,
 } from 'use-places-autocomplete'
 import useOnclickOutside from 'react-cool-onclickoutside'
-
-import { useForm } from 'react-hook-form'
+import { RadioGroup } from '@headlessui/react'
 import { Store } from '@/lib/Store'
-import { Popover, Transition } from '@headlessui/react'
 const Icon = dynamic(() => import('@/components/common/Icon'))
 const Modal = dynamic(() => import('@/components/ui/Modal'))
 
@@ -31,11 +28,10 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
   const brand = SwrBrand()
   const { state, dispatch } = useContext(Store)
   const [voucherValid, setVoucherValid]: any = useState()
-  const [recipient, setRecipientDetails] = useState()
   const [voucherBalance, setVoucherBalance] = useState(0)
   const [address, setAddress]: any = useState({})
   const [processing, setProcessing]: any = useState(false)
-  const [error,setError]:any = useState()
+  const [errors, setErrors]: any[] = useState([])
 
   // https://github.com/wellyshen/use-places-autocomplete?ref=hackernoon.com#api
   const {
@@ -163,6 +159,62 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
 
   const num = 0
 
+  function validateOrder() {
+    let foundErrors: any[] = []
+    state.cart.recipient.firstname === ''
+      ? (foundErrors = foundErrors.concat([
+          {
+            id: 'firstname',
+            title: 'Empty First Name',
+            message: `First Name is required. Please fill in the field.`,
+          },
+        ]))
+      : null
+    state.cart.recipient.lastname === ''
+      ? (foundErrors = foundErrors.concat([
+          {
+            id: 'lastname',
+            title: 'Empty Last Name',
+            message: `Last Name is required. Please fill in the field.`,
+          },
+        ]))
+      : null
+    state.cart.termsAccepted === false
+      ? (foundErrors = foundErrors.concat([
+          {
+            id: 'terms',
+            title: 'Terms not accepted.',
+            message: `Please accept the terms & conditions.`,
+          },
+        ]))
+      : null
+
+      JSON.stringify(state.cart.deliveryOption) === '{}'
+      ? (foundErrors = foundErrors.concat([
+          {
+            id: 'deliveryOption',
+            title: 'Delivery Option not selected.',
+            message: `Please select a delivery option.`,
+          },
+        ]))
+      : null
+
+    Object.values(state.cart.recipient.address).every(
+      (x) => x === null || x === ''
+    )
+      ? (foundErrors = foundErrors.concat([
+          {
+            id: 'address',
+            title: 'Address Empty',
+            message: `Recipient Address not provided. Please fill out the recipient's delivery Address.`,
+          },
+        ]))
+      : null
+
+    foundErrors.length > 0 ? setErrors(foundErrors) : null
+    console.log('errors --', errors)
+  }
+
   return (
     <div className="bg-white">
       {/* <Script
@@ -192,647 +244,678 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
             </div>
           </div>
         </div> */}
-        
-          <div className="mt-5 lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
+
+        <div className="mt-5 lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
+          <div>
             <div>
+              <h3
+                id="contact-info-heading"
+                className="text-lg font-medium text-gray-900"
+              >
+                Recipient Details
+              </h3>
               <div>
-                <h3
-                  id="contact-info-heading"
-                  className="text-lg font-medium text-gray-900"
-                >
-                  Recipient Details
-                </h3>
+      <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        Email
+      </label>
+      <div className="relative mt-1 rounded-md shadow-sm">
+        <input
+          type="email"
+          name="email"
+          id="email"
+          className="block w-full pr-10 text-red-900 placeholder-red-300 border-red-300 rounded-md focus:border-red-500 focus:outline-none focus:ring-red-500 sm:text-sm"
+          placeholder="you@example.com"
+          defaultValue="adamwathan"
+          aria-invalid="true"
+          aria-describedby="email-error"
+        />
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <Icon name={'error'} className="w-5 h-5 text-red-500" aria-hidden="true" />
+        </div>
+      </div>
+      <p className="mt-2 text-xs leading-snug text-red-600" id="email-error">
+        Your password must be less than 4 characters.
+      </p>
+    </div>
+              <div className="grid grid-cols-4 mt-6 gap-y-3 gap-x-4 sm:grid-cols-4">
+              
 
-                <div className="grid grid-cols-4 mt-6 gap-y-3 gap-x-4 sm:grid-cols-4">
-                  <div className="col-span-2 sm:col-span-2">
-                    <div className="flex justify-between">
-                      <label
-                        htmlFor="expiration-date"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        First Name
-                      </label>
-                      <span className="text-xs italic text-gray-400">
-                        Required
-                      </span>
-                    </div>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        id="firstname"
-                        // name="firstname"
-                        defaultValue={state.cart.recipient.firstname}
-                        autoComplete="given-name"
-                        aria-invalid="true"
-                        aria-describedby="name-error"
-                        // {...register('firstname', { required: true })}
-                        onChange={debounce((e: any) => {
-                          dispatch({
-                            type: 'SET_RECIPIENT',
-                            payload: {
-                              firstname: e.target.value,
-                            },
-                          })
-                        }, 300)}
-                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      />
 
-                      {/* <p className="mt-2 text-xs text-red-600" id="email-error">
-                        {errors.firstname && 'Name is mandatory.'}
-                      </p> */}
-                    </div>
+                <div className="col-span-2 sm:col-span-2">
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="firstname"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      First Name
+                    </label>
+                    <span className="text-xs italic text-gray-400">
+                      Required
+                    </span>
                   </div>
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      defaultValue={state.cart.recipient.firstname}
+                      autoComplete="given-name"
+                      // aria-invalid={errors.firstname ? 'true' : 'false'}
+                      aria-describedby="name-error"
+                      // placeholder="John"
+                      // {...register('firstName', {
+                      //   required: true,
+                      //   maxLength: 80,
+                      // })}
+                      onChange={debounce((e: any) => {
+                        dispatch({
+                          type: 'SET_RECIPIENT',
+                          payload: {
+                            firstname: e.target.value,
+                          },
+                        })
+                      }, 300)}
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                    />
+                  </div>
+                </div>
 
-                  <div className="col-span-2 sm:col-span-2">
-                    <div className="flex justify-between">
-                      <label
-                        htmlFor="cvc"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Last Name
-                      </label>
-                      <span className="text-xs italic text-gray-400">
-                        Required
-                      </span>
-                    </div>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        id="lastname"
-                        // name="lastname"
-                        autoComplete="family-name"
-                        // {...register('lastname', { required: true })}
-                        defaultValue={state.cart.recipient.lastname}
-                        onChange={debounce((e: any) => {
-                          dispatch({
-                            type: 'SET_RECIPIENT',
-                            payload: {
-                              lastname: e.target.value,
-                            },
-                          })
-                        }, 300)}
-                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      />
-                      {/* <p className="mt-2 text-xs text-red-600" id="email-error">
+                <div className="col-span-2 sm:col-span-2">
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="cvc"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Last Name
+                    </label>
+                    <span className="text-xs italic text-gray-400">
+                      Required
+                    </span>
+                  </div>
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      id="lastname"
+                      // name="lastname"
+                      autoComplete="family-name"
+                      // {...register('lastname', { required: true })}
+                      defaultValue={state.cart.recipient.lastname}
+                      onChange={debounce((e: any) => {
+                        dispatch({
+                          type: 'SET_RECIPIENT',
+                          payload: {
+                            lastname: e.target.value,
+                          },
+                        })
+                      }, 300)}
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                    />
+                    {/* <p className="mt-2 text-xs text-red-600" id="email-error">
                         {errors.lastname && 'Name is mandatory.'}
                       </p> */}
-                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-4">
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Company
+                    </label>
+                    <span
+                      className="text-xs italic text-gray-400"
+                      id="company-optional"
+                    >
+                      Optional
+                    </span>
                   </div>
 
-                  <div className="col-span-4">
-                    <div className="flex justify-between">
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Company
-                      </label>
-                      <span
-                        className="text-xs italic text-gray-400"
-                        id="company-optional"
-                      >
-                        Optional
-                      </span>
-                    </div>
-
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        id="company"
-                        // {...register('company', {})}
-                        defaultValue={state.cart.recipient.company}
-                        onChange={debounce((e: any) => {
-                          dispatch({
-                            type: 'SET_RECIPIENT',
-                            payload: {
-                              company: e.target.value,
-                            },
-                          })
-                        }, 300)}
-                        aria-describedby="company-optional"
-                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      />
-                    </div>
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      id="company"
+                      // {...register('company', {})}
+                      defaultValue={state.cart.recipient.company}
+                      onChange={debounce((e: any) => {
+                        dispatch({
+                          type: 'SET_RECIPIENT',
+                          payload: {
+                            company: e.target.value,
+                          },
+                        })
+                      }, 300)}
+                      aria-describedby="company-optional"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                    />
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div className="mt-5">
-                <h3
-                  id="delivery-heading"
-                  className="text-lg font-medium text-gray-900"
-                >
-                  Delivery Address
-                </h3>
-                <p
-                  className="mt-2 text-sm italic leading-snug text-gray-500"
-                  id="email-description"
-                >
-                  At this time, we only deliver Thanklys to addresses in
-                  Australia. Please enter Floor, Apt / Unit, PO Box or Parcel
-                  Lockers manually in the second field.
-                </p>
-                <div className="grid grid-cols-1 mt-6 gap-y-3 gap-x-4 sm:grid-cols-3">
-                  <div className="sm:col-span-3">
-                    <div className="flex justify-between">
-                      <label
-                        htmlFor="address"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Street Address
-                      </label>
-                      <span
-                        className="text-xs italic text-gray-400"
-                        id="company-optional"
-                      >
-                        Required
-                      </span>
-                    </div>
-                    <div className="mt-1" ref={ref}>
-                      <input
-                        value={
-                          state.cart.recipient.address.fulladdress
-                            ? state.cart.recipient.address.fulladdress
-                            : value
-                        }
-                        defaultValue={state.cart.recipient.address.fulladdress}
-                        onChange={handleInput}
-                        disabled={!ready}
-                        type="text"
-                        placeholder="Start typing your street address..."
-                        autoComplete="off"
-                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      />
-                      {status === 'OK' && <ul>{renderSuggestions()}</ul>}
-                    </div>
-                  </div>
-                  <div className="sm:col-span-3">
+            <div className="mt-5">
+              <h3
+                id="delivery-heading"
+                className="text-lg font-medium text-gray-900"
+              >
+                Delivery Address
+              </h3>
+              <p
+                className="mt-2 text-sm italic leading-snug text-gray-500"
+                id="email-description"
+              >
+                At this time, we only deliver Thanklys to addresses in
+                Australia. Please enter Floor, Apt / Unit, PO Box or Parcel
+                Lockers manually in the second field.
+              </p>
+              <div className="grid grid-cols-1 mt-6 gap-y-3 gap-x-4 sm:grid-cols-3">
+                <div className="sm:col-span-3">
+                  <div className="flex justify-between">
                     <label
                       htmlFor="address"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Floor, Apt / Unit, PO Box or Parcel Locker
+                      Street Address
                     </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        id="address2"
-                        placeholder=""
-                        // {...register('address2', {})}
-                        defaultValue={state.cart.recipient.address.line2}
-                        onChange={debounce((e: any) => {
-                          dispatch({
-                            type: 'SET_RECIPIENT',
-                            payload: {
-                              address: {
-                                ...state.cart.recipient.address,
-                                line2: e.target.value,
-                              },
-                            },
-                          })
-                        }, 300)}
-                        // autoComplete="street-address"
-                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      />
-                    </div>
+                    <span
+                      className="text-xs italic text-gray-400"
+                      id="company-optional"
+                    >
+                      Required
+                    </span>
                   </div>
-
-                  <div className="hidden">
-                    <div className="flex justify-between">
-                      <label
-                        htmlFor="city"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Suburb
-                      </label>
-                      <span className="text-xs italic text-gray-400">
-                        Required
-                      </span>
-                    </div>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        id="locality"
-                        name="locality"
-                        value={address.suburb ? address.suburb : ''}
-                        defaultValue={state.cart.recipient.address.suburb}
-                        onChange={debounce((e: any) => {
-                          dispatch({
-                            type: 'SET_RECIPIENT',
-                            payload: {
-                              address: {
-                                ...state.cart.recipient.address,
-                                suburb: e.target.value,
-                              },
-                            },
-                          })
-                        }, 300)}
-                        // autoComplete="address-level2"
-                        // {...register('locality', { required: true })}
-                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      />
-                      {/* <p className="mt-2 text-xs text-red-600" id="email-error">
-                        {errors.locality && 'Suburb is mandatory.'}
-                      </p> */}
-                    </div>
-                  </div>
-
-                  <div className="hidden">
-                    <div className="flex justify-between">
-                      <label
-                        htmlFor="region"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        State
-                      </label>
-                      <span className="text-xs italic text-gray-400">
-                        Required
-                      </span>
-                    </div>
-                    <div className="mt-1">
-                      <select
-                        id="state"
-                        name="state"
-                        required
-                        autoComplete="state"
-                        value={address.state ? address.state : 'NSW'}
-                        defaultValue={state.cart.recipient.address.state}
-                        onChange={debounce((e: any) => {
-                          dispatch({
-                            type: 'SET_RECIPIENT',
-                            payload: {
-                              address: {
-                                ...state.cart.recipient.address,
-                                state: e.target.value,
-                              },
-                            },
-                          })
-                        }, 300)}
-                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      >
-                        <option>NSW</option>
-                        <option>VIC</option>
-                        <option>QLD</option>
-                        <option>SA</option>
-                        <option>WA</option>
-                        <option>TAS</option>
-                        <option>NT</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="hidden">
-                    <div className="flex justify-between">
-                      <label
-                        htmlFor="postal-code"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Postcode
-                      </label>
-                      <span className="text-xs italic text-gray-400">
-                        Required
-                      </span>
-                    </div>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        id="postcode"
-                        name="postcode"
-                        required
-                        value={address.postcode ? address.postcode : ''}
-                        defaultValue={state.cart.recipient.address.postcode}
-                        onChange={debounce((e: any) => {
-                          dispatch({
-                            type: 'SET_RECIPIENT',
-                            payload: {
-                              address: {
-                                ...state.cart.recipient.address,
-                                postcode: e.target.value,
-                              },
-                            },
-                          })
-                        }, 300)}
-                        autoComplete="postal-code"
-                        // {...register('postcode', { required: true })}
-                        className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                      />
-                      {/* <p className="mt-2 text-xs text-red-600" id="email-error">
-                        {errors.postcode && 'Postcode is mandatory.'}
-                      </p> */}
-                    </div>
+                  <div className="mt-1" ref={ref}>
+                    <input
+                      value={
+                        state.cart.recipient.address.fulladdress
+                          ? state.cart.recipient.address.fulladdress
+                          : value
+                      }
+                      defaultValue={state.cart.recipient.address.fulladdress}
+                      onChange={handleInput}
+                      disabled={!ready}
+                      type="text"
+                      placeholder="Start typing your street address..."
+                      autoComplete="off"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                    />
+                    {status === 'OK' && <ul>{renderSuggestions()}</ul>}
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Order summary */}
-
-            <div className="p-2 px-3 mt-10 rounded-md shadow-sm bg-gray-50 lg:mt-0">
-              <h2 className="text-lg font-medium text-gray-900 ">
-                Order summary
-              </h2>
-
-              <div className="mt-4">
-                <h3 className="sr-only">Items in your cart</h3>
-
-                <ul
-                  role="list"
-                  className="px-3 border-b border-gray-200 divide-y divide-gray-200"
-                >
-                  {state.cart.items?.map((product: any) => (
-                    <li key={product.id} className="flex py-6">
-                      <div className="flex-shrink-0 border rounded-sm shadow-sm border-gray-150">
-                        <Image
-                          className="object-cover object-center w-24 h-24 rounded-md sm:h-32 sm:w-32"
-                          src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${product.images[0].directus_files_id}`}
-                          width={900}
-                          height={900}
-                        />
-                      </div>
-
-                      <div className="flex flex-col flex-1 ml-4 sm:ml-6">
-                        <div>
-                          <div className="flex justify-between">
-                            <h4 className="text-sm">
-                              <a
-                                href={product.href}
-                                className="font-medium text-gray-700 hover:text-gray-800"
-                              >
-                                {product.name}
-                              </a>
-                            </h4>
-                            <p className="ml-4 text-sm font-medium text-gray-900">
-                              {product.price}
-                            </p>
-                          </div>
-                          <p className="mt-1 text-sm text-gray-500">
-                            {product.color}
-                          </p>
-                          <p className="mt-1 text-sm text-gray-500">
-                            {product.size}
-                          </p>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-
-                <dl className="px-4 py-6 space-y-2 sm:px-6">
-                  <div className="flex items-center justify-between">
-                    <dt className="text-sm">Subtotal</dt>
-                    <dd className="text-sm font-medium text-gray-900">
-                      {`$` + Number(state.cart.subtotal).toFixed(2)}
-                    </dd>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <dt className="text-sm">Delivery Options</dt>
-
-                    <dd className="text-sm font-medium text-gray-900">
-                      {`$` + Number(state.cart.delivery).toFixed(2)}
-                    </dd>
-                  </div>
-                  <dt className="text-sm">
-                    <RadioGroup
-                      value={
-                        state.cart.deliveryOption
-                          ? state.cart.deliveryOption
-                          : deliveryOptions[0]
-                      }
-                      onChange={(e: any) => {
-                        console.log('radiogroup -- ', e)
-                        Number(
-                          state.cart.total < 50 && e.name === 'Express'
-                            ? 8.95
-                            : 0
-                        ).toFixed(2)
-
-                        dispatch({
-                          type: 'SET_DELIVERY',
-                          payload: {
-                            deliveryOption: { ...e },
-                          },
-                        })
-                      }}
-                      className="mt-2"
-                    >
-                      <RadioGroup.Label className="sr-only">
-                        {'Choose a memory option'}
-                      </RadioGroup.Label>
-                      <div className="grid grid-cols-3 gap-3 sm:grid-cols-3">
-                        {deliveryOptions.map((option: any) => (
-                          <RadioGroup.Option
-                            key={option.name}
-                            value={option}
-                            // {...register('deliveryOption', {required: true,})}
-                            className={cn(
-                              'cursor-pointer focus:outline-none',
-
-                              option.id === state.cart.deliveryOption.id
-                                ? 'border-transparent bg-slate-600 text-white ring-2 ring-slate-500 ring-offset-2 hover:bg-slate-700'
-                                : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50',
-                              'flex items-center justify-center rounded-md border py-3 px-3 text-xs font-medium sm:flex-1'
-                            )}
-                          >
-                            <RadioGroup.Label as="span">
-                              {option.name +
-                                ` ` +
-                                `$` +
-                                Number(
-                                  state.cart.total < 50 &&
-                                    option.name === 'Express'
-                                    ? 8.95
-                                    : 0
-                                ).toFixed(2)}
-                            </RadioGroup.Label>
-                          </RadioGroup.Option>
-                        ))}
-                      </div>
-                    </RadioGroup>
-                  </dt>
-
-                  <div className="flex items-center justify-between">
-                    <dt className="text-sm">G.S.T</dt>
-                    <dd className="text-sm font-medium text-gray-900">
-                      {`$` +
-                        Number(
-                          state.cart.subtotal + state.cart.delivery === 0
-                            ? 0
-                            : (state.cart.subtotal + state.cart.delivery) / 11
-                        ).toFixed(2)}
-                    </dd>
-                  </div>
-                  {state.cart.usedVoucher !== 0 && (
-                    <div className="flex items-center justify-between">
-                      <dt className="text-sm">Thankly Voucher</dt>
-                      <dd className="text-sm font-medium text-gray-900">
-                        `($` + Number(state.cart.usedVoucher).toFixed(2) + `)`
-                      </dd>
-                    </div>
-                  )}
-                  <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-                    <dt className="text-base font-semibold">Order Total</dt>
-                    <dd className="text-base font-semibold text-gray-900">
-                      {`$` + Number(state.cart.total).toFixed(2)}
-                    </dd>
-                  </div>
-
-                  <div className="justify-center mt-3 text-sm font-medium text-gray-500 ">
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="address"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Floor, Apt / Unit, PO Box or Parcel Locker
+                  </label>
+                  <div className="mt-1">
                     <input
-                      id="terms"
-                      type="checkbox"
-                      // {...register('terms', { required: true })}
-                      checked={
-                        state.cart.termsAccepted
-                          ? state.cart.termsAccepted
-                          : false
-                      }
+                      type="text"
+                      id="address2"
+                      placeholder=""
+                      // {...register('address2', {})}
+                      defaultValue={state.cart.recipient.address.line2}
                       onChange={debounce((e: any) => {
-                        // console.log('checked', e.target.checked)
                         dispatch({
-                          type: 'SET_TERMS',
+                          type: 'SET_RECIPIENT',
                           payload: {
-                            termsAccepted: e.target.checked === true,
+                            address: {
+                              ...state.cart.recipient.address,
+                              line2: e.target.value,
+                            },
                           },
                         })
                       }, 300)}
-                      className="w-4 h-4 border-gray-300 rounded text-slate-600 focus:ring-slate-500"
+                      // autoComplete="street-address"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     />
+                  </div>
+                </div>
 
+                <div className="hidden">
+                  <div className="flex justify-between">
                     <label
-                      htmlFor="terms"
-                      className="ml-3 font-medium text-gray-700"
+                      htmlFor="city"
+                      className="block text-sm font-medium text-gray-700"
                     >
-                      {'I accept the '}
-                      <Link className="underline" passHref href="/privacy">
-                        <a target="_blank" rel="noopener noreferrer">
-                          {' Thankly Terms & Conditions.'}
-                        </a>
-                      </Link>
+                      Suburb
                     </label>
+                    <span className="text-xs italic text-gray-400">
+                      Required
+                    </span>
                   </div>
-                </dl>
-
-                <div className="px-4 py-3 sm:px-6">
-                  <div>
-                    <h2 className="text-lg font-medium text-gray-900">
-                      Thankly Voucher
-                    </h2>
-                    <p className="block pt-2 text-sm font-medium leading-snug text-gray-700">
-                      {`If you would like to use a Thankly Voucher for this
-                    purchase, please enter it here.`}
-                      <span className="font-semibold">{` If Voucher Balance is insufficient, you will be directed to Stripe to collect card details for the remaining amount.`}</span>
-                    </p>
-
-                    <div className="flex py-3 mt-1 rounded-md ">
-                      <div className="relative flex items-stretch flex-grow focus-within:z-10">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                          <Icon name={'redeem'} />
-                        </div>
-                        <input
-                          type="text"
-                          name="voucher"
-                          id="voucher"
-                          maxLength={10}
-                          size={10}
-                          className={`txt-slate-500 block w-full rounded-none rounded-l-md border-gray-300 pl-10 font-semibold focus:border-slate-500 focus:ring-slate-500 sm:text-sm`}
-                          placeholder="VOUCHER CODE"
-                          onChange={debounce(async (e: any) => {
-                            // call api to validate voucher and set
-                            setVoucherBalance(0)
-                            let data = await (
-                              await fetch(
-                                `${process.env.NEXT_PUBLIC_REST_API}/vouchers?fields=*` +
-                                  `&filter[code][_eq]=${e.target.value}` +
-                                  `&filter[status][_eq]=published`
-                              )
-                            ).json()
-                            data = data.data
-
-                            if (data?.length === 1) {
-                              data = data[0]
-                              setVoucherValid(true)
-                            } else {
-                              data = null
-                              setVoucherValid(false)
-                            }
-
-                            console.log('getVoucher', data)
-
-                            dispatch({
-                              type: 'APPLY_VOUCHER',
-                              payload: data,
-                            })
-                          }, 300)}
-                        />
-                      </div>
-
-                      <button
-                        type="button"
-                        className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100 "
-                      >
-                        <Icon name={'attach_money'} />
-                        {/* <Icon
-                        className="animate-pulse"
-                        name={'hourglass_empty'}
-                      /> */}
-                        <span>
-                          {state.cart.voucher
-                            ? state.cart.voucher.value
-                            : voucherBalance.toFixed(2)}
-                        </span>
-                      </button>
-                    </div>
-
-                    {voucherValid === false && (
-                      <p className="block pb-4 text-sm font-medium leading-tight text-red-700 0">
-                        <Icon
-                          className="w-5 h-5 text-sm leading-tight"
-                          name={'cancel'}
-                        />
-                        <span className="text-sm leading-snug">{`Invalid or already used Voucher. Please try a different Voucher. If you think this is in error, please contact us.`}</span>
-                      </p>
-                    )}
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      id="locality"
+                      name="locality"
+                      value={address.suburb ? address.suburb : ''}
+                      defaultValue={state.cart.recipient.address.suburb}
+                      onChange={debounce((e: any) => {
+                        dispatch({
+                          type: 'SET_RECIPIENT',
+                          payload: {
+                            address: {
+                              ...state.cart.recipient.address,
+                              suburb: e.target.value,
+                            },
+                          },
+                        })
+                      }, 300)}
+                      // autoComplete="address-level2"
+                      // {...register('locality', { required: true })}
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                    />
+                    {/* <p className="mt-2 text-xs text-red-600" id="email-error">
+                        {errors.locality && 'Suburb is mandatory.'}
+                      </p> */}
                   </div>
+                </div>
 
-                  <button
-                    type="button"
-                    // onClick={(e: any) => {
-                    //   e.preventDefault()
-                    //   // check if Recipient Info correctly completed
+                <div className="hidden">
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="region"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      State
+                    </label>
+                    <span className="text-xs italic text-gray-400">
+                      Required
+                    </span>
+                  </div>
+                  <div className="mt-1">
+                    <select
+                      id="state"
+                      name="state"
+                      required
+                      autoComplete="state"
+                      value={address.state ? address.state : 'NSW'}
+                      defaultValue={state.cart.recipient.address.state}
+                      onChange={debounce((e: any) => {
+                        dispatch({
+                          type: 'SET_RECIPIENT',
+                          payload: {
+                            address: {
+                              ...state.cart.recipient.address,
+                              state: e.target.value,
+                            },
+                          },
+                        })
+                      }, 300)}
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                    >
+                      <option>NSW</option>
+                      <option>VIC</option>
+                      <option>QLD</option>
+                      <option>SA</option>
+                      <option>WA</option>
+                      <option>TAS</option>
+                      <option>NT</option>
+                    </select>
+                  </div>
+                </div>
 
-                    //   setProcessing(true)
-                    // }}
-                    style={{
-                      backgroundColor: brand.firstAccentColour
-                        ? brand.firstAccentColour
-                        : '#fff',
-                    }}
-                    className="w-full px-4 py-3 text-base font-medium text-white align-middle border border-transparent rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                  >
-                    <Icon
-                      className="mr-3 -mt-1 text-white align-middle"
-                      name={'credit_card'}
+                <div className="hidden">
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="postal-code"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Postcode
+                    </label>
+                    <span className="text-xs italic text-gray-400">
+                      Required
+                    </span>
+                  </div>
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      id="postcode"
+                      name="postcode"
+                      required
+                      value={address.postcode ? address.postcode : ''}
+                      defaultValue={state.cart.recipient.address.postcode}
+                      onChange={debounce((e: any) => {
+                        dispatch({
+                          type: 'SET_RECIPIENT',
+                          payload: {
+                            address: {
+                              ...state.cart.recipient.address,
+                              postcode: e.target.value,
+                            },
+                          },
+                        })
+                      }, 300)}
+                      autoComplete="postal-code"
+                      // {...register('postcode', { required: true })}
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     />
-                    {`Confirm order`}
-                  </button>
-                  <p className="justify-between text-sm font-medium text-center align-middle text-slate-700 ">
-                    <Icon
-                      name={'lock'}
-                      className="w-5 h-5 mr-2 text-base"
-                      aria-hidden="true"
-                    />
-                    We use{' '}
-                    <Link className="underline" href="https://stripe.com/au">
-                      <a>Stripe</a>
-                    </Link>
-                    {' to securely process your payments.'}
-                  </p>
+                    {/* <p className="mt-2 text-xs text-red-600" id="email-error">
+                        {errors.postcode && 'Postcode is mandatory.'}
+                      </p> */}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-       
 
+          {/* Order summary */}
+
+          <div className="p-2 px-3 mt-10 rounded-md shadow-sm bg-gray-50 lg:mt-0">
+            <h2 className="text-lg font-medium text-gray-900 ">
+              Order summary
+            </h2>
+
+            <div className="mt-4">
+              <h3 className="sr-only">Items in your cart</h3>
+
+              <ul
+                role="list"
+                className="px-3 border-b border-gray-200 divide-y divide-gray-200"
+              >
+                {state.cart.items?.map((product: any) => (
+                  <li key={product.id} className="flex py-6">
+                    <div className="flex-shrink-0 border rounded-sm shadow-sm border-gray-150">
+                      <Image
+                        className="object-cover object-center w-24 h-24 rounded-md sm:h-32 sm:w-32"
+                        src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${product.images[0].directus_files_id}`}
+                        width={900}
+                        height={900}
+                      />
+                    </div>
+
+                    <div className="flex flex-col flex-1 ml-4 sm:ml-6">
+                      <div>
+                        <div className="flex justify-between">
+                          <h4 className="text-sm">
+                            <a
+                              href={product.href}
+                              className="font-medium text-gray-700 hover:text-gray-800"
+                            >
+                              {product.name}
+                            </a>
+                          </h4>
+                          <p className="ml-4 text-sm font-medium text-gray-900">
+                            {product.price}
+                          </p>
+                        </div>
+                        <p className="mt-1 text-sm text-gray-500">
+                          {product.color}
+                        </p>
+                        <p className="mt-1 text-sm text-gray-500">
+                          {product.size}
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <dl className="px-4 py-6 space-y-2 sm:px-6">
+                <div className="flex items-center justify-between">
+                  <dt className="text-sm">Subtotal</dt>
+                  <dd className="text-sm font-medium text-gray-900">
+                    {`$` + Number(state.cart.subtotal).toFixed(2)}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between">
+                  <dt className="text-sm">Delivery Options</dt>
+
+                  <dd className="text-sm font-medium text-gray-900">
+                    {`$` + Number(state.cart.delivery).toFixed(2)}
+                  </dd>
+                </div>
+                <dt className="text-sm">
+                  <RadioGroup
+                    value={
+                      state.cart.deliveryOption
+                        ? state.cart.deliveryOption
+                        : deliveryOptions[0]
+                    }
+                    onChange={(e: any) => {
+                      console.log('radiogroup -- ', e)
+                      Number(
+                        state.cart.total < 50 && e.name === 'Express' ? 8.95 : 0
+                      ).toFixed(2)
+
+                      dispatch({
+                        type: 'SET_DELIVERY',
+                        payload: {
+                          deliveryOption: { ...e },
+                        },
+                      })
+                    }}
+                    className="mt-2"
+                  >
+                    <RadioGroup.Label className="sr-only">
+                      {'Choose a memory option'}
+                    </RadioGroup.Label>
+                    <div className="grid grid-cols-3 gap-3 sm:grid-cols-3">
+                      {deliveryOptions.map((option: any) => (
+                        <RadioGroup.Option
+                          key={option.id}
+                          value={option}
+                          // {...register('deliveryOption', {required: true,})}
+                          className={cn(
+                            'cursor-pointer focus:outline-none',
+
+                            option.id === state.cart.deliveryOption.id
+                              ? 'border-transparent bg-slate-600 text-white ring-2 ring-slate-500 ring-offset-2 hover:bg-slate-700'
+                              : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50',
+                            'flex items-center justify-center rounded-md border py-3 px-3 text-xs font-medium sm:flex-1'
+                          )}
+                        >
+                          <RadioGroup.Label as="span">
+                            {option.name +
+                              ` ` +
+                              `$` +
+                              Number(
+                                state.cart.total < 50 &&
+                                  option.name === 'Express'
+                                  ? 8.95
+                                  : 0
+                              ).toFixed(2)}
+                          </RadioGroup.Label>
+                        </RadioGroup.Option>
+                      ))}
+                    </div>
+                  </RadioGroup>
+                </dt>
+
+                <div className="flex items-center justify-between">
+                  <dt className="text-sm">G.S.T</dt>
+                  <dd className="text-sm font-medium text-gray-900">
+                    {`$` +
+                      Number(
+                        state.cart.subtotal + state.cart.delivery === 0
+                          ? 0
+                          : (state.cart.subtotal + state.cart.delivery) / 11
+                      ).toFixed(2)}
+                  </dd>
+                </div>
+                {state.cart.usedVoucher !== 0 && (
+                  <div className="flex items-center justify-between">
+                    <dt className="text-sm">Thankly Voucher</dt>
+                    <dd className="text-sm font-medium text-gray-900">
+                      `($` + Number(state.cart.usedVoucher).toFixed(2) + `)`
+                    </dd>
+                  </div>
+                )}
+                <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+                  <dt className="text-base font-semibold">Order Total</dt>
+                  <dd className="text-base font-semibold text-gray-900">
+                    {`$` + Number(state.cart.total).toFixed(2)}
+                  </dd>
+                </div>
+
+                <div className="justify-center mt-3 text-sm font-medium text-gray-500 ">
+                  <input
+                    id="terms"
+                    type="checkbox"
+                    // {...register('terms', { required: true })}
+                    checked={
+                      state.cart.termsAccepted
+                        ? state.cart.termsAccepted
+                        : false
+                    }
+                    onChange={(e: any) => {
+                      // console.log('checked', e.target.checked)
+                      dispatch({
+                        type: 'SET_TERMS',
+                        payload: {
+                          termsAccepted: e.target.checked === true,
+                        },
+                      })
+                    }}
+                    className="w-4 h-4 border-gray-300 rounded text-slate-600 focus:ring-slate-500"
+                  />
+
+                  <label
+                    htmlFor="terms"
+                    className="ml-3 font-medium text-gray-700"
+                  >
+                    {'I accept the '}
+                    <Link className="underline" passHref href="/privacy">
+                      <a target="_blank" rel="noopener noreferrer">
+                        {' Thankly Terms & Conditions.'}
+                      </a>
+                    </Link>
+                  </label>
+                </div>
+              </dl>
+
+              <div className="px-4 py-3 sm:px-6">
+                <div>
+                  <h2 className="text-lg font-medium text-gray-900">
+                    Thankly Voucher
+                  </h2>
+                  <p className="block pt-2 text-sm font-medium leading-snug text-gray-700">
+                    {`If you would like to use a Thankly Voucher for this
+                    purchase, please enter it here.`}
+                    <span className="font-semibold">{` If Voucher Balance is insufficient, you will be directed to Stripe to collect card details for the remaining amount.`}</span>
+                  </p>
+
+                  <div className="flex py-3 mt-1 rounded-md ">
+                    <div className="relative flex items-stretch flex-grow focus-within:z-10">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <Icon name={'redeem'} />
+                      </div>
+                      <input
+                        type="text"
+                        name="voucher"
+                        id="voucher"
+                        maxLength={10}
+                        size={10}
+                        className={`txt-slate-500 block w-full rounded-none rounded-l-md border-gray-300 pl-10 font-semibold focus:border-slate-500 focus:ring-slate-500 sm:text-sm`}
+                        placeholder="VOUCHER CODE"
+                        onChange={debounce(async (e: any) => {
+                          // call api to validate voucher and set
+                          setVoucherBalance(0)
+                          let data = await (
+                            await fetch(
+                              `${process.env.NEXT_PUBLIC_REST_API}/vouchers?fields=*` +
+                                `&filter[code][_eq]=${e.target.value}` +
+                                `&filter[status][_eq]=published`
+                            )
+                          ).json()
+                          data = data.data
+
+                          if (data?.length === 1) {
+                            data = data[0]
+                            setVoucherValid(true)
+                          } else {
+                            data = null
+                            setVoucherValid(false)
+                          }
+
+                          console.log('getVoucher', data)
+
+                          dispatch({
+                            type: 'APPLY_VOUCHER',
+                            payload: data,
+                          })
+                        }, 300)}
+                      />
+                    </div>
+
+                    <button
+                      type="button"
+                      className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100 "
+                    >
+                      <Icon name={'attach_money'} />
+                      {/* <Icon
+                        className="animate-pulse"
+                        name={'hourglass_empty'}
+                      /> */}
+                      <span>
+                        {state.cart.voucher
+                          ? state.cart.voucher.value
+                          : voucherBalance.toFixed(2)}
+                      </span>
+                    </button>
+                  </div>
+
+                  {voucherValid === false && (
+                    <p className="block pb-4 text-sm font-medium leading-tight text-red-700 0">
+                      <Icon
+                        className="w-5 h-5 text-sm leading-tight"
+                        name={'cancel'}
+                      />
+                      <span className="text-sm leading-snug">{`Invalid or already used Voucher. Please try a different Voucher. If you think this is in error, please contact us.`}</span>
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  onClick={(e: any) => {
+                    e.preventDefault()
+
+                    // setErrors(errors.length =0,console.log('errors --',errors))
+                    // errors.length =0
+                    // setProcessing(true)
+
+                    // final cart
+                    console.log('final cart --', state.cart)
+
+                    // collate any errors
+
+                    validateOrder()
+
+                    // errors = []
+                    // errors.length > 0 ? setProcessing(false) : setProcessing(true)
+                    // everything done, setState just in case
+                    // should already be redirected to orderConfirmation or orderError routes
+                  }}
+                  style={{
+                    backgroundColor: brand.firstAccentColour
+                      ? brand.firstAccentColour
+                      : '#fff',
+                  }}
+                  className="w-full px-4 py-3 text-base font-medium text-white align-middle border border-transparent rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                >
+                  <Icon
+                    className="mr-3 -mt-1 text-white align-middle"
+                    name={'credit_card'}
+                  />
+                  {`Confirm order`}
+                </button>
+                <p className="justify-between text-sm font-medium text-center align-middle text-slate-700 ">
+                  <Icon
+                    name={'lock'}
+                    className="w-5 h-5 mr-2 text-base"
+                    aria-hidden="true"
+                  />
+                  We use{' '}
+                  <Link className="underline" href="https://stripe.com/au">
+                    <a>Stripe</a>
+                  </Link>
+                  {' to securely process your payments.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
         <Modal
           show={processing}
           readOnly
@@ -854,8 +937,6 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
 }
 
 export default Step3
-
-import { RadioGroup } from '@headlessui/react'
 
 const deliveryOptions = [
   { id: 1, name: 'Express', price: 0 },
