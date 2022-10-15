@@ -53,7 +53,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).send(`Webhook Error: ${err.message}`)
     }
 
-    console.log('stripe triggered event --- ', event.data)
+    console.log('stripe triggered event --- ', event)
 
 
     // if (relevantEvents.has(event.type)) {
