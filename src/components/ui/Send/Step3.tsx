@@ -16,12 +16,14 @@ import usePlacesAutocomplete, {
 import useOnclickOutside from 'react-cool-onclickoutside'
 import { RadioGroup } from '@headlessui/react'
 import { Store } from '@/lib/Store'
+
 const Icon = dynamic(() => import('@/components/common/Icon'))
 const Modal = dynamic(() => import('@/components/ui/Modal'))
 
 interface Step3Props {
   className?: string
 }
+
 
 // eslint-disable-next-line react/display-name
 const Step3: React.FC<Step3Props> = ({ className }) => {
@@ -32,7 +34,9 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
   const [address, setAddress]: any = useState({})
   const [processing, setProcessing]: any = useState(false)
   const [errors, setErrors]: any[] = useState([])
+  const [initiateCheckout, setInitiateCheckout] = useState(false)
 
+  console.log('env',process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
   // https://github.com/wellyshen/use-places-autocomplete?ref=hackernoon.com#api
   const {
     ready,
@@ -159,62 +163,6 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
 
   const num = 0
 
-  function validateOrder() {
-    let foundErrors: any[] = []
-    state.cart.recipient.firstname === ''
-      ? (foundErrors = foundErrors.concat([
-          {
-            id: 'firstname',
-            title: 'Empty First Name',
-            message: `First Name is required. Please fill in the field.`,
-          },
-        ]))
-      : null
-    state.cart.recipient.lastname === ''
-      ? (foundErrors = foundErrors.concat([
-          {
-            id: 'lastname',
-            title: 'Empty Last Name',
-            message: `Last Name is required. Please fill in the field.`,
-          },
-        ]))
-      : null
-    state.cart.termsAccepted === false
-      ? (foundErrors = foundErrors.concat([
-          {
-            id: 'terms',
-            title: 'Terms not accepted.',
-            message: `Please accept the terms & conditions.`,
-          },
-        ]))
-      : null
-
-      JSON.stringify(state.cart.deliveryOption) === '{}'
-      ? (foundErrors = foundErrors.concat([
-          {
-            id: 'deliveryOption',
-            title: 'Delivery Option not selected.',
-            message: `Please select a delivery option.`,
-          },
-        ]))
-      : null
-
-    Object.values(state.cart.recipient.address).every(
-      (x) => x === null || x === ''
-    )
-      ? (foundErrors = foundErrors.concat([
-          {
-            id: 'address',
-            title: 'Address Empty',
-            message: `Recipient Address not provided. Please fill out the recipient's delivery Address.`,
-          },
-        ]))
-      : null
-
-    foundErrors.length > 0 ? setErrors(foundErrors) : null
-    console.log('errors --', errors)
-  }
-
   return (
     <div className="bg-white">
       {/* <Script
@@ -254,33 +202,8 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
               >
                 Recipient Details
               </h3>
-              <div>
-      <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-        Email
-      </label>
-      <div className="relative mt-1 rounded-md shadow-sm">
-        <input
-          type="email"
-          name="email"
-          id="email"
-          className="block w-full pr-10 text-red-900 placeholder-red-300 border-red-300 rounded-md focus:border-red-500 focus:outline-none focus:ring-red-500 sm:text-sm"
-          placeholder="you@example.com"
-          defaultValue="adamwathan"
-          aria-invalid="true"
-          aria-describedby="email-error"
-        />
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-          <Icon name={'error'} className="w-5 h-5 text-red-500" aria-hidden="true" />
-        </div>
-      </div>
-      <p className="mt-2 text-xs leading-snug text-red-600" id="email-error">
-        Your password must be less than 4 characters.
-      </p>
-    </div>
+
               <div className="grid grid-cols-4 mt-6 gap-y-3 gap-x-4 sm:grid-cols-4">
-              
-
-
                 <div className="col-span-2 sm:col-span-2">
                   <div className="flex justify-between">
                     <label
@@ -293,7 +216,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       Required
                     </span>
                   </div>
-                  <div className="mt-1">
+                  <div className="relative mt-1 rounded-md shadow-sm">
                     <input
                       type="text"
                       defaultValue={state.cart.recipient.firstname}
@@ -313,9 +236,34 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                           },
                         })
                       }, 300)}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      className={cn(
+                        errors.filter((item: any) => item.id === 'firstname')
+                          .length > 0
+                          ? `border-red-600 pr-10 text-red-600 placeholder-red-600 focus:border-red-600 focus:ring-red-600`
+                          : `border-gray-300 focus:border-slate-500 focus:ring-slate-500`,
+                        `block w-full rounded-md shadow-sm sm:text-sm`
+                      )}
                     />
+                    {errors.filter((item: any) => item.id === 'firstname')
+                      .length > 0 && (
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <Icon
+                          name={'error'}
+                          className="w-5 h-5 text-red-600"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    )}
                   </div>
+                  {errors.filter((item: any) => item.id === 'firstname')
+                    .length > 0 && (
+                    <p className="mt-2 text-xs leading-snug text-red-600">
+                      {
+                        errors.filter((item: any) => item.id === 'firstname')[0]
+                          .message
+                      }
+                    </p>
+                  )}
                 </div>
 
                 <div className="col-span-2 sm:col-span-2">
@@ -330,7 +278,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       Required
                     </span>
                   </div>
-                  <div className="mt-1">
+                  <div className="relative mt-1 rounded-md shadow-sm">
                     <input
                       type="text"
                       id="lastname"
@@ -346,12 +294,34 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                           },
                         })
                       }, 300)}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      className={cn(
+                        errors.filter((item: any) => item.id === 'lastname')
+                          .length > 0
+                          ? `border-red-600 pr-10 text-red-600 placeholder-red-600 focus:border-red-600 focus:ring-red-600`
+                          : `border-gray-300 focus:border-slate-500 focus:ring-slate-500`,
+                        `block w-full rounded-md shadow-sm sm:text-sm`
+                      )}
                     />
-                    {/* <p className="mt-2 text-xs text-red-600" id="email-error">
-                        {errors.lastname && 'Name is mandatory.'}
-                      </p> */}
+                    {errors.filter((item: any) => item.id === 'lastname')
+                      .length > 0 && (
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <Icon
+                          name={'error'}
+                          className="w-5 h-5 text-red-600"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    )}
                   </div>
+                  {errors.filter((item: any) => item.id === 'lastname').length >
+                    0 && (
+                    <p className="mt-2 text-xs leading-snug text-red-600">
+                      {
+                        errors.filter((item: any) => item.id === 'lastname')[0]
+                          .message
+                      }
+                    </p>
+                  )}
                 </div>
 
                 <div className="col-span-4">
@@ -362,15 +332,12 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     >
                       Company
                     </label>
-                    <span
-                      className="text-xs italic text-gray-400"
-                      id="company-optional"
-                    >
+                    <span className="text-xs italic text-gray-400">
                       Optional
                     </span>
                   </div>
 
-                  <div className="mt-1">
+                  <div className="relative mt-1 rounded-md shadow-sm">
                     <input
                       type="text"
                       id="company"
@@ -385,24 +352,34 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                         })
                       }, 300)}
                       aria-describedby="company-optional"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      className={cn(
+                        errors.filter((item: any) => item.id === 'company')
+                          .length > 0
+                          ? `border-red-600 pr-10 text-red-600 placeholder-red-600 focus:border-red-600 focus:ring-red-600`
+                          : `border-gray-300 focus:border-slate-500 focus:ring-slate-500`,
+                        `block w-full rounded-md shadow-sm sm:text-sm`
+                      )}
                     />
+                    {errors.filter((item: any) => item.id === 'company')
+                      .length > 0 && (
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <Icon
+                          name={'error'}
+                          className="w-5 h-5 text-red-600"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="mt-5">
-              <h3
-                id="delivery-heading"
-                className="text-lg font-medium text-gray-900"
-              >
+              <h3 className="text-lg font-medium text-gray-900">
                 Delivery Address
               </h3>
-              <p
-                className="mt-2 text-sm italic leading-snug text-gray-500"
-                id="email-description"
-              >
+              <p className="mt-2 text-sm italic leading-snug text-gray-500">
                 At this time, we only deliver Thanklys to addresses in
                 Australia. Please enter Floor, Apt / Unit, PO Box or Parcel
                 Lockers manually in the second field.
@@ -416,39 +393,67 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     >
                       Street Address
                     </label>
-                    <span
-                      className="text-xs italic text-gray-400"
-                      id="company-optional"
-                    >
+                    <span className="text-xs italic text-gray-400">
                       Required
                     </span>
                   </div>
-                  <div className="mt-1" ref={ref}>
+                  <div className="relative mt-1 rounded-md shadow-sm" ref={ref}>
                     <input
                       value={
                         state.cart.recipient.address.fulladdress
                           ? state.cart.recipient.address.fulladdress
                           : value
                       }
-                      defaultValue={state.cart.recipient.address.fulladdress}
+                      // defaultValue={state.cart.recipient.address.fulladdress}
                       onChange={handleInput}
                       disabled={!ready}
                       type="text"
                       placeholder="Start typing your street address..."
                       autoComplete="off"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                      className={cn(
+                        errors.filter((item: any) => item.id === 'address')
+                          .length > 0
+                          ? `border-red-600 pr-10 text-red-600 placeholder-red-600 focus:border-red-600 focus:ring-red-600`
+                          : `border-gray-300 focus:border-slate-500 focus:ring-slate-500`,
+                        `block w-full rounded-md shadow-sm sm:text-sm`
+                      )}
                     />
                     {status === 'OK' && <ul>{renderSuggestions()}</ul>}
+
+                    {errors.filter((item: any) => item.id === 'address')
+                      .length > 0 && (
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <Icon
+                          name={'error'}
+                          className="w-5 h-5 text-red-600"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    )}
                   </div>
+                  {errors.filter((item: any) => item.id === 'address').length >
+                    0 && (
+                    <p className="mt-2 text-xs leading-snug text-red-600">
+                      {
+                        errors.filter((item: any) => item.id === 'address')[0]
+                          .message
+                      }
+                    </p>
+                  )}
                 </div>
                 <div className="sm:col-span-3">
-                  <label
-                    htmlFor="address"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Floor, Apt / Unit, PO Box or Parcel Locker
-                  </label>
-                  <div className="mt-1">
+                  <div className="flex justify-between">
+                    <label
+                      htmlFor="address"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Floor, Apt / Unit, PO Box or Parcel Locker
+                    </label>
+                    <span className="text-xs italic text-gray-400">
+                      Optional
+                    </span>
+                  </div>
+                  <div className="relative mt-1 rounded-md shadow-sm">
                     <input
                       type="text"
                       id="address2"
@@ -489,7 +494,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       type="text"
                       id="locality"
                       name="locality"
-                      value={address.suburb ? address.suburb : ''}
+                      // value={address.suburb ? address.suburb : ''}
                       defaultValue={state.cart.recipient.address.suburb}
                       onChange={debounce((e: any) => {
                         dispatch({
@@ -506,9 +511,6 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       // {...register('locality', { required: true })}
                       className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     />
-                    {/* <p className="mt-2 text-xs text-red-600" id="email-error">
-                        {errors.locality && 'Suburb is mandatory.'}
-                      </p> */}
                   </div>
                 </div>
 
@@ -574,7 +576,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       id="postcode"
                       name="postcode"
                       required
-                      value={address.postcode ? address.postcode : ''}
+                      // value={address.postcode ? address.postcode : ''}
                       defaultValue={state.cart.recipient.address.postcode}
                       onChange={debounce((e: any) => {
                         dispatch({
@@ -591,9 +593,6 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       // {...register('postcode', { required: true })}
                       className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
                     />
-                    {/* <p className="mt-2 text-xs text-red-600" id="email-error">
-                        {errors.postcode && 'Postcode is mandatory.'}
-                      </p> */}
                   </div>
                 </div>
               </div>
@@ -721,6 +720,17 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       ))}
                     </div>
                   </RadioGroup>
+
+                  {errors.filter((item: any) => item.id === 'deliveryOption')
+                    .length > 0 && (
+                    <p className="mt-2 text-xs leading-snug text-red-600">
+                      {
+                        errors.filter(
+                          (item: any) => item.id === 'deliveryOption'
+                        )[0].message
+                      }
+                    </p>
+                  )}
                 </dt>
 
                 <div className="flex items-center justify-between">
@@ -782,6 +792,15 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       </a>
                     </Link>
                   </label>
+                  {errors.filter((item: any) => item.id === 'terms').length >
+                    0 && (
+                    <p className="mt-2 text-xs leading-snug text-red-600">
+                      {
+                        errors.filter((item: any) => item.id === 'terms')[0]
+                          .message
+                      }
+                    </p>
+                  )}
                 </div>
               </dl>
 
@@ -857,7 +876,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                   </div>
 
                   {voucherValid === false && (
-                    <p className="block pb-4 text-sm font-medium leading-tight text-red-700 0">
+                    <p className="block pb-4 text-sm font-medium leading-tight text-red-600 0">
                       <Icon
                         className="w-5 h-5 text-sm leading-tight"
                         name={'cancel'}
@@ -868,23 +887,94 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                 </div>
                 <button
                   type="submit"
-                  onClick={(e: any) => {
+                  onClick={async (e: any) => {
                     e.preventDefault()
-
-                    // setErrors(errors.length =0,console.log('errors --',errors))
-                    // errors.length =0
-                    // setProcessing(true)
+                    setProcessing(true)
 
                     // final cart
                     console.log('final cart --', state.cart)
 
                     // collate any errors
+                    let foundErrors: any[] = []
+                    state.cart.recipient.firstname === ''
+                      ? (foundErrors = foundErrors.concat([
+                          {
+                            id: 'firstname',
+                            title: 'Empty First Name',
+                            message: `First Name is required. Please fill in the field.`,
+                          },
+                        ]))
+                      : null
+                    state.cart.recipient.lastname === ''
+                      ? (foundErrors = foundErrors.concat([
+                          {
+                            id: 'lastname',
+                            title: 'Empty Last Name',
+                            message: `Last Name is required. Please fill in the field.`,
+                          },
+                        ]))
+                      : null
+                    state.cart.termsAccepted === false
+                      ? (foundErrors = foundErrors.concat([
+                          {
+                            id: 'terms',
+                            title: 'Terms not accepted.',
+                            message: `Please accept the terms & conditions.`,
+                          },
+                        ]))
+                      : null
 
-                    validateOrder()
+                    JSON.stringify(state.cart.deliveryOption) === '{}'
+                      ? (foundErrors = foundErrors.concat([
+                          {
+                            id: 'deliveryOption',
+                            title: 'Delivery Option not selected.',
+                            message: `Please select a delivery option.`,
+                          },
+                        ]))
+                      : null
 
-                    // errors = []
-                    // errors.length > 0 ? setProcessing(false) : setProcessing(true)
-                    // everything done, setState just in case
+                    Object.values(state.cart.recipient.address).every(
+                      (x) => x === null || x === ''
+                    )
+                      ? (foundErrors = foundErrors.concat([
+                          {
+                            id: 'address',
+                            title: 'Address Empty',
+                            message: `Recipient Address not provided. Please fill out the recipient's delivery Address.`,
+                          },
+                        ]))
+                      : null
+
+                    if (foundErrors.length > 0) {
+                      setErrors(foundErrors)
+                      console.log('errors --', errors)
+                      setProcessing(false)
+                      return
+                    }
+                    // this shouldnt execute if there are errors
+                    console.log('initiating checkout...')
+
+                    // try {
+
+                    //   // get stripe checkout session id
+                    //   const { sessionId } = await postData({
+                    //     url: '/api/create-checkout-session',
+                    //     data: state.cart,
+                    //     token: `${process.env.STRIPE_PUBLISHABLE_KEY}`,
+                    //   })
+
+                    //   // check if stripe is loaded and then initiate checkout using checking session id
+                    //   const stripe = await getStripe()
+                    //   stripe?.redirectToCheckout({ sessionId })
+                    // } catch (error) {
+                    //   setProcessing(false)
+                    //   console.log(error)
+                    //   return alert((error as Error)?.message)
+                    // } finally {
+                    //   setProcessing(false)
+                    // }
+
                     // should already be redirected to orderConfirmation or orderError routes
                   }}
                   style={{

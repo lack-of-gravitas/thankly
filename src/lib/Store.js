@@ -33,6 +33,7 @@ const initialState = {
         voucher: {},
         deliveryOption: {},
         termsAccepted: false,
+        createAccount: false,
         subtotal: 0,
         delivery: 0,
         usedVoucher: 0,
@@ -127,6 +128,16 @@ function reducer(state, action) {
       return { ...state, cart: { ...state.cart } }
     }
 
+    case 'SET_ACCOUNT': {
+      state.cart.createAccount = action.payload.createAccount
+
+      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
+        expires: 1 / 600,
+      })
+      console.log('state.cart -- ', state.cart)
+      return { ...state, cart: { ...state.cart } }
+    }
+
     case 'APPLY_VOUCHER': {
       state.cart.voucher = action.payload
 
@@ -160,6 +171,7 @@ function reducer(state, action) {
           voucher: {},
           deliveryOption: {},
           termsAccepted: false,
+          createAccount: false,
           subtotal: 0,
           delivery: 0,
           usedVoucher: 0,
@@ -193,6 +205,7 @@ function reducer(state, action) {
           voucher: {},
           deliveryOption: {},
           termsAccepted: false,
+          createAccount: false,
           subtotal: 0,
           delivery: 0,
           usedVoucher: 0,

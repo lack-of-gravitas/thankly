@@ -120,20 +120,19 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                   {true ? (
                     <div className="px-4 py-6 space-y-6 border-t border-gray-200">
                       <div className="flow-root">
-                        <a
+                      <Link passHref href="#"><a
                           href="#"
                           className="block p-2 -m-2 font-medium text-gray-900"
                         >
                           Your account
-                        </a>
+                        </a></Link>
                       </div>
                       <div className="flow-root">
-                        <a
-                          href="#"
+                        <Link passHref href="#"><a
                           className="block p-2 -m-2 font-medium text-gray-900"
                         >
                           Sign out
-                        </a>
+                        </a></Link>
                       </div>
                     </div>
                   ) : (
@@ -274,7 +273,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                               <Menu.Items className="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 <Menu.Item>
                                   {({ active }) => (
-                                    <a
+                                      <Link passHref href="#"> <a
                                       href="#"
                                       className={cn(
                                         active ? 'bg-gray-100' : '',
@@ -282,21 +281,23 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                       )}
                                     >
                                       Your Account
-                                    </a>
+                                    </a></Link>
                                   )}
                                 </Menu.Item>
 
                                 <Menu.Item>
                                   {({ active }) => (
+                                    
+                                    <Link passHref href="#">
                                     <a
-                                      href="#"
+                                     
                                       className={cn(
                                         active ? 'bg-gray-100' : '',
                                         'block px-4 py-2 text-sm text-gray-700'
                                       )}
                                     >
                                       Sign out
-                                    </a>
+                                    </a></Link>
                                   )}
                                 </Menu.Item>
                               </Menu.Items>

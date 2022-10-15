@@ -100,71 +100,72 @@ const managePurchases = async (
     .select('id')
     .eq('stripe_customer_id', customerId)
     .single()
-  if (noCustomerError) throw noCustomerError
-  const { id: uuid } = customerData || {}
-  console.log('customer uuid --', uuid)
+  //https://github.com/supabase/supabase/discussions/3343?sort=top
+  if (!noCustomerError) {
+    //throw noCustomerError
+    const { id: uuid } = customerData || {}
+    console.log('customer uuid --', uuid)
 
-  let purchaseData: Purchase | any | undefined = undefined
+    let purchaseData: Purchase | any | undefined = undefined
 
-  if (mode === 'subscription' || mode === null) {
-    const subscription = await stripe.subscriptions.retrieve(identifier)
-    console.log('subscription --', subscription)
+    // if (mode === 'subscription' || mode === null) {
+    //   const subscription = await stripe.subscriptions.retrieve(identifier)
+    //   console.log('subscription --', subscription)
 
-    if (subscription) {
-      purchaseData = {
-        id: subscription.id,
-        status: subscription.status,
-        user_id: uuid,
-        mode: 'subscription',
-        // price_id: subscription ? subscription.items.data[0].price.id:,
-        cancel_at_period_end: subscription.cancel_at_period_end,
-        cancel_at: subscription.cancel_at
-          ? toDateTime(subscription.cancel_at)
-          : null,
-        canceled_at: subscription.canceled_at
-          ? toDateTime(subscription.canceled_at)
-          : null,
-        current_period_start: toDateTime(subscription.current_period_start),
-        current_period_end: toDateTime(subscription.current_period_end),
-        created: toDateTime(subscription.created),
-        ended_at: subscription.ended_at
-          ? toDateTime(subscription.ended_at)
-          : null,
+    //   if (subscription) {
+    //     purchaseData = {
+    //       id: subscription.id,
+    //       status: subscription.status,
+    //       user_id: uuid,
+    //       mode: 'subscription',
+    //       // price_id: subscription ? subscription.items.data[0].price.id:,
+    //       cancel_at_period_end: subscription.cancel_at_period_end,
+    //       cancel_at: subscription.cancel_at
+    //         ? toDateTime(subscription.cancel_at)
+    //         : null,
+    //       canceled_at: subscription.canceled_at
+    //         ? toDateTime(subscription.canceled_at)
+    //         : null,
+    //       current_period_start: toDateTime(subscription.current_period_start),
+    //       current_period_end: toDateTime(subscription.current_period_end),
+    //       created: toDateTime(subscription.created),
+    //       ended_at: subscription.ended_at
+    //         ? toDateTime(subscription.ended_at)
+    //         : null,
 
-        metadata: metadata,
+    //       metadata: metadata,
+    //     }
+    //     console.log('purchaseData --', purchaseData)
+    //   }
+    // }
+
+    if (mode === 'payment') {
+      const payment_intent = await stripe.paymentIntents.retrieve(identifier)
+      console.log('payment_intent --', payment_intent)
+
+      if (payment_intent) {
+        purchaseData = {
+          id: payment_intent.id,
+          status: payment_intent.status,
+          user_id: uuid,
+          mode: 'payment_intent',
+          metadata: metadata,
+        }
       }
       console.log('purchaseData --', purchaseData)
     }
-  }
 
-  if (mode === 'payment') {
-    const payment_intent = await stripe.paymentIntents.retrieve(identifier)
-    console.log('payment_intent --', payment_intent)
-
-    if (payment_intent) {
-      purchaseData = {
-        id: payment_intent.id,
-        status: payment_intent.status,
-        user_id: uuid,
-        mode: 'payment_intent',
-        // price_id: subscription ? subscription.items.data[0].price.id:,
-
-        metadata: metadata,
-      }
+    if (purchaseData) {
+      const { error } = await supabaseAdmin
+        .from('purchases')
+        .upsert([purchaseData])
+      if (error) throw error
+      console.log(
+        `Inserted/updated purchase [${
+          purchaseData ? purchaseData.id : null
+        }] for user [${uuid}]`
+      )
     }
-    console.log('purchaseData --', purchaseData)
-  }
-
-  if (purchaseData) {
-    const { error } = await supabaseAdmin
-      .from('purchases')
-      .upsert([purchaseData])
-    if (error) throw error
-    console.log(
-      `Inserted/updated purchase [${
-        purchaseData ? purchaseData.id : null
-      }] for user [${uuid}]`
-    )
   }
 }
 
