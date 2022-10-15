@@ -53,7 +53,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).send(`Webhook Error: ${err.message}`)
     }
 
-    console.log('event', event.data.object)
+    console.log('stripe triggered event --- ', event.data)
 
 
     // if (relevantEvents.has(event.type)) {
@@ -113,3 +113,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 export default webhookHandler
+
+
+
+// price created
