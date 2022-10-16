@@ -1,15 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { stripe } from '@/lib/stripe'
-// import { getUser, withApiAuth } from '@supabase/supabase-auth-helpers/nextjs'
-// import { createOrRetrieveCustomer } from '@/lib/supabase-admin'
 
-// API called via Directus / Supabase and receives Price / Product Data which is used to create Stripe Product / Price and then return stripeId to update Directus / Supabase
 
 const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     console.log('req->', req)
+    console.log('res->', res)
+    
+     // DO SOME STUFF HERE LATER
+     // I DID SOME STUFF HERE YOU DONT CARE ABOUT SO SET 200
 
-    return res.status(200).json(req)
+    return res.status(200).json({ message: 'Hello from Next.js!' })
   } else {
     res.setHeader('Allow', 'POST')
     res.status(405).end('Method Not Allowed')
