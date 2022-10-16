@@ -33,7 +33,7 @@ const relevantEvents = new Set([
   'price.updated',
   'price.deleted',
   'payment_intent.succeeded',
-  'checkout.session.completed',
+  'checkout.session.completed', // TODO: Delete Voucher Coupon
 ])
 
 const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {

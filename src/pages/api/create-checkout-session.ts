@@ -11,6 +11,10 @@ const createCheckoutSession = async (
   if (req.method === 'POST') {
     console.log('req->', req.body)
 
+
+    // have to create a Discount for the exact amount of the difference and auto apply that to the product
+    const coupon = await stripe.coupons.create({percent_off: 20, duration: 'once'});
+
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
@@ -20,12 +24,16 @@ const createCheckoutSession = async (
           quantity: 1,
         },
       ],
+      discounts: [{
+        coupon: `${coupon}`,
+      }],
       mode: 'payment',
       success_url: `${req.headers.origin}/?success=true`,
       cancel_url: `${req.headers.origin}/?canceled=true`,
       automatic_tax: { enabled: false },
     })
 
+    
     //     try {
     //       // const { user } = await getUser({ req, res })
     //       // const customer = await createOrRetrieveCustomer({
