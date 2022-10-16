@@ -18,6 +18,8 @@ import { RadioGroup } from '@headlessui/react'
 import { Store } from '@/lib/Store'
 import { loadStripe } from '@stripe/stripe-js'
 import { postData } from '@/lib/api-helpers'
+import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe-client'
 
 const Icon = dynamic(() => import('@/components/common/Icon'))
 const Modal = dynamic(() => import('@/components/ui/Modal'))
@@ -781,49 +783,51 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                   </dd>
                 </div>
 
-                {/* <div className="justify-center mt-3 text-sm font-medium text-gray-500 ">
-                  <input
-                    id="terms"
-                    type="checkbox"
-                    // {...register('terms', { required: true })}
-                    checked={
-                      state.cart.termsAccepted
-                        ? state.cart.termsAccepted
-                        : false
-                    }
-                    onChange={(e: any) => {
-                      // console.log('checked', e.target.checked)
-                      dispatch({
-                        type: 'SET_TERMS',
-                        payload: {
-                          termsAccepted: e.target.checked === true,
-                        },
-                      })
-                    }}
-                    className="w-4 h-4 border-gray-300 rounded text-slate-600 focus:ring-slate-500"
-                  />
-
-                  <label
-                    htmlFor="terms"
-                    className="ml-3 font-medium text-gray-700"
-                  >
-                    {'I accept the '}
-                    <Link className="underline" passHref href="/privacy">
-                      <a target="_blank" rel="noopener noreferrer">
-                        {' Thankly Terms & Conditions.'}
-                      </a>
-                    </Link>
-                  </label>
-                  {errors.filter((item: any) => item.id === 'terms').length >
-                    0 && (
-                    <p className="mt-2 text-xs leading-snug text-red-600">
-                      {
-                        errors.filter((item: any) => item.id === 'terms')[0]
-                          .message
+                {/* {state.cart.total === 0 && (
+                  <div className="justify-center mt-3 text-sm font-medium text-gray-500 ">
+                    <input
+                      id="terms"
+                      type="checkbox"
+                      // {...register('terms', { required: true })}
+                      checked={
+                        state.cart.termsAccepted
+                          ? state.cart.termsAccepted
+                          : false
                       }
-                    </p>
-                  )}
-                </div> */}
+                      onChange={(e: any) => {
+                        // console.log('checked', e.target.checked)
+                        dispatch({
+                          type: 'SET_TERMS',
+                          payload: {
+                            termsAccepted: e.target.checked === true,
+                          },
+                        })
+                      }}
+                      className="w-4 h-4 border-gray-300 rounded text-slate-600 focus:ring-slate-500"
+                    />
+
+                    <label
+                      htmlFor="terms"
+                      className="ml-3 font-medium text-gray-700"
+                    >
+                      {'I accept the '}
+                      <Link className="underline" passHref href="/privacy">
+                        <a target="_blank" rel="noopener noreferrer">
+                          {' Thankly Terms & Conditions.'}
+                        </a>
+                      </Link>
+                    </label>
+                    {errors.filter((item: any) => item.id === 'terms').length >
+                      0 && (
+                      <p className="mt-2 text-xs leading-snug text-red-600">
+                        {
+                          errors.filter((item: any) => item.id === 'terms')[0]
+                            .message
+                        }
+                      </p>
+                    )}
+                  </div>
+                )} */}
               </dl>
 
               <div className="px-4 py-3 sm:px-6">
@@ -936,15 +940,15 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                           },
                         ]))
                       : null
-                    state.cart.termsAccepted === false
-                      ? (foundErrors = foundErrors.concat([
-                          {
-                            id: 'terms',
-                            title: 'Terms not accepted.',
-                            message: `Please accept the terms & conditions.`,
-                          },
-                        ]))
-                      : null
+                    // state.cart.total === 0 && state.cart.termsAccepted === false
+                    //   ? (foundErrors = foundErrors.concat([
+                    //       {
+                    //         id: 'terms',
+                    //         title: 'Terms not accepted.',
+                    //         message: `Please accept the terms & conditions.`,
+                    //       },
+                    //     ]))
+                    //   : null
 
                     JSON.stringify(state.cart.deliveryOption) === '{}'
                       ? (foundErrors = foundErrors.concat([
@@ -976,14 +980,25 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     }
 
                     console.log('initiating checkout...')
-                    await postData({
-                      url: '/api/create-checkout-session',
-                      data: state.cart,
-                      // token: `${process.env.STRIPE_PUBLISHABLE_KEY}`,
-                    })
 
-                    setProcessing(false)
-                    
+                    try {
+                      const { sessionId } = await postData({
+                        url: '/api/create-checkout-session',
+                        data: state.cart,
+                        // token: `${process.env.STRIPE_PUBLISHABLE_KEY}`,
+                      })
+
+                      console.log('checkout sessionid -- ', sessionId)
+
+                      const stripe = await getStripe()
+                      stripe?.redirectToCheckout({ sessionId })
+                      setProcessing(false)
+                    } catch (error) {
+                      return alert((error as Error)?.message)
+                    } finally {
+                      setInitiateCheckout(false)
+                    }
+
                     // should already be redirected to orderConfirmation or orderError routes
                   }}
                   style={{
