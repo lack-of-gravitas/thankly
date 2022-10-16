@@ -32,8 +32,8 @@ const relevantEvents = new Set([
   'price.created',
   'price.updated',
   'price.deleted',
+  'payment_intent.succeeded',
   'checkout.session.completed',
-  
 ])
 
 const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -55,11 +55,13 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     console.log('stripe triggered event --- ', event)
 
-
     // if (relevantEvents.has(event.type)) {
     //   try {
     //     switch (event.type) {
     //       case 'product.created':
+    //         // get directusid from metadata and update stripeId for product record in Supabase
+    //         await upsertProductRecord(event.data.object as Stripe.Product)
+
     //       case 'product.updated':
     //         await upsertProductRecord(event.data.object as Stripe.Product)
     //         break
@@ -80,7 +82,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     //         )
     //         break
 
-    //         // case 'customer.subscription.created':
+    //       // case 'customer.subscription.created':
     //       // case 'customer.subscription.updated':
     //       // case 'customer.subscription.deleted':
     //       //   const subscription = event.data.object as Stripe.Subscription
@@ -114,6 +116,162 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 export default webhookHandler
 
+// // price deleted
 
+// stripe triggered event ---  {
+//   id: 'evt_1Lt4weEvc4dteT8lr5EU7xFz',
+//   object: 'event',
+//   api_version: '2022-08-01',
+//   created: 1665819488,
+//   data: {
+//     object: {
+//       id: 'prod_MWetI5m6pENs5e',
+//       object: 'product',
+//       active: true,
+//       attributes: [],
+//       created: 1664514926,
+//       default_price: null,
+//       description: null,
+//       images: [],
+//       livemode: false,
+//       metadata: {},
+//       name: 'DEMO Thank You Card',
+//       package_dimensions: null,
+//       shippable: null,
+//       statement_descriptor: null,
+//       tax_code: 'txcd_99999999',
+//       type: 'service',
+//       unit_label: null,
+//       updated: 1665819488,
+//       url: null
+//     },
+//     previous_attributes: { updated: 1665819487 }
+//   },
+//   livemode: false,
+//   pending_webhooks: 1,
+//   request: {
+//     id: 'req_ynVUz8saN49EtZ',
+//     idempotency_key: '761de9ce-3a99-4eb7-93a0-cab3e8fb56dc'
+//   },
+//   type: 'product.updated'
+// }
 
-// price created
+// // price created
+// stripe triggered event ---  {
+//   id: 'evt_1Lt4xaEvc4dteT8l5gVlzKBF',
+//   object: 'event',
+//   api_version: '2022-08-01',
+//   created: 1665819546,
+//   data: {
+//     object: {
+//       id: 'prod_MWetI5m6pENs5e',
+//       object: 'product',
+//       active: true,
+//       attributes: [],
+//       created: 1664514926,
+//       default_price: 'price_1Lt4xZEvc4dteT8lk9D7MZY8',
+//       description: null,
+//       images: [],
+//       livemode: false,
+//       metadata: {},
+//       name: 'DEMO Thank You Card',
+//       package_dimensions: null,
+//       shippable: null,
+//       statement_descriptor: null,
+//       tax_code: 'txcd_99999999',
+//       type: 'service',
+//       unit_label: null,
+//       updated: 1665819546,
+//       url: null
+//     },
+//     previous_attributes: { updated: 1665819545 }
+//   },
+//   livemode: false,
+//   pending_webhooks: 1,
+//   request: {
+//     id: 'req_9nEUHvS0KJa0XU',
+//     idempotency_key: '152c8c13-7cfc-46ec-8471-7a37df33328e'
+//   },
+//   type: 'product.updated'
+// }
+
+// // product updated
+// stripe triggered event ---  {
+//   id: 'evt_1Lt4yjEvc4dteT8lOT28a9qn',
+//   object: 'event',
+//   api_version: '2022-08-01',
+//   created: 1665819616,
+//   data: {
+//     object: {
+//       id: 'prod_MWetI5m6pENs5e',
+//       object: 'product',
+//       active: true,
+//       attributes: [],
+//       created: 1664514926,
+//       default_price: null,
+//       description: null,
+//       images: [],
+//       livemode: false,
+//       metadata: {},
+//       name: 'Thank You Card',
+//       package_dimensions: null,
+//       shippable: null,
+//       statement_descriptor: null,
+//       tax_code: 'txcd_99999999',
+//       type: 'service',
+//       unit_label: null,
+//       updated: 1665819616,
+//       url: null
+//     },
+//     previous_attributes: { name: 'DEMO Thank You Card', updated: 1665819577 }
+//   },
+//   livemode: false,
+//   pending_webhooks: 1,
+//   request: {
+//     id: 'req_cA11RdnXR9hIO2',
+//     idempotency_key: '00615750-c76b-4444-8f24-763bc3abc45c'
+//   },
+//   type: 'product.updated'
+// }
+
+// // customer created
+
+// stripe triggered event ---  {
+//   id: 'evt_1Lt4zWEvc4dteT8ld7OAIeYm',
+//   object: 'event',
+//   api_version: '2022-08-01',
+//   created: 1665819666,
+//   data: {
+//     object: {
+//       id: 'cus_McJcOuxkwEhUeT',
+//       object: 'customer',
+//       address: null,
+//       balance: 0,
+//       created: 1665819666,
+//       currency: null,
+//       default_source: null,
+//       delinquent: false,
+//       description: null,
+//       discount: null,
+//       email: 'info@tausigma.co',
+//       invoice_prefix: 'D064860E',
+//       invoice_settings: [Object],
+//       livemode: false,
+//       metadata: {},
+//       name: 'DEMO Customer',
+//       next_invoice_sequence: 1,
+//       phone: null,
+//       preferred_locales: [],
+//       shipping: null,
+//       tax_exempt: 'none',
+//       test_clock: null
+//     }
+//   },
+//   livemode: false,
+//   pending_webhooks: 1,
+//   request: {
+//     id: 'req_GXUG6yUfQXICbE',
+//     idempotency_key: '0d622f33-3546-4600-9ea7-2798814f26bc'
+//   },
+//   type: 'customer.created'
+// }

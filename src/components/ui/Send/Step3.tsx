@@ -16,6 +16,8 @@ import usePlacesAutocomplete, {
 import useOnclickOutside from 'react-cool-onclickoutside'
 import { RadioGroup } from '@headlessui/react'
 import { Store } from '@/lib/Store'
+import { loadStripe } from '@stripe/stripe-js'
+import { postData } from '@/lib/api-helpers'
 
 const Icon = dynamic(() => import('@/components/common/Icon'))
 const Modal = dynamic(() => import('@/components/ui/Modal'))
@@ -24,6 +26,11 @@ interface Step3Props {
   className?: string
 }
 
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ''
+)
 
 // eslint-disable-next-line react/display-name
 const Step3: React.FC<Step3Props> = ({ className }) => {
@@ -36,7 +43,22 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
   const [errors, setErrors]: any[] = useState([])
   const [initiateCheckout, setInitiateCheckout] = useState(false)
 
-  console.log('env',process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+  // console.log('env',process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+
+  useEffect(() => {
+    // Check to see if this is a redirect back from Checkout
+    const query = new URLSearchParams(window.location.search)
+    if (query.get('success')) {
+      console.log('Order placed! You will receive an email confirmation.')
+    }
+
+    if (query.get('canceled')) {
+      console.log(
+        'Order canceled -- continue to shop around and checkout when you’re ready.'
+      )
+    }
+  }, [])
+
   // https://github.com/wellyshen/use-places-autocomplete?ref=hackernoon.com#api
   const {
     ready,
@@ -52,9 +74,9 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
     debounce: 300,
     cache: 24 * 60 * 60, // Provide the cache time in seconds, default is 24 hours
   })
+
+  // When user clicks outside of the component, we can dismiss the searched suggestions by calling this method
   const ref = useOnclickOutside(() => {
-    // When user clicks outside of the component, we can dismiss
-    // the searched suggestions by calling this method
     clearSuggestions()
   })
 
@@ -759,7 +781,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                   </dd>
                 </div>
 
-                <div className="justify-center mt-3 text-sm font-medium text-gray-500 ">
+                {/* <div className="justify-center mt-3 text-sm font-medium text-gray-500 ">
                   <input
                     id="terms"
                     type="checkbox"
@@ -801,7 +823,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       }
                     </p>
                   )}
-                </div>
+                </div> */}
               </dl>
 
               <div className="px-4 py-3 sm:px-6">
@@ -952,29 +974,16 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       setProcessing(false)
                       return
                     }
-                    // this shouldnt execute if there are errors
+
                     console.log('initiating checkout...')
+                    await postData({
+                      url: '/api/create-checkout-session',
+                      data: state.cart,
+                      // token: `${process.env.STRIPE_PUBLISHABLE_KEY}`,
+                    })
 
-                    // try {
-
-                    //   // get stripe checkout session id
-                    //   const { sessionId } = await postData({
-                    //     url: '/api/create-checkout-session',
-                    //     data: state.cart,
-                    //     token: `${process.env.STRIPE_PUBLISHABLE_KEY}`,
-                    //   })
-
-                    //   // check if stripe is loaded and then initiate checkout using checking session id
-                    //   const stripe = await getStripe()
-                    //   stripe?.redirectToCheckout({ sessionId })
-                    // } catch (error) {
-                    //   setProcessing(false)
-                    //   console.log(error)
-                    //   return alert((error as Error)?.message)
-                    // } finally {
-                    //   setProcessing(false)
-                    // }
-
+                    setProcessing(false)
+                    
                     // should already be redirected to orderConfirmation or orderError routes
                   }}
                   style={{

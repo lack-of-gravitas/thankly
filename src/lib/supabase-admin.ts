@@ -17,8 +17,9 @@ const upsertProductRecord = async (product: Stripe.Product) => {
     active: product.active,
     name: product.name,
     description: product.description ?? undefined,
-    image: product.images?.[0] ?? null,
     metadata: product.metadata,
+    // image: product.images?.[0] ?? null,
+    
   }
 
   const { error } = await supabaseAdmin
