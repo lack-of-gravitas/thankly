@@ -7,9 +7,9 @@ import { stripe } from '@/lib/stripe'
 
 const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    console.log('req->', req.body)
+    console.log('req->', req)
 
-    return res.status(200)
+    return res.status(200).json(req)
   } else {
     res.setHeader('Allow', 'POST')
     res.status(405).end('Method Not Allowed')
