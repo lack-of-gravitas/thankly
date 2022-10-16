@@ -3,8 +3,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    console.log('req->', req)
-    console.log('res->', res)
+    console.log('req->', req.body)
+    // console.log('res->', res)
     
      // DO SOME STUFF HERE LATER
      // I DID SOME STUFF HERE YOU DONT CARE ABOUT SO SET 200
