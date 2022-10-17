@@ -3,9 +3,9 @@ import { stripe } from '@/lib/stripe'
 
 const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    console.log('req->', req.body.prices)
+    console.log('req->', JSON.parse(req.body))
     // update quantity, update main image, name, description, pricing
-    'prices' in req.body ? console.log('prices upserted') : null
+    'prices' in JSON.parse(req.body) ? console.log('prices upserted') : null
 
     // check what was updated & call relevant Stripe API
 
@@ -18,9 +18,8 @@ const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
 
 export default updateStripe
 
-
 // create new product
-// req-> [Object: null prototype] 
+// req-> [Object: null prototype]
 // {
 //     "name": "DEMO New Upsert",
 //     "type": "card",
@@ -41,7 +40,6 @@ export default updateStripe
 //     "brand": "Thankly",
 //     "status": "active"
 //   }
-
 
 // add image
 // req-> [Object: null prototype] {
