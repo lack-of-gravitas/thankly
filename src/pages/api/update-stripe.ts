@@ -4,11 +4,9 @@ import { stripe } from '@/lib/stripe'
 const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     console.log(req.body)
-const data = req.body
+    const { name, description, stockQty, images, prices } = req.body
 
-console.log("Prices: ", data.prices);
-console.log("Name: ", data.name);
-console.log("Type: ", data.type);
+    stockQty ? console.log('qty // ', stockQty) : null
     // update quantity, update main image, name, description, pricing
     // 'prices' in JSON.parse(req.body) ? console.log('prices upserted') : null
 
