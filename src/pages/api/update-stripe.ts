@@ -6,7 +6,7 @@ const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log(req.body)
 
     // update quantity, update main image, name, description, pricing
-    'prices' in req.body ? console.log('prices upserted') : null
+    'prices' in JSON.parse(req.body) ? console.log('prices upserted') : null
 
     // check what was updated & call relevant Stripe API
 
