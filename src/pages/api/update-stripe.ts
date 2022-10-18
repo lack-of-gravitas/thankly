@@ -1,63 +1,89 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { stripe } from '@/lib/stripe'
+// create separate endpoint for Customer / Price Updates
 
 const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    console.log(req.body)
-    const { name, description, stockQty, images, prices } = req.body
+    console.log(JSON.stringify(req.body))
+    // const { event, payload, key, keys } = req.body
 
-    stockQty ? console.log('qty // ', stockQty) : null
-    // update quantity, update main image, name, description, pricing
-    // 'prices' in JSON.parse(req.body) ? console.log('prices upserted') : null
-
-    // check what was updated & call relevant Stripe API
-
-    return res.status(200).json({ message: 'Hello from Next.js!' })
-  } else {
-    res.setHeader('Allow', 'POST')
-    res.status(405).end('Method Not Allowed')
+    // try {
+    //   switch (event) {
+    //     case 'items.create':
+    //         const product = await stripe.products.create ({
+    //             name: payload.name ?? 'NAME NOT SET',
+    //             active: payload.status === 'active' ? true: false,
+    //             description: payload.description ?? '',
+    //             images: [payload.images.create[0]]
+    //             metadata: key
+    //         })
+    //       break
+    //     case 'items.update':
+    //       break
+    //     case 'items.delete':
+    //       break
+    //     default:
+    //       throw new Error('Unhandled event. Check webhook.')
+    //   }
+    // } catch (error) {
+    //   console.log(error)
+    //   return res
+    //     .status(400)
+    //     .send(
+    //       'Webhook error: "Webhook handler failed. View logs."' +
+    //         JSON.stringify(error)
+    //     )
+    // }
   }
+
+  // 'prices' in JSON.parse(req.body) ? console.log('prices upserted') : null
+
+  return res.status(200).json({ received: true })
 }
 
 export default updateStripe
 
-// create new product
-// req-> [Object: null prototype]
+// create product
 // {
-//     "name": "DEMO New Upsert",
-//     "type": "card",
-//     "images": {
-//       "create": [
-//         {
-//           "products_id": " ",
-//           "directus_files_id": {
-//             "id": "ddc12764-9313-4f4c-a422-0de80fb90071"
-//           }
-//         }
-//       ],
-//       "update": [],
-//       "delete": []
+//     event: 'items.create',
+//     accountability: {
+//       user: 'eee90e7e-69c1-4824-8dbd-5cee8f279ad3',
+//       role: 'bc0d61b1-ba8b-495f-a3fb-9db4c92b6668'
 //     },
-//     "stockQty": 3,
-//     "description": "This is an awesome card",
-//     "brand": "Thankly",
-//     "status": "active"
+//     payload: {
+//       name: 'DEMO Stripe Product',
+//       type: 'card',
+//       images: { create: [Array], update: [], delete: [] },
+//       prices: [ [Object] ],
+//       description: 'test description',
+//       stockQty: 5,
+//       brand: 'Thankly',
+//       status: 'active'
+//     },
+//     key: 13,
+//     collection: 'products'
 //   }
 
-// add image
-// req-> [Object: null prototype] {
-//     '"{"images":{"create":[{"products_id":"12","directus_files_id":{"id":"5be8ed7b-4000-409d-885f-599c532e97ea"}}],"update":[],"delete":[]}}"': ''
+// batch edit products (chaneg to gift)
+// {
+//     event: 'items.update',
+//     accountability: {
+//       user: 'eee90e7e-69c1-4824-8dbd-5cee8f279ad3',
+//       role: 'bc0d61b1-ba8b-495f-a3fb-9db4c92b6668'
+//     },
+//     payload: { type: 'gift' },
+//     keys: [ 10, 13, 9 ],
+//     collection: 'products'
 //   }
 
-// update existing field
-// req-> [Object: null prototype] { '"{"name":"DEMO UpsertStripe"}"': '' }
-
-// create price(s)
-// req-> [Object: null prototype] {
-//     '"{"prices":[{"active":true,"currency":"USD","unit_amount":1234}]}"': ''
-//   }
-
-// update price(s)
-// req-> [Object: null prototype] {
-//     '"{"prices":[{"active":true,"currency":"AUD","unit_amount":12.35}]}"': ''
+// delete product
+// {
+//     event: 'items.delete',
+//     accountability: {
+//       user: 'eee90e7e-69c1-4824-8dbd-5cee8f279ad3',
+//       role: 'bc0d61b1-ba8b-495f-a3fb-9db4c92b6668'
+//     },
+//     payload: [ 13 ],
+//     keys: [ 13 ],
+//     collection: 'products'
 //   }
