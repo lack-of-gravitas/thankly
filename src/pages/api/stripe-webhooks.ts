@@ -61,9 +61,18 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         switch (event.type) {
           case 'product.created':
             product = event.data.object as Stripe.Product
-
-            results = await (
-              await fetch(`${process.env.NEXT_PUBLIC_REST_API}/products`, {
+            console.log(
+              'json -- ',
+              JSON.stringify({
+                id: product.id,
+                name: product.name,
+                description: product.description,
+                status: product.active === true ? 'active' : 'draft',
+              })
+            )
+            results = await fetch(
+              `${process.env.NEXT_PUBLIC_REST_API}/products`,
+              {
                 method: 'POST',
                 headers: {
                   Authorization: `Bearer ${process.env.DIRECTUS}`,
@@ -76,8 +85,8 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                   description: product.description,
                   status: product.active === true ? 'active' : 'draft',
                 }),
-              })
-            ).json()
+              }
+            )
 
             console.log('directus product created results -- ', results)
             break
