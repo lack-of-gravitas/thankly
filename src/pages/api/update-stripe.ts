@@ -10,45 +10,34 @@ const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
     const { event, payload, key, keys } = req.body
 
     try {
-      switch (event) {
-        case 'products.items.create':
-          let product: any = {
-            name: payload.name ?? 'NAME NOT SET',
-            active: payload.status === 'active' ? true : false,
-            description: payload.description ?? '',
-            images: [
-              `${process.env.NEXT_PUBLIC_ASSETS_URL}/${payload.images.create[0].directus_files_id.id}`,
-            ],
-          }
+      let product: any = {
+        name: payload.name ?? 'NAME NOT SET',
+        active: payload.status === 'active' ? true : false,
+        description: payload.description ?? '',
+        images: [
+          `${process.env.NEXT_PUBLIC_ASSETS_URL}/${payload.images.create[0].directus_files_id.id}`,
+        ],
+      }
 
-          // payload.prices
-          //   ? (product = {
-          //       ...product,
-          //       ...{ default_price_data: [...payload.prices] },
-          //     })
-          //   : null
+      // payload.prices
+      //   ? (product = {
+      //       ...product,
+      //       ...{ default_price_data: [...payload.prices] },
+      //     })
+      //   : null
 
-          product = await stripe.products.create(product)
-          console.log('product -- ', product)
+      product = await stripe.products.create(product)
+      console.log('product -- ', product)
 
-          // update stripeId into Product
-          // create prices if there were prices associated
-          if (payload.prices && product) {
-            const price = await stripe.prices.create({
-              unit_amount: payload.prices[0].unit_amount,
-              currency: payload.prices[0].currency,
-              product: product.id,
-            })
-            console.log('price -- ', price)
-          }
-
-          break
-        case 'items.update':
-          break
-        case 'items.delete':
-          break
-        default:
-          throw new Error('Unhandled event. Check webhook.')
+      // update stripeId into Product
+      // create prices if there were prices associated
+      if (payload.prices && product) {
+        const price = await stripe.prices.create({
+          unit_amount: payload.prices[0].unit_amount,
+          currency: payload.prices[0].currency,
+          product: product.id,
+        })
+        console.log('price -- ', price)
       }
     } catch (error) {
       console.log(error)
