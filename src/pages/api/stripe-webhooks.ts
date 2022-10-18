@@ -62,7 +62,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           case 'product.created':
             product = event.data.object as Stripe.Product
             results = await postData({
-              url: '/items/products',
+              url: `https://${process.env.VERCEL_URL}/items/products`,
               data: {
                 id: product.id,
                 name: product.name,
@@ -77,7 +77,8 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           case 'product.updated':
             product = event.data.object as Stripe.Product
             results = await postData({
-              url: `/items/products/` + product.id,
+              url:
+                `https://${process.env.VERCEL_URL}/items/products` + product.id,
               data: {
                 name: product.name,
                 description: product.description,
@@ -92,7 +93,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           case 'price.created':
             price = event.data.object as Stripe.Price
             results = await postData({
-              url: '/items/price',
+              url: `https://${process.env.VERCEL_URL}/items/products`,
               data: {
                 id: price.id,
                 currency: price.currency,
@@ -107,7 +108,8 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           case 'price.updated':
             price = event.data.object as Stripe.Price
             results = await postData({
-              url: `/items/products` + price.id,
+              url:
+                `https://${process.env.VERCEL_URL}/items/products` + price.id,
               data: {
                 currency: price.currency,
                 product: price.product,
