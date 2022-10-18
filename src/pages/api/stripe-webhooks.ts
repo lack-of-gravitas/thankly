@@ -64,7 +64,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             results = await postData({
               url: `${process.env.NEXT_PUBLIC_REST_API}/products`,
               data: {
-                id: product.id,
+                productId: product.id,
                 name: product.name,
                 description: product.description,
                 status: product.active === true ? 'active' : 'draft',
