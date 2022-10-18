@@ -62,7 +62,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           case 'product.created':
             product = event.data.object as Stripe.Product
             results = await postData({
-              url: `https://${process.env.VERCEL_URL}/items/products`,
+              url: `${process.env.NEXT_PUBLIC_REST_API}/products`,
               data: {
                 id: product.id,
                 name: product.name,
@@ -77,8 +77,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           case 'product.updated':
             product = event.data.object as Stripe.Product
             results = await postData({
-              url:
-                `https://${process.env.VERCEL_URL}/items/products` + product.id,
+              url: `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id,
               data: {
                 name: product.name,
                 description: product.description,
@@ -88,16 +87,16 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             })
 
             console.log('directus product created results -- ', results)
-
             break
+
           case 'price.created':
             price = event.data.object as Stripe.Price
             results = await postData({
-              url: `https://${process.env.VERCEL_URL}/items/products`,
+              url: `${process.env.NEXT_PUBLIC_REST_API}/products`,
               data: {
-                id: price.id,
+                priceId: price.id,
                 currency: price.currency,
-                product: price.product,
+                // product: price.product,
                 unit_amount: ((price.unit_amount ?? 0) / 100).toFixed(2),
               },
               token: `${process.env.DIRECTUS}`,
@@ -105,21 +104,22 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
             console.log('directus price created results -- ', results)
             break
+
           case 'price.updated':
             price = event.data.object as Stripe.Price
             results = await postData({
               url:
-                `https://${process.env.VERCEL_URL}/items/products` + price.id,
+                `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
               data: {
+                priceId: price.id,
                 currency: price.currency,
-                product: price.product,
+                //product: price.product,
                 unit_amount: ((price.unit_amount ?? 0) / 100).toFixed(2),
               },
               token: `${process.env.DIRECTUS}`,
             })
 
             console.log('directus price created results -- ', results)
-
             break
           // case 'checkout.session.completed':
           //   const checkoutSession = event.data.object as Stripe.Checkout.Session
