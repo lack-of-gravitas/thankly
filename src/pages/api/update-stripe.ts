@@ -6,14 +6,14 @@ import { stripe } from '@/lib/stripe'
 
 const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    console.log(JSON.stringify(req.body))
+    console.log('', JSON.stringify(req.body))
     const { event, payload, key, keys } = req.body
 
     try {
       switch (event) {
         case 'items.create':
-          let product = {
-            id: '',
+          let product:any = {
+            
             name: payload.name ?? 'NAME NOT SET',
             active: payload.status === 'active' ? true : false,
             description: payload.description ?? '',
@@ -31,6 +31,7 @@ const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
 
           product = await stripe.products.create(product)
           console.log('product -- ', product)
+
 
           // update stripeId into Product
           // create prices if there were prices associated
