@@ -12,8 +12,7 @@ const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       switch (event) {
         case 'products.items.create':
-          let product:any = {
-            
+          let product: any = {
             name: payload.name ?? 'NAME NOT SET',
             active: payload.status === 'active' ? true : false,
             description: payload.description ?? '',
@@ -32,18 +31,15 @@ const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
           product = await stripe.products.create(product)
           console.log('product -- ', product)
 
-
           // update stripeId into Product
           // create prices if there were prices associated
           if (payload.prices && product) {
             const price = await stripe.prices.create({
               unit_amount: payload.prices[0].unit_amount,
               currency: payload.prices[0].currency,
-              // recurring: { interval: 'month' },
-              product: product.id ?? 'prod_MdOV0ZLqD3hZYF',
+              product: product.id,
             })
             console.log('price -- ', price)
-
           }
 
           break
