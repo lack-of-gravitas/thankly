@@ -11,7 +11,7 @@ const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
       switch (event) {
-        case 'items.create':
+        case 'products.items.create':
           let product:any = {
             
             name: payload.name ?? 'NAME NOT SET',
