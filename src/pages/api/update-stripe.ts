@@ -14,7 +14,7 @@ const updateStripe = async (req: NextApiRequest, res: NextApiResponse) => {
             name: payload.name ?? 'NAME NOT SET',
             active: payload.status === 'active' ? true : false,
             description: payload.description ?? '',
-            metadata: key,
+            // metadata: {key}, FUCKING GARBAGE TYPESCRIPT DOESNT LET ME SET THIS SHIT
             images: [
               `${process.env.NEXT_PUBLIC_ASSETS_URL}/${payload.images.create[0].directus_files_id.id}`,
             ],
