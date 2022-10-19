@@ -55,8 +55,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         switch (event.type) {
           case 'product.created':
             product = event.data.object as Stripe.Product
-
-            // check if product already exists in Directus (unique id doesn't seem to be enforced)
+            console.log('product.created --- ', event)
 
             results = await fetch(
               `${process.env.NEXT_PUBLIC_REST_API}/products`,
@@ -72,14 +71,15 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                   name: product.name,
                   description: product.description,
                   status: product.active,
+                  priceId:product.default_price,
                 }),
               }
             )
-
-            console.log('directus product created results -- ', results)
             break
           case 'product.updated':
             product = event.data.object as Stripe.Product
+            console.log('product.updated --- ', event)
+
             results = await fetch(
               `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id,
               {
@@ -93,18 +93,43 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                   name: product.name,
                   description: product.description,
                   status: product.active,
+                  priceId:product.default_price,
                 }),
               }
             )
-
-            console.log('directus product created results -- ', results)
             break
-          case 'price.created' || 'price.updated':
+          case 'price.created':
             price = event.data.object as Stripe.Price
-            console.log('stripe triggered event --- ', price)
+            console.log('price.created PRICE OBJECT FROM STRIPE --- ', event)
 
             results = await fetch(
-              `${process.env.NEXT_PUBLIC_REST_API}/products/${price.product}`,
+              `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
+              {
+                method: 'PATCH',
+                redirect: 'follow',
+                headers: {
+                  Authorization: `Bearer ${process.env.DIRECTUS}`,
+                  'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                  priceId: price.id,
+                  currency: price.currency,
+                  unit_amount:
+                    price.unit_amount === 0 || price.unit_amount === null
+                      ? 0
+                      : (price.unit_amount / 100).toFixed(2),
+                }),
+              }
+            )
+            break
+
+          case 'price.updated':
+            price = event.data.object as Stripe.Price
+            console.log('price.updated PRICE OBJECT FROM STRIPE --- ', event)
+
+            results = await fetch(
+              `${process.env.NEXT_PUBLIC_REST_API}/products` + price.product,
               {
                 method: 'PATCH',
                 redirect: 'follow',
@@ -126,10 +151,10 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             break
           case 'price.deleted':
             price = event.data.object as Stripe.Price
-            console.log('stripe triggered event --- ', price)
+            console.log('price.deleted --- ', event)
 
             results = await fetch(
-              `${process.env.NEXT_PUBLIC_REST_API}/products/${price.product}`,
+              `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
               {
                 method: 'PATCH',
                 redirect: 'follow',
@@ -150,22 +175,6 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             break
           case 'customer.updated':
             break
-
-          // case 'checkout.session.completed':
-          //   const checkoutSession = event.data.object as Stripe.Checkout.Session
-          //   await managePurchases(
-          //     // event.data.object as Stripe.Checkout.Session,
-          //     checkoutSession.mode === 'subscription'
-          //       ? (checkoutSession.subscription as string)
-          //       : checkoutSession.payment_intent,
-          //     checkoutSession.customer as string,
-          //     checkoutSession.metadata,
-          //     checkoutSession.mode as string
-          //   )
-          //   break
-
-          // default:
-          //   throw new Error('Unhandled relevant event!')
         }
       } catch (error) {
         console.log(error)
