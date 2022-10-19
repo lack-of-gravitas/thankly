@@ -2,7 +2,6 @@ import { stripe } from '@/lib/stripe'
 import { NextApiRequest, NextApiResponse } from 'next'
 import Stripe from 'stripe'
 import { Readable } from 'node:stream'
-import { postData } from '@/lib/api-helpers'
 
 // Stripe requires the raw body to construct the event.
 export const config = {
@@ -25,9 +24,6 @@ const relevantEvents = new Set([
   'product.created',
   'product.updated',
   'product.deleted',
-  'price.created',
-  'price.updated',
-  'price.deleted',
   'payment_intent.succeeded',
   'checkout.session.completed', // TODO: Delete Voucher Coupon
 ])
@@ -89,7 +85,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             results = await fetch(
               `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id,
               {
-                method: 'POST',
+                method: 'PATCH',
                 headers: {
                   Authorization: `Bearer ${process.env.DIRECTUS}`,
                   'Content-Type': 'application/json',
@@ -104,50 +100,6 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             )
 
             console.log('directus product created results -- ', results)
-            break
-
-          case 'price.created':
-            price = event.data.object as Stripe.Price
-            results = await fetch(
-              `${process.env.NEXT_PUBLIC_REST_API}/products`,
-              {
-                method: 'POST',
-                headers: {
-                  Authorization: `Bearer ${process.env.DIRECTUS}`,
-                  'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify({
-                  priceId: price.id,
-                  currency: price.currency,
-                  unit_amount: ((price.unit_amount ?? 0) / 100).toFixed(2),
-                }),
-              }
-            )
-
-            console.log('directus price created results -- ', results)
-            break
-
-          case 'price.updated':
-            price = event.data.object as Stripe.Price
-            results = await fetch(
-              `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
-              {
-                method: 'POST',
-                headers: {
-                  Authorization: `Bearer ${process.env.DIRECTUS}`,
-                  'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify({
-                  priceId: price.id,
-                  currency: price.currency,
-                  unit_amount: ((price.unit_amount ?? 0) / 100).toFixed(2),
-                }),
-              }
-            )
-
-            console.log('directus price created results -- ', results)
             break
           // case 'checkout.session.completed':
           //   const checkoutSession = event.data.object as Stripe.Checkout.Session
