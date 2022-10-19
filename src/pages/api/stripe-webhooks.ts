@@ -72,7 +72,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 description: product.description,
                 status: product.active,
               },
-              token: { Authorization: `Bearer ${process.env.DIRECTUS}` },
+              token: `Authorization: Bearer ${process.env.DIRECTUS}`,
             })
 
             // results = await fetch(
@@ -175,3 +175,29 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 export default webhookHandler
+
+
+export const postDirectus = async ({
+  url,
+  data,
+}: {
+  url: string
+  data?: any
+}) => {
+  // export const postData = async ({ url, token, data }) => {
+  console.log('posting,', url,  data)
+
+  const res: Response = await fetch(url, {
+    method: 'POST',
+    headers: new Headers({ 'Content-Type': 'application/json', }),
+    credentials: 'same-origin',
+    body: JSON.stringify(data),
+  })
+
+  if (!res.ok) {
+    console.log('Error in postData', { url,  data, res })
+    throw Error(res.statusText)
+  }
+
+  return res.json()
+}
