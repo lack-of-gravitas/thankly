@@ -117,9 +117,9 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                   priceId: price.id,
                   currency: price.currency,
                   unit_amount:
-                    price.unit_amount != 0 || price.unit_amount != null
-                      ? (price.unit_amount / 100).toFixed(2)
-                      : 0,
+                    price.unit_amount === 0 || price.unit_amount === null
+                      ? 0
+                      : (price.unit_amount / 100).toFixed(2),
                 }),
               }
             )
