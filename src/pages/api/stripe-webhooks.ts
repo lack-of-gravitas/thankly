@@ -29,7 +29,7 @@ const relevantEvents = new Set([
 ])
 
 const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'POST') {
+  if (req.method === 'POST' || req.method === 'PATCH') {
     const buf = await buffer(req)
     const sig = req.headers['stripe-signature']
     const webhookSecret =
