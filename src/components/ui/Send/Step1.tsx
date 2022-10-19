@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from 'react'
 import cn from 'clsx'
 import dynamic from 'next/dynamic'
 import Fuse from 'fuse.js'
+import { stripe } from '@/lib/stripe'
 
 const Icon = dynamic(() => import('@/components/common/Icon'))
 const ProductCard = dynamic(() => import('@/components/ui/ProductCard'))
@@ -37,6 +38,7 @@ const Step1: React.FC<Step1Props> = ({ className, data }) => {
   let fuse: any
 
   products ? (fuse = new Fuse(products, searchOptions)) : null
+  // console.log('products -- ', products)
 
   function onSearch({ currentTarget }: any) {
     currentTarget.value === '' || query === ''
@@ -128,7 +130,7 @@ const Step1: React.FC<Step1Props> = ({ className, data }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 pt-5 mx-auto gap-x-2 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 xl:grid-cols-4 lg:gap-x-4 xl:gap-x-4">
+      <div className="grid grid-cols-1 pt-5 mx-auto gap-x-2 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-4 xl:grid-cols-4 xl:gap-x-4">
         {searchResults
           ? searchResults?.map((product: any) => (
               <ProductCard key={product.name} product={product} />

@@ -101,6 +101,53 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
             console.log('directus product created results -- ', results)
             break
+          case 'price.created':
+          case 'price.updated':
+            price = event.data.object as Stripe.Price
+            results = await fetch(
+              `${process.env.NEXT_PUBLIC_REST_API}/products/${price.product}`,
+              {
+                method: 'PATCH',
+                headers: {
+                  Authorization: `Bearer ${process.env.DIRECTUS}`,
+                  'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                  priceId: price.id,
+                  currency: price.currency,
+                  unit_amount:
+                    price.unit_amount != 0 || price.unit_amount === null
+                      ? (price.unit_amount / 100).toFixed(2)
+                      : 0,
+                }),
+              }
+            )
+            break
+          case 'price.deleted':
+            price = event.data.object as Stripe.Price
+            results = await fetch(
+              `${process.env.NEXT_PUBLIC_REST_API}/products/${price.product}`,
+              {
+                method: 'PATCH',
+                headers: {
+                  Authorization: `Bearer ${process.env.DIRECTUS}`,
+                  'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                  priceId: '',
+                  currency: 'AUD',
+                  unit_amount: 0,
+                }),
+              }
+            )
+            break
+          case 'customer.created':
+            break
+          case 'customer.updated':
+            break
+
           // case 'checkout.session.completed':
           //   const checkoutSession = event.data.object as Stripe.Checkout.Session
           //   await managePurchases(

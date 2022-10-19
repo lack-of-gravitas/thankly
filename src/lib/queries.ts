@@ -1,3 +1,5 @@
+import { stripe } from './stripe'
+
 // brand
 export async function getBrand() {
   let brand = await (
@@ -174,7 +176,7 @@ export async function getSection(params: any) {
           `${process.env.NEXT_PUBLIC_REST_API}/products` +
             `?fields=*,images.directus_files_id` +
             `&filter[featured][_eq]=true` +
-            `&filter[status][_eq]=active` +
+            `&filter[status][_eq]=true` +
             `&filter[stockQty][_gt]=0` +
             `&filter[type][_in]=${
               section.type ? section.type.toString() : `card,gift`
@@ -265,7 +267,7 @@ export async function getSection(params: any) {
           {
             method: 'GET',
             headers: {
-              'Stripe-Version': '2020-08-27',
+              'Stripe-Version': '2022-08-01',
               search_api_beta: 'v1',
               Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRIPE_PRODUCTINFO}`,
               'Content-Type': 'application/json',
@@ -336,12 +338,15 @@ export async function getProducts() {
     await fetch(
       `${process.env.NEXT_PUBLIC_REST_API}/products` +
         `?fields=*,categories.item.*,images.directus_files_id` + // key fields
-        `&filter[status][_eq]=active` +
+        `&filter[status][_eq]=true` +
         `&filter[stockQty][_gt]=0` +
         `&filter[type][_in]=card,gift`
     )
   ).json()
   data = data.data
+
+
+
   return data
 }
 
@@ -360,7 +365,7 @@ export async function getFeaturedProducts(type: any, limit: any) {
       `${process.env.NEXT_PUBLIC_REST_API}/products` +
         `?fields=*,images.*` +
         `&filter[featured][_eq]=true` +
-        `&filter[status][_eq]=active` +
+        `&filter[status][_eq]=true` +
         `&filter[stockQty][_gt]=0` +
         `&filter[type][_in]=${type ? type.toString() : `card,gift`}` +
         `&sort=-date_created` +
@@ -368,6 +373,8 @@ export async function getFeaturedProducts(type: any, limit: any) {
     )
   ).json()
   data = data.data
+
+ 
   return data
 }
 

@@ -17,10 +17,10 @@ export function SwrBrand() {
 }
 
 export function SwrVoucher(voucher: any) {
-  let { data } = useSWR(['voucher',voucher], () => getVoucher(voucher), {
+  let { data } = useSWR(['voucher', voucher], () => getVoucher(voucher), {
     revalidateOnReconnect: false,
   })
-  return data.length === 1 ?  data.data[0] :  null
+  return data.length === 1 ? data.data[0] : null
 }
 
 export function SwrSection(queryParams: any) {
@@ -43,6 +43,8 @@ export function SwrProducts() {
   // add key to manage state of "choose / chosen button"
   if (data) data = data.map((v: any) => ({ ...v, chosen: false }))
   // console.log('data --', data)
+  console.log(`Bearer ${process.env.STRIPE_SECRET_KEY}`)
+  // data?.map(async (product: any) => {
 
   return data
 }
