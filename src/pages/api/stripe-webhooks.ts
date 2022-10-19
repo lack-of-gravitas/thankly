@@ -45,8 +45,6 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).send(`Webhook Error: ${err.message}`)
     }
 
-    console.log('stripe triggered event --- ', event)
-
     if (relevantEvents.has(event.type)) {
       try {
         // directus api - https://docs.directus.io/reference/items.html
@@ -101,13 +99,15 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
             console.log('directus product created results -- ', results)
             break
-          case 'price.created':
-          case 'price.updated':
+          case 'price.created' || 'price.updated':
             price = event.data.object as Stripe.Price
+            console.log('stripe triggered event --- ', price)
+
             results = await fetch(
               `${process.env.NEXT_PUBLIC_REST_API}/products/${price.product}`,
               {
                 method: 'PATCH',
+                redirect: 'follow',
                 headers: {
                   Authorization: `Bearer ${process.env.DIRECTUS}`,
                   'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                   priceId: price.id,
                   currency: price.currency,
                   unit_amount:
-                    price.unit_amount != 0 || price.unit_amount === null
+                    price.unit_amount != 0 || price.unit_amount != null
                       ? (price.unit_amount / 100).toFixed(2)
                       : 0,
                 }),
@@ -126,10 +126,13 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             break
           case 'price.deleted':
             price = event.data.object as Stripe.Price
+            console.log('stripe triggered event --- ', price)
+
             results = await fetch(
               `${process.env.NEXT_PUBLIC_REST_API}/products/${price.product}`,
               {
                 method: 'PATCH',
+                redirect: 'follow',
                 headers: {
                   Authorization: `Bearer ${process.env.DIRECTUS}`,
                   'Content-Type': 'application/json',
@@ -137,7 +140,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 credentials: 'same-origin',
                 body: JSON.stringify({
                   priceId: '',
-                  currency: 'AUD',
+                  currency: '',
                   unit_amount: 0,
                 }),
               }

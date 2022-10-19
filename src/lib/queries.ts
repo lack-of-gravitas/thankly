@@ -249,53 +249,53 @@ export async function getSection(params: any) {
       return section.data[0].item
       break
 
-    case 'ProductPricing':
-      section = await (
-        await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
-            `?fields=item.id,item.text,item.section_name,item.prices.*,products_id.stripeId` +
-            `&filter[id][_eq]=${params.id}`
-        )
-      ).json()
-      section = section.data[0].item
-      // console.log('pricing section', section)
-      // console.log('product_id', params.product_id)
+    // case 'ProductPricing':
+    //   section = await (
+    //     await fetch(
+    //       `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
+    //         `?fields=item.id,item.text,item.section_name,item.prices.*,products_id.stripeId` +
+    //         `&filter[id][_eq]=${params.id}`
+    //     )
+    //   ).json()
+    //   section = section.data[0].item
+    //   // console.log('pricing section', section)
+    //   // console.log('product_id', params.product_id)
 
-      let { data: stripePrices } = await (
-        await fetch(
-          `https://api.stripe.com/v1/search/prices?query=product:'${params.product_id}' AND active:'true'`,
-          {
-            method: 'GET',
-            headers: {
-              'Stripe-Version': '2022-08-01',
-              search_api_beta: 'v1',
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRIPE_PRODUCTINFO}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-      ).json()
-      // console.log('stripe prices', stripePrices)
+    //   let { data: stripePrices } = await (
+    //     await fetch(
+    //       `https://api.stripe.com/v1/search/prices?query=product:'${params.product_id}' AND active:'true'`,
+    //       {
+    //         method: 'GET',
+    //         headers: {
+    //           'Stripe-Version': '2022-08-01',
+    //           search_api_beta: 'v1',
+    //           Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRIPE_PRODUCTINFO}`,
+    //           'Content-Type': 'application/json',
+    //         },
+    //       }
+    //     )
+    //   ).json()
+    //   // console.log('stripe prices', stripePrices)
 
-      let consolidatedPrices: any = []
+    //   let consolidatedPrices: any = []
 
-      section.prices?.map((price: any) => {
-        stripePrices?.map((stripePrice: any) => {
-          // find price in stripePrices
-          if (stripePrice.id === price.stripeId) {
-            consolidatedPrices.push({
-              ...price,
-              ...stripePrice,
-            })
-            // console.log('consolidatedPrices', consolidatedPrices)
-          }
-        })
-      })
+    //   section.prices?.map((price: any) => {
+    //     stripePrices?.map((stripePrice: any) => {
+    //       // find price in stripePrices
+    //       if (stripePrice.id === price.stripeId) {
+    //         consolidatedPrices.push({
+    //           ...price,
+    //           ...stripePrice,
+    //         })
+    //         // console.log('consolidatedPrices', consolidatedPrices)
+    //       }
+    //     })
+    //   })
 
-      section.prices = consolidatedPrices
-      // console.log('section + prices', section)
+    //   section.prices = consolidatedPrices
+    //   // console.log('section + prices', section)
 
-      return section
+    //   return section
     case 'ProductReviews':
       section = await (
         await fetch(
