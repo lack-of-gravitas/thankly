@@ -61,32 +61,37 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         switch (event.type) {
           case 'product.created':
             product = event.data.object as Stripe.Product
-            console.log(
-              'json -- ',
-              JSON.stringify({
+
+
+            // check if product already exists in Directus (unique id doesn't seem to be enforced)
+            results = await postData({
+              url: `${process.env.NEXT_PUBLIC_REST_API}/products`,
+              data: {
                 id: product.id,
                 name: product.name,
                 description: product.description,
-                status: product.active === true ? 'active' : 'draft',
-              })
-            )
-            results = await fetch(
-              `${process.env.NEXT_PUBLIC_REST_API}/products`,
-              {
-                method: 'POST',
-                headers: {
-                  Authorization: `Bearer ${process.env.DIRECTUS}`,
-                  'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify({
-                  id: product.id,
-                  name: product.name,
-                  description: product.description,
-                  status: product.active === true ? 'active' : 'draft',
-                }),
-              }
-            )
+                status: product.active,
+              },
+              token: { Authorization: `Bearer ${process.env.DIRECTUS}` },
+            })
+
+            // results = await fetch(
+            //   `${process.env.NEXT_PUBLIC_REST_API}/products`,
+            //   {
+            //     method: 'POST',
+            //     headers: {
+            //       Authorization: `Bearer ${process.env.DIRECTUS}`,
+            //       'Content-Type': 'application/json',
+            //     },
+            //     credentials: 'same-origin',
+            //     body: JSON.stringify({
+            //       id: product.id,
+            //       name: product.name,
+            //       description: product.description,
+            //       status: product.active,
+            //     }),
+            //   }
+            // )
 
             console.log('directus product created results -- ', results)
             break
@@ -97,9 +102,9 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
               data: {
                 name: product.name,
                 description: product.description,
-                status: product.active === true ? 'active' : 'draft',
+                status: product.active,
               },
-              token: `${process.env.DIRECTUS}`,
+              token: { Authorization: `Bearer ${process.env.DIRECTUS}` },
             })
 
             console.log('directus product created results -- ', results)
@@ -112,10 +117,9 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
               data: {
                 priceId: price.id,
                 currency: price.currency,
-                // product: price.product,
                 unit_amount: ((price.unit_amount ?? 0) / 100).toFixed(2),
               },
-              token: `${process.env.DIRECTUS}`,
+              token: { Authorization: `Bearer ${process.env.DIRECTUS}` },
             })
 
             console.log('directus price created results -- ', results)
@@ -129,10 +133,9 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
               data: {
                 priceId: price.id,
                 currency: price.currency,
-                //product: price.product,
                 unit_amount: ((price.unit_amount ?? 0) / 100).toFixed(2),
               },
-              token: `${process.env.DIRECTUS}`,
+              token: { Authorization: `Bearer ${process.env.DIRECTUS}` },
             })
 
             console.log('directus price created results -- ', results)
