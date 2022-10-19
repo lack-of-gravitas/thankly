@@ -62,81 +62,90 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           case 'product.created':
             product = event.data.object as Stripe.Product
 
-
             // check if product already exists in Directus (unique id doesn't seem to be enforced)
-            results = await postData({
-              url: `${process.env.NEXT_PUBLIC_REST_API}/products`,
-              data: {
-                id: product.id,
-                name: product.name,
-                description: product.description,
-                status: product.active,
-              },
-              token: `Authorization: Bearer ${process.env.DIRECTUS}`,
-            })
 
-            // results = await fetch(
-            //   `${process.env.NEXT_PUBLIC_REST_API}/products`,
-            //   {
-            //     method: 'POST',
-            //     headers: {
-            //       Authorization: `Bearer ${process.env.DIRECTUS}`,
-            //       'Content-Type': 'application/json',
-            //     },
-            //     credentials: 'same-origin',
-            //     body: JSON.stringify({
-            //       id: product.id,
-            //       name: product.name,
-            //       description: product.description,
-            //       status: product.active,
-            //     }),
-            //   }
-            // )
+            results = await fetch(
+              `${process.env.NEXT_PUBLIC_REST_API}/products`,
+              {
+                method: 'POST',
+                headers: {
+                  Authorization: `Bearer ${process.env.DIRECTUS}`,
+                  'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                  id: product.id,
+                  name: product.name,
+                  description: product.description,
+                  status: product.active,
+                }),
+              }
+            )
 
             console.log('directus product created results -- ', results)
             break
           case 'product.updated':
             product = event.data.object as Stripe.Product
-            results = await postData({
-              url: `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id,
-              data: {
-                name: product.name,
-                description: product.description,
-                status: product.active,
-              },
-              token: { Authorization: `Bearer ${process.env.DIRECTUS}` },
-            })
+            results = await fetch(
+              `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id,
+              {
+                method: 'POST',
+                headers: {
+                  Authorization: `Bearer ${process.env.DIRECTUS}`,
+                  'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                  name: product.name,
+                  description: product.description,
+                  status: product.active,
+                }),
+              }
+            )
 
             console.log('directus product created results -- ', results)
             break
 
           case 'price.created':
             price = event.data.object as Stripe.Price
-            results = await postData({
-              url: `${process.env.NEXT_PUBLIC_REST_API}/products`,
-              data: {
-                priceId: price.id,
-                currency: price.currency,
-                unit_amount: ((price.unit_amount ?? 0) / 100).toFixed(2),
-              },
-              token: { Authorization: `Bearer ${process.env.DIRECTUS}` },
-            })
+            results = await fetch(
+              `${process.env.NEXT_PUBLIC_REST_API}/products`,
+              {
+                method: 'POST',
+                headers: {
+                  Authorization: `Bearer ${process.env.DIRECTUS}`,
+                  'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                  priceId: price.id,
+                  currency: price.currency,
+                  unit_amount: ((price.unit_amount ?? 0) / 100).toFixed(2),
+                }),
+              }
+            )
 
             console.log('directus price created results -- ', results)
             break
 
           case 'price.updated':
             price = event.data.object as Stripe.Price
-            results = await postData({
-              url:
-                `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
-              data: {
-                priceId: price.id,
-                currency: price.currency,
-                unit_amount: ((price.unit_amount ?? 0) / 100).toFixed(2),
-              },
-              token: { Authorization: `Bearer ${process.env.DIRECTUS}` },
-            })
+            results = await fetch(
+              `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
+              {
+                method: 'POST',
+                headers: {
+                  Authorization: `Bearer ${process.env.DIRECTUS}`,
+                  'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                  priceId: price.id,
+                  currency: price.currency,
+                  unit_amount: ((price.unit_amount ?? 0) / 100).toFixed(2),
+                }),
+              }
+            )
 
             console.log('directus price created results -- ', results)
             break
@@ -175,29 +184,3 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 export default webhookHandler
-
-
-export const postDirectus = async ({
-  url,
-  data,
-}: {
-  url: string
-  data?: any
-}) => {
-  // export const postData = async ({ url, token, data }) => {
-  console.log('posting,', url,  data)
-
-  const res: Response = await fetch(url, {
-    method: 'POST',
-    headers: new Headers({ 'Content-Type': 'application/json', }),
-    credentials: 'same-origin',
-    body: JSON.stringify(data),
-  })
-
-  if (!res.ok) {
-    console.log('Error in postData', { url,  data, res })
-    throw Error(res.statusText)
-  }
-
-  return res.json()
-}
