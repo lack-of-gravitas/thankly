@@ -24,6 +24,8 @@ const relevantEvents = new Set([
   'product.created',
   'product.updated',
   'product.deleted',
+  'price.created',
+  'price.updated',
   'payment_intent.succeeded',
   'checkout.session.completed', // TODO: Delete Voucher Coupon
 ])
