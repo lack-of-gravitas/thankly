@@ -18,18 +18,6 @@ async function buffer(readable: Readable) {
   return Buffer.concat(chunks)
 }
 
-const relevantEvents = new Set([
-  'customer.created',
-  'customer.updated',
-  'product.created',
-  'product.updated',
-  'product.deleted',
-  'price.created',
-  'price.updated',
-  'payment_intent.succeeded',
-  'checkout.session.completed', // TODO: Delete Voucher Coupon
-])
-
 const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST' || req.method === 'PATCH') {
     const buf = await buffer(req)
@@ -47,147 +35,104 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).send(`Webhook Error: ${err.message}`)
     }
 
-    if (relevantEvents.has(event.type)) {
-      try {
-        // directus api - https://docs.directus.io/reference/items.html
-        let product
-        let price
-        let results: any
+    try {
+      // directus api - https://docs.directus.io/reference/items.html
+      let product: Stripe.Product
+      let price: Stripe.Price
+      let results: any
 
-        switch (event.type) {
-          case 'product.created':
-            product = event.data.object as Stripe.Product
-            console.log('product.created --- ', event)
-
-            results = await fetch(
-              `${process.env.NEXT_PUBLIC_REST_API}/products`,
-              {
-                method: 'POST',
-                headers: {
-                  Authorization: `Bearer ${process.env.DIRECTUS}`,
-                  'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify({
-                  id: product.id,
-                  name: product.name,
-                  description: product.description,
-                  status: product.active,
-                  priceId: product.default_price,
-                }),
-              }
-            )
-            
-          case 'product.updated':
-            product = event.data.object as Stripe.Product
-            console.log('product.updated --- ', event)
-
-            results = await fetch(
-              `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id,
-              {
-                method: 'PATCH',
-                headers: {
-                  Authorization: `Bearer ${process.env.DIRECTUS}`,
-                  'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify({
-                  name: product.name,
-                  description: product.description,
-                  status: product.active,
-                  priceId: product.default_price,
-                }),
-              }
-            )
-
-            
-          case 'price.created':
-            price = event.data.object as Stripe.Price
-            console.log('price.created PRICE OBJECT FROM STRIPE --- ', event)
-
-            results = await fetch(
-              `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
-              {
-                method: 'PATCH',
-                redirect: 'follow',
-                headers: {
-                  Authorization: `Bearer ${process.env.DIRECTUS}`,
-                  'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify({
-                  priceId: price.id,
-                  currency: price.currency,
-                  unit_amount:
-                    price.unit_amount === 0 || price.unit_amount === null
-                      ? 0
-                      : (price.unit_amount / 100).toFixed(2),
-                }),
-              }
-            )
-            
-
-          case 'price.updated':
-            price = event.data.object as Stripe.Price
-            console.log('price.updated PRICE OBJECT FROM STRIPE --- ', event)
-
-            results = await fetch(
-              `${process.env.NEXT_PUBLIC_REST_API}/products` + price.product,
-              {
-                method: 'PATCH',
-                redirect: 'follow',
-                headers: {
-                  Authorization: `Bearer ${process.env.DIRECTUS}`,
-                  'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify({
-                  priceId: price.id,
-                  currency: price.currency,
-                  unit_amount:
-                    price.unit_amount === 0 || price.unit_amount === null
-                      ? 0
-                      : (price.unit_amount / 100).toFixed(2),
-                }),
-              }
-            )
-            
-          case 'price.deleted':
-            price = event.data.object as Stripe.Price
-            console.log('price.deleted --- ', event)
-
-            results = await fetch(
-              `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
-              {
-                method: 'PATCH',
-                redirect: 'follow',
-                headers: {
-                  Authorization: `Bearer ${process.env.DIRECTUS}`,
-                  'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify({
-                  priceId: '',
-                  currency: '',
-                  unit_amount: 0,
-                }),
-              }
-            )
-            
-          case 'customer.created':
-            break
-          case 'customer.updated':
-            break
-        }
-      } catch (error) {
-        console.log(error)
-        return res
-          .status(400)
-          .send(
-            'Webhook error: "Webhook handler failed. View logs."' +
-              JSON.stringify(error)
-          )
+      if (event.type === 'product.created') {
+        product = event.data.object as Stripe.Product
+        results = await fetch(`${process.env.NEXT_PUBLIC_REST_API}/products`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${process.env.DIRECTUS}`,
+            'Content-Type': 'application/json',
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            status: product.active,
+            priceId: product.default_price,
+          }),
+        })
       }
+
+      if (event.type === 'product.updated') {
+        product = event.data.object as Stripe.Product
+        results = await fetch(
+          `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id,
+          {
+            method: 'PATCH',
+            headers: {
+              Authorization: `Bearer ${process.env.DIRECTUS}`,
+              'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+              name: product.name,
+              description: product.description,
+              status: product.active,
+              priceId: product.default_price,
+            }),
+          }
+        )
+      }
+
+      if (event.type === 'price.created' || event.type === 'price.updated') {
+        price = event.data.object as Stripe.Price
+        results = await fetch(
+          `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
+          {
+            method: 'PATCH',
+            redirect: 'follow',
+            headers: {
+              Authorization: `Bearer ${process.env.DIRECTUS}`,
+              'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+              priceId: price.id,
+              currency: price.currency,
+              unit_amount:
+                price.unit_amount === 0 || price.unit_amount === null
+                  ? 0
+                  : (price.unit_amount / 100).toFixed(2),
+            }),
+          }
+        )
+      }
+
+      if (event.type === 'price.deleted') {
+        price = event.data.object as Stripe.Price
+        results = await fetch(
+          `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
+          {
+            method: 'PATCH',
+            redirect: 'follow',
+            headers: {
+              Authorization: `Bearer ${process.env.DIRECTUS}`,
+              'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+              priceId: '',
+              currency: '',
+              unit_amount: 0,
+            }),
+          }
+        )
+      }
+    } catch (error) {
+      console.log(error)
+      return res
+        .status(400)
+        .send(
+          'Webhook error: "Webhook handler failed. View logs."' +
+            JSON.stringify(error)
+        )
     }
 
     res.json({ received: true }) // acknowledge receipt of webhook and appropriate processing
