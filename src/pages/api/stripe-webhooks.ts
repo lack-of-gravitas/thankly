@@ -77,11 +77,10 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 }),
               }
             )
-            break
+            
           case 'product.updated':
             product = event.data.object as Stripe.Product
             console.log('product.updated --- ', event)
-            let newPrice = await stripe.prices.retrieve(product.default_price)
 
             results = await fetch(
               `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id,
@@ -97,16 +96,11 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                   description: product.description,
                   status: product.active,
                   priceId: product.default_price,
-                  currency: newPrice.currency,
-                  unit_amount:
-                    newPrice.unit_amount === 0 || newPrice.unit_amount === null
-                      ? 0
-                      : (newPrice.unit_amount / 100).toFixed(2),
                 }),
               }
             )
 
-            break
+            
           case 'price.created':
             price = event.data.object as Stripe.Price
             console.log('price.created PRICE OBJECT FROM STRIPE --- ', event)
@@ -131,7 +125,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 }),
               }
             )
-            break
+            
 
           case 'price.updated':
             price = event.data.object as Stripe.Price
@@ -157,7 +151,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 }),
               }
             )
-            break
+            
           case 'price.deleted':
             price = event.data.object as Stripe.Price
             console.log('price.deleted --- ', event)
@@ -179,7 +173,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 }),
               }
             )
-            break
+            
           case 'customer.created':
             break
           case 'customer.updated':
