@@ -65,8 +65,9 @@ const createCheckoutSession = async (
 
     //         // {CHECKOUT_SESSION_ID} is a string literal; do not change it! the actual Session ID is returned in the query parameter when your customer is redirected to the success page.  // go to account page after success
     //       })
+    return res.status(200).json({ received: true }) // acknowledge receipt of webhook and appropriate processing
 
-    return res.status(200).json({ sessionId: session.id })
+    // return res.status(200).json({ sessionId: session.id })
     // } catch (err: any) {
     //   console.log(err)
     //   res.status(500).json({ error: { statusCode: 500, message: err.message } })
