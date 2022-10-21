@@ -16,25 +16,25 @@ const createCheckoutSession = async (
     //   duration: 'once',
     // })
 
-    // const session = await stripe.checkout.sessions.create({
-    //   line_items: [
-    //     {
-    //       // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-    //       // price: '{{PRICE_ID}}',
-    //       price: `price_1LtM0gEvc4dteT8lK0IcPvmg`,
-    //       quantity: 1,
-    //     },
-    //   ],
-    //   // discounts: [
-    //   //   {
-    //   //     coupon: `${coupon}`,
-    //   //   },
-    //   // ],
-    //   mode: 'payment',
-    //   success_url: `${req.headers.origin}/?success=true`,
-    //   cancel_url: `${req.headers.origin}/?canceled=true`,
-    //   automatic_tax: { enabled: false },
-    // })
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+          // price: '{{PRICE_ID}}',
+          price: `price_1LtM0gEvc4dteT8lK0IcPvmg`,
+          quantity: 1,
+        },
+      ],
+      // discounts: [
+      //   {
+      //     coupon: `${coupon}`,
+      //   },
+      // ],
+      mode: 'payment',
+      success_url: `${req.headers.origin}/?success=true`,
+      cancel_url: `${req.headers.origin}/?canceled=true`,
+      automatic_tax: { enabled: false },
+    })
 
     //     try {
     //       // const { user } = await getUser({ req, res })
@@ -65,9 +65,8 @@ const createCheckoutSession = async (
 
     //         // {CHECKOUT_SESSION_ID} is a string literal; do not change it! the actual Session ID is returned in the query parameter when your customer is redirected to the success page.  // go to account page after success
     //       })
-    return res.status(200).json({ received: true }) // acknowledge receipt of webhook and appropriate processing
 
-    // return res.status(200).json({ sessionId: session.id })
+    return res.status(200).json({ sessionId: session.id })
     // } catch (err: any) {
     //   console.log(err)
     //   res.status(500).json({ error: { statusCode: 500, message: err.message } })
