@@ -23,7 +23,7 @@ const Step2: React.FC<Step2Props> = ({ className, data }) => {
   const writingStyles = SwrWritingStyles()
   const { state, dispatch } = useContext(Store)
   const [selectedWritingStyle, setSelectedWritingStyle] = useState(
-    state.cart.style
+    state.cart.cardContent.writingStyle
   )
 
   return (
@@ -48,7 +48,7 @@ const Step2: React.FC<Step2Props> = ({ className, data }) => {
                     name="message"
                     id="message"
                     className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    defaultValue={state.cart.message}
+                    defaultValue={state.cart.cardContent.message}
                     onChange={debounce((e: any) => {
                       // console.log(e)
                       dispatch({
@@ -74,7 +74,7 @@ const Step2: React.FC<Step2Props> = ({ className, data }) => {
                     name="instructions"
                     id="instructions"
                     className="block w-full border-gray-300 rounded-md shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                    defaultValue={state.cart.instructions}
+                    defaultValue={state.cart.cardContent.instructions}
                     onChange={debounce((e: any) => {
                       // console.log(e)
                       dispatch({

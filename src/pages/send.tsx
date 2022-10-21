@@ -52,11 +52,11 @@ export default function Send({ slug, preview, prefetchedData }: any) {
 
         break
       case 2:
-        if (state.cart.message != '') {
+        if (state.cart.cardContent.message != '') {
           setCurrentStep(currentStep + 1)
         }
 
-        if (state.cart.message === '') {
+        if (state.cart.cardContent.message === '') {
           setErrorMessage({
             title: 'Message not provided',
             description:

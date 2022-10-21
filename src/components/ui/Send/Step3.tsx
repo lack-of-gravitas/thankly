@@ -39,7 +39,12 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
   const brand = SwrBrand()
   const { state, dispatch } = useContext(Store)
   const [voucherValid, setVoucherValid]: any = useState()
-  const [voucherBalance, setVoucherBalance] = useState(0)
+  const [voucherBalance, setVoucherBalance] = useState(
+    state.cart.options.voucher
+      ? state.cart.options.voucher.value * 1 -
+          state.cart.options.voucher.used * 1
+      : 0
+  )
   const [address, setAddress]: any = useState({})
   const [processing, setProcessing]: any = useState(false)
   const [errors, setErrors]: any[] = useState([])
@@ -682,23 +687,23 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                 <div className="flex items-center justify-between">
                   <dt className="text-sm">Subtotal</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {`$` + Number(state.cart.subtotal).toFixed(2)}
+                    {`$` + Number(state.cart.totals.subtotal).toFixed(2)}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between">
                   <dt className="text-sm">Delivery Options</dt>
 
                   <dd className="text-sm font-medium text-gray-900">
-                    {`$` + Number(state.cart.delivery).toFixed(2)}
+                    {`$` + Number(state.cart.totals.delivery).toFixed(2)}
                   </dd>
                 </div>
                 <dt className="text-sm">
                   <RadioGroup
-                    value={state.cart.deliveryOption ?? deliveryOptions[0]}
+                    value={state.cart.options.delivery ?? deliveryOptions[0]}
                     onChange={(e: any) => {
                       console.log('radiogroup -- ', e)
                       Number(
-                        state.cart.subtotal < 50 && e.name === 'Express'
+                        state.cart.totals.subtotal < 50 && e.name === 'Express'
                           ? (e.price = 8.95)
                           : (e.price = 0)
                       ).toFixed(2)
@@ -724,7 +729,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                           className={cn(
                             'cursor-pointer focus:outline-none',
 
-                            option.id === state.cart.deliveryOption.id
+                            option.id === state.cart.options.delivery.id
                               ? 'border-transparent bg-slate-600 text-white ring-2 ring-slate-500 ring-offset-2 hover:bg-slate-700'
                               : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50',
                             'flex items-center justify-center rounded-md border py-3 px-3 text-xs font-medium sm:flex-1'
@@ -734,7 +739,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                             {option.name +
                               ` $` +
                               Number(
-                                state.cart.subtotal < 50 &&
+                                state.cart.totals.subtotal < 50 &&
                                   option.name === 'Express'
                                   ? 8.95
                                   : 0
@@ -762,24 +767,28 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                   <dd className="text-sm font-medium text-gray-900">
                     {`$` +
                       Number(
-                        state.cart.subtotal + state.cart.delivery === 0
+                        state.cart.totals.subtotal +
+                          state.cart.totals.delivery ===
+                          0
                           ? 0
-                          : (state.cart.subtotal + state.cart.delivery) / 11
+                          : (state.cart.totals.subtotal +
+                              state.cart.totals.delivery) /
+                              11
                       ).toFixed(2)}
                   </dd>
                 </div>
-                {state.cart.usedVoucher !== 0 && (
+                {state.cart.totals.voucher !== 0 && (
                   <div className="flex items-center justify-between">
                     <dt className="text-sm">Thankly Voucher (applied)</dt>
                     <dd className="text-sm font-medium text-gray-900">
-                      {`-$` + Number(state.cart.usedVoucher).toFixed(2) + ``}
+                      {`-$` + Number(state.cart.totals.voucher).toFixed(2) + ``}
                     </dd>
                   </div>
                 )}
                 <div className="flex items-center justify-between pt-6 border-t border-gray-200">
                   <dt className="text-base font-semibold">Order Total</dt>
                   <dd className="text-base font-semibold text-gray-900">
-                    {`$` + Number(state.cart.total).toFixed(2)}
+                    {`$` + Number(state.cart.totals.net).toFixed(2)}
                   </dd>
                 </div>
 
@@ -790,8 +799,8 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       type="checkbox"
                       // {...register('terms', { required: true })}
                       checked={
-                        state.cart.termsAccepted
-                          ? state.cart.termsAccepted
+                        state.cart.options.termsAccepted
+                          ? state.cart.options.termsAccepted
                           : false
                       }
                       onChange={(e: any) => {
@@ -857,7 +866,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                         onChange={debounce(async (e: any) => {
                           // call api to validate voucher and set
                           setVoucherBalance(0)
-
+                          console.log('voucher', e.target.value)
                           if (e.target.value === '') {
                             dispatch({
                               type: 'REMOVE_VOUCHER',
@@ -871,7 +880,6 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                               )
                             ).json()
                             data = data.data
-
                             if (data?.length === 1) {
                               data = data[0]
                               setVoucherValid(true)
@@ -879,6 +887,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                               data = null
                               setVoucherValid(false)
                             }
+                            console.log('voucher data', data)
 
                             console.log('getVoucher', data)
 
@@ -886,6 +895,11 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                               type: 'APPLY_VOUCHER',
                               payload: data,
                             })
+
+                            setVoucherBalance(
+                              state.cart.options.voucher.value * 1 -
+                                state.cart.options.voucher.used * 1
+                            )
                           }
                         }, 300)}
                       />
@@ -898,9 +912,11 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       <Icon name={'attach_money'} />
                       <span className="font-medium text-gray-700">
                         {`Balance `}
-                        {state.cart.voucher
-                          ? state.cart.voucher.value
-                          : voucherBalance.toFixed(2)}
+                        {(state.cart.options.voucher
+                          ? state.cart.options.voucher.value * 1 -
+                            state.cart.options.voucher.used * 1
+                          : 0
+                        ).toFixed(2)}
                       </span>
                     </button>
                   </div>
@@ -944,7 +960,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                           },
                         ]))
                       : null
-                    // state.cart.total === 0 && state.cart.termsAccepted === false
+                    // state.cart.totals.net === 0 && state.cart.options.termsAccepted === false
                     //   ? (foundErrors = foundErrors.concat([
                     //       {
                     //         id: 'terms',
@@ -954,7 +970,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     //     ]))
                     //   : null
 
-                    JSON.stringify(state.cart.deliveryOption) === '{}'
+                    JSON.stringify(state.cart.options.delivery) === '{}'
                       ? (foundErrors = foundErrors.concat([
                           {
                             id: 'deliveryOption',
@@ -1001,6 +1017,9 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       return alert((error as Error)?.message)
                     } finally {
                       setInitiateCheckout(false)
+                      dispatch({
+                        type: 'CLEAR_CART',
+                      })
                     }
 
                     // should already be redirected to orderConfirmation or orderError routes

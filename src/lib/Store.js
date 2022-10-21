@@ -2,49 +2,103 @@
 import { createContext, useReducer } from 'react'
 import Cookies from 'js-cookie'
 import { v4 as uuidv4 } from 'uuid'
+import { update } from 'lodash'
 
 export const Store = createContext()
+const emptyCartObject = {
+  id: uuidv4(),
+  items: [], // gift and/or card
+
+  cardContent: {
+    writingStyle: '',
+    message: '',
+    specialInstructions: '',
+  },
+
+  recipient: {
+    firstname: '',
+    lastname: '',
+    company: '',
+    address: {
+      state: '',
+      postcode: '',
+      suburb: '',
+      fulladdress: '',
+      line2: '',
+    },
+  },
+
+  options: {
+    voucher: {},
+    delivery: {},
+    termsAccepted: false,
+    createAccount: false,
+  },
+
+  totals: {
+    items: 0,
+    discount: 0, // free cards for large value orders
+    delivery: 0,
+    subtotal: 0,
+    voucher: 0,
+    net: 0,
+  },
+}
 
 const initialState = {
-  // set the initial state empty cart
-
-  cart: Cookies.get('cart')
-    ? JSON.parse(Cookies.get('cart'))
-    : {
-        // thankly: [
-        //   {
-        id: uuidv4(), // unique id for the thankly
-        items: [], //
-        message: '',
-        instructions: '',
-        style: '',
-        recipient: {
-          firstname: '',
-          lastname: '',
-          company: '',
-          address: {
-            state: '',
-            postcode: '',
-            suburb: '',
-            fulladdress: '',
-            line2: '',
-          },
-        },
-        voucher: {},
-        deliveryOption: {},
-        termsAccepted: false,
-        createAccount: false,
-        subtotal: 0,
-        delivery: 0,
-        usedVoucher: 0,
-        total: 0,
-        //   },
-        // ],
-      },
+  cart: Cookies.get('cart') ? JSON.parse(Cookies.get('cart')) : emptyCartObject,
 }
 
 function reducer(state, action) {
   // console.log('action.payload --', action.payload)
+
+  function updateCartTotals() {
+    state.cart.totals = {
+      items: 0,
+      discount: 0, // free cards for large value orders
+      delivery: 0,
+      subtotal: 0,
+      voucher: 0,
+      net: 0,
+    }
+
+    // update item totals
+    state.cart.items.map(
+      (item) => (state.cart.totals.items += item.unit_amount * 1)
+    )
+
+    // if order contains gift, add discount equivalent to card price
+    if (state.cart.items.filter((item) => item.type === 'gift').length > 0) {
+      const card = state.cart.items.filter((item) => item.type === 'card')
+      state.cart.totals.discount = -1 * card.unit_amount
+    }
+
+    // update delivery cost
+    state.cart.totals.delivery = state.cart.options.delivery.price ?? 0
+
+    // update subtotal (items - discount + delivery)
+    state.cart.totals.subtotal =
+      state.cart.totals.items -
+      state.cart.totals.discount +
+      state.cart.totals.delivery
+
+    // update voucher
+    state.cart.options.voucher === null ? (state.cart.totals.voucher = 0) : null
+
+    if (state.cart.options.voucher !== null) {
+      const currVoucherBalance =
+        state.cart.options.voucher.value * 1 -
+        state.cart.options.voucher.used * 1
+
+      state.cart.totals.subtotal > currVoucherBalance
+        ? (state.cart.totals.voucher = currVoucherBalance)
+        : (state.cart.totals.voucher = state.cart.totals.subtotal)
+    }
+
+    // update net total
+    state.cart.totals.net =
+      state.cart.totals.subtotal - state.cart.totals.voucher
+  }
 
   switch (action.type) {
     case 'ADD_ITEM': {
@@ -56,20 +110,9 @@ function reducer(state, action) {
 
       let items = [...state.cart.items, action.payload]
 
-      console.log('items --', items)
-      state.cart.subtotal = 0
-      items.map((item) => (state.cart.subtotal += item.unit_amount * 1))
+      // update totals
+      updateCartTotals()
 
-      if (state.cart.voucher !== null) {
-        state.cart.subtotal + state.cart.delivery >
-        state.cart.voucher.value * 1 - state.cart.voucher.used * 1
-          ? (state.cart.usedVoucher =
-              state.cart.voucher.value * 1 - state.cart.voucher.used * 1)
-          : (state.cart.usedVoucher = state.cart.subtotal)
-      }
-      
-      state.cart.total =
-        state.cart.subtotal + state.cart.delivery - state.cart.usedVoucher
       Cookies.set('cart', JSON.stringify({ ...state.cart, items }), {
         expires: 1 / 600,
       })
@@ -82,21 +125,7 @@ function reducer(state, action) {
         (item) => item.stripeId !== action.payload.stripeId
       )
 
-      if (state.cart.voucher !== null) {
-        state.cart.subtotal + state.cart.delivery >
-        state.cart.voucher.value * 1 - state.cart.voucher.used * 1
-          ? (state.cart.usedVoucher =
-              state.cart.voucher.value * 1 - state.cart.voucher.used * 1)
-          : (state.cart.usedVoucher = state.cart.subtotal)
-      }
-
-      state.cart.subtotal = 0
-      state.cart.items?.map(
-        (item) => (state.cart.subtotal += item.unit_amount * 1)
-      )
-
-      state.cart.total =
-        state.cart.subtotal + state.cart.delivery - state.cart.usedVoucher
+      updateCartTotals()
 
       Cookies.set('cart', JSON.stringify({ ...state.cart.items }), {
         expires: 1 / 600,
@@ -105,19 +134,9 @@ function reducer(state, action) {
     }
 
     case 'SET_DELIVERY': {
-      state.cart.deliveryOption = action.payload.deliveryOption
-      state.cart.delivery = action.payload.deliveryOption.price
+      state.cart.options.delivery = action.payload.deliveryOption
+      updateCartTotals()
 
-      if (state.cart.voucher !== null) {
-        state.cart.subtotal + state.cart.delivery >
-        state.cart.voucher.value * 1 - state.cart.voucher.used * 1
-          ? (state.cart.usedVoucher =
-              state.cart.voucher.value * 1 - state.cart.voucher.used * 1)
-          : (state.cart.usedVoucher = state.cart.subtotal)
-      }
-
-      state.cart.total =
-        state.cart.subtotal + state.cart.delivery - state.cart.usedVoucher
       Cookies.set('cart', JSON.stringify({ ...state.cart }), {
         expires: 1 / 600,
       })
@@ -127,7 +146,7 @@ function reducer(state, action) {
     }
 
     case 'SET_STYLE': {
-      state.cart.style = action.payload.style
+      state.cart.cardContent.writingStyle = action.payload.style
 
       Cookies.set('cart', JSON.stringify({ ...state.cart }), {
         expires: 1 / 600,
@@ -136,7 +155,7 @@ function reducer(state, action) {
     }
 
     case 'SET_MESSAGE': {
-      state.cart.message = action.payload
+      state.cart.cardContent.message = action.payload
 
       Cookies.set('cart', JSON.stringify({ ...state.cart }), {
         expires: 1 / 600,
@@ -145,7 +164,7 @@ function reducer(state, action) {
     }
 
     case 'SET_INSTRUCTIONS': {
-      state.cart.instructions = action.payload
+      state.cart.cardContent.instructions = action.payload
 
       Cookies.set('cart', JSON.stringify({ ...state.cart }), {
         expires: 1 / 600,
@@ -164,7 +183,7 @@ function reducer(state, action) {
     }
 
     case 'SET_TERMS': {
-      state.cart.termsAccepted = action.payload.termsAccepted
+      state.cart.options.termsAccepted = action.payload.termsAccepted
 
       Cookies.set('cart', JSON.stringify({ ...state.cart }), {
         expires: 1 / 600,
@@ -174,7 +193,7 @@ function reducer(state, action) {
     }
 
     case 'SET_ACCOUNT': {
-      state.cart.createAccount = action.payload.createAccount
+      state.cart.options.createAccount = action.payload.createAccount
 
       Cookies.set('cart', JSON.stringify({ ...state.cart }), {
         expires: 1 / 600,
@@ -184,18 +203,10 @@ function reducer(state, action) {
     }
 
     case 'APPLY_VOUCHER': {
-      state.cart.voucher = action.payload
+      console.log('voucher payload',action.payload)
+      state.cart.options.voucher = action.payload
+      updateCartTotals()
 
-      if (state.cart.voucher !== null) {
-        state.cart.subtotal + state.cart.delivery >
-        state.cart.voucher.value * 1 - state.cart.voucher.used * 1
-          ? (state.cart.usedVoucher =
-              state.cart.voucher.value * 1 - state.cart.voucher.used * 1)
-          : (state.cart.usedVoucher = state.cart.subtotal)
-      }
-
-      state.cart.total =
-        state.cart.subtotal + state.cart.delivery - state.cart.usedVoucher
       Cookies.set('cart', JSON.stringify({ ...state.cart }), {
         expires: 1 / 600,
       })
@@ -203,10 +214,10 @@ function reducer(state, action) {
     }
 
     case 'REMOVE_VOUCHER': {
-      state.cart.voucher = {}
-      state.cart.usedVoucher = 0
-      state.cart.total =
-        state.cart.subtotal + state.cart.delivery - state.cart.usedVoucher
+      state.cart.options.voucher = {}
+      updateCartTotals()
+
+      // return setCartCookie(state.cart)
       Cookies.set('cart', JSON.stringify({ ...state.cart }), {
         expires: 1 / 600,
       })
@@ -214,74 +225,19 @@ function reducer(state, action) {
     }
 
     case 'CLEAR_CART': {
-      Cookies.set(
-        'cart',
-        JSON.stringify({
-          id: uuidv4(), // unique id for the thankly
-          items: [], //
-          message: '',
-          instructions: '',
-          style: '',
-          recipient: {
-            firstname: '',
-            lastname: '',
-            company: '',
-            address: {
-              state: '',
-              postcode: '',
-              suburb: '',
-              fulladdress: '',
-              line2: '',
-            },
-          },
-          voucher: {},
-          deliveryOption: {},
-          termsAccepted: false,
-          createAccount: false,
-          subtotal: 0,
-          delivery: 0,
-          usedVoucher: 0,
-          total: 0,
-        }),
-        {
-          expires: 1 / 600,
-        }
-      )
-
-      return {
-        ...state,
-        cart: {
-          id: uuidv4(), // unique id for the thankly
-          items: [], //
-          message: '',
-          instructions: '',
-          style: '',
-          recipient: {
-            firstname: '',
-            lastname: '',
-            company: '',
-            address: {
-              state: '',
-              postcode: '',
-              suburb: '',
-              fulladdress: '',
-              line2: '',
-            },
-          },
-          voucher: {},
-          deliveryOption: {},
-          termsAccepted: false,
-          createAccount: false,
-          subtotal: 0,
-          delivery: 0,
-          usedVoucher: 0,
-          total: 0,
-        },
-      }
+      Cookies.set('cart', JSON.stringify(emptyCartObject), { expires: 1 / 600 })
+      return { ...state, cart: { ...emptyCartObject } }
     }
 
     default:
       return state
+  }
+
+  function setCartCookie(cart) {
+    Cookies.set('cart', JSON.stringify({ ...cart }), {
+      expires: 1 / 600,
+    })
+    return { ...state, cart: { ...state.cart } }
   }
 }
 
