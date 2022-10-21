@@ -9,33 +9,32 @@ const createCheckoutSession = async (
   res: NextApiResponse
 ) => {
   if (req.method === 'POST') {
-    console.log('req->', req.body)
+    console.log('stripe checkout ->', req.body)
+    // // have to create a Discount for the exact amount of the difference and auto apply that to the product
+    // const coupon = await stripe.coupons.create({
+    //   amount_off: 20,
+    //   duration: 'once',
+    // })
 
-    // have to create a Discount for the exact amount of the difference and auto apply that to the product
-    const coupon = await stripe.coupons.create({
-      percent_off: 20,
-      duration: 'once',
-    })
-
-    const session = await stripe.checkout.sessions.create({
-      line_items: [
-        {
-          // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-          // price: '{{PRICE_ID}}',
-          price: `price_1LtM0gEvc4dteT8lK0IcPvmg`,
-          quantity: 1,
-        },
-      ],
-      discounts: [
-        {
-          coupon: `${coupon}`,
-        },
-      ],
-      mode: 'payment',
-      success_url: `${req.headers.origin}/?success=true`,
-      cancel_url: `${req.headers.origin}/?canceled=true`,
-      automatic_tax: { enabled: false },
-    })
+    // const session = await stripe.checkout.sessions.create({
+    //   line_items: [
+    //     {
+    //       // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+    //       // price: '{{PRICE_ID}}',
+    //       price: `price_1LtM0gEvc4dteT8lK0IcPvmg`,
+    //       quantity: 1,
+    //     },
+    //   ],
+    //   // discounts: [
+    //   //   {
+    //   //     coupon: `${coupon}`,
+    //   //   },
+    //   // ],
+    //   mode: 'payment',
+    //   success_url: `${req.headers.origin}/?success=true`,
+    //   cancel_url: `${req.headers.origin}/?canceled=true`,
+    //   automatic_tax: { enabled: false },
+    // })
 
     //     try {
     //       // const { user } = await getUser({ req, res })

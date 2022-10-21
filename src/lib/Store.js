@@ -44,6 +44,8 @@ const initialState = {
 }
 
 function reducer(state, action) {
+  // console.log('action.payload --', action.payload)
+
   switch (action.type) {
     case 'ADD_ITEM': {
       action.payload.type === 'card'
@@ -53,6 +55,21 @@ function reducer(state, action) {
         : null
 
       let items = [...state.cart.items, action.payload]
+
+      console.log('items --', items)
+      state.cart.subtotal = 0
+      items.map((item) => (state.cart.subtotal += item.unit_amount * 1))
+
+      if (state.cart.voucher !== null) {
+        state.cart.subtotal + state.cart.delivery >
+        state.cart.voucher.value * 1 - state.cart.voucher.used * 1
+          ? (state.cart.usedVoucher =
+              state.cart.voucher.value * 1 - state.cart.voucher.used * 1)
+          : (state.cart.usedVoucher = state.cart.subtotal)
+      }
+      
+      state.cart.total =
+        state.cart.subtotal + state.cart.delivery - state.cart.usedVoucher
       Cookies.set('cart', JSON.stringify({ ...state.cart, items }), {
         expires: 1 / 600,
       })
@@ -65,9 +82,47 @@ function reducer(state, action) {
         (item) => item.stripeId !== action.payload.stripeId
       )
 
+      if (state.cart.voucher !== null) {
+        state.cart.subtotal + state.cart.delivery >
+        state.cart.voucher.value * 1 - state.cart.voucher.used * 1
+          ? (state.cart.usedVoucher =
+              state.cart.voucher.value * 1 - state.cart.voucher.used * 1)
+          : (state.cart.usedVoucher = state.cart.subtotal)
+      }
+
+      state.cart.subtotal = 0
+      state.cart.items?.map(
+        (item) => (state.cart.subtotal += item.unit_amount * 1)
+      )
+
+      state.cart.total =
+        state.cart.subtotal + state.cart.delivery - state.cart.usedVoucher
+
       Cookies.set('cart', JSON.stringify({ ...state.cart.items }), {
         expires: 1 / 600,
       })
+      return { ...state, cart: { ...state.cart } }
+    }
+
+    case 'SET_DELIVERY': {
+      state.cart.deliveryOption = action.payload.deliveryOption
+      state.cart.delivery = action.payload.deliveryOption.price
+
+      if (state.cart.voucher !== null) {
+        state.cart.subtotal + state.cart.delivery >
+        state.cart.voucher.value * 1 - state.cart.voucher.used * 1
+          ? (state.cart.usedVoucher =
+              state.cart.voucher.value * 1 - state.cart.voucher.used * 1)
+          : (state.cart.usedVoucher = state.cart.subtotal)
+      }
+
+      state.cart.total =
+        state.cart.subtotal + state.cart.delivery - state.cart.usedVoucher
+      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
+        expires: 1 / 600,
+      })
+
+      console.log('state.cart -- ', state.cart)
       return { ...state, cart: { ...state.cart } }
     }
 
@@ -108,16 +163,6 @@ function reducer(state, action) {
       return { ...state, cart: { ...state.cart } }
     }
 
-    case 'SET_DELIVERY': {
-      state.cart.deliveryOption = action.payload.deliveryOption
-
-      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
-        expires: 1 / 600,
-      })
-      console.log('state.cart -- ', state.cart)
-      return { ...state, cart: { ...state.cart } }
-    }
-
     case 'SET_TERMS': {
       state.cart.termsAccepted = action.payload.termsAccepted
 
@@ -141,6 +186,27 @@ function reducer(state, action) {
     case 'APPLY_VOUCHER': {
       state.cart.voucher = action.payload
 
+      if (state.cart.voucher !== null) {
+        state.cart.subtotal + state.cart.delivery >
+        state.cart.voucher.value * 1 - state.cart.voucher.used * 1
+          ? (state.cart.usedVoucher =
+              state.cart.voucher.value * 1 - state.cart.voucher.used * 1)
+          : (state.cart.usedVoucher = state.cart.subtotal)
+      }
+
+      state.cart.total =
+        state.cart.subtotal + state.cart.delivery - state.cart.usedVoucher
+      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
+        expires: 1 / 600,
+      })
+      return { ...state, cart: { ...state.cart } }
+    }
+
+    case 'REMOVE_VOUCHER': {
+      state.cart.voucher = {}
+      state.cart.usedVoucher = 0
+      state.cart.total =
+        state.cart.subtotal + state.cart.delivery - state.cart.usedVoucher
       Cookies.set('cart', JSON.stringify({ ...state.cart }), {
         expires: 1 / 600,
       })

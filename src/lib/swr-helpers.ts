@@ -43,8 +43,6 @@ export function SwrProducts() {
   // add key to manage state of "choose / chosen button"
   if (data) data = data.map((v: any) => ({ ...v, chosen: false }))
   // console.log('data --', data)
-  console.log(`Bearer ${process.env.STRIPE_SECRET_KEY}`)
-  // data?.map(async (product: any) => {
 
   return data
 }

@@ -344,9 +344,7 @@ export async function getProducts() {
     )
   ).json()
   data = data.data
-
-
-
+// console.log(data)
   return data
 }
 
@@ -374,7 +372,6 @@ export async function getFeaturedProducts(type: any, limit: any) {
   ).json()
   data = data.data
 
- 
   return data
 }
 

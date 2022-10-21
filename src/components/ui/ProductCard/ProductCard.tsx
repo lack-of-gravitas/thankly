@@ -22,7 +22,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
   const brand: any = SwrBrand()
   const { state, dispatch } = useContext(Store)
   const [productAdded, setProductAdded] = useState(
-    inCart(product.stripeId) ? true : false
+    inCart(product.id) ? true : false
   )
 
   return (
@@ -38,7 +38,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
       <div className="flex flex-col flex-1 p-4 space-y-2">
         <div className="flex items-center justify-between mt-4 space-x-8 text-gray-900">
           <h3 className="text-base font-bold text-slate-700">{product.name}</h3>
-          <p>{product.price}</p>
+          <p  className="text-base font-bold text-slate-700">${product.unit_amount}</p>
         </div>
 
         <p className="text-sm text-gray-500">{product.description}</p>
@@ -88,7 +88,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
 
   function inCart(stripeId: any) {
     const existItem = state.cart.items?.find(
-      (x: any) => x.stripeId === stripeId
+      (x: any) => x.id === stripeId
     )
     return existItem ? true : false
   }

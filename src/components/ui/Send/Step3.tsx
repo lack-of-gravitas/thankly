@@ -56,7 +56,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
 
     if (query.get('canceled')) {
       console.log(
-        'Order canceled -- continue to shop around and checkout when you’re ready.'
+        'Order cancelled -- continue to shop around and checkout when you’re ready.'
       )
     }
   }, [])
@@ -642,7 +642,10 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     <div className="flex-shrink-0 border rounded-sm shadow-sm border-gray-150">
                       <Image
                         className="object-cover object-center w-24 h-24 rounded-md sm:h-32 sm:w-32"
-                        src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${product.images[0].directus_files_id}`}
+                        src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${
+                          product.images[0]?.directus_files_id ??
+                          '344cabf1-43ff-4184-acb0-cc7d461aff09'
+                        }`}
                         width={900}
                         height={900}
                       />
@@ -691,15 +694,13 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                 </div>
                 <dt className="text-sm">
                   <RadioGroup
-                    value={
-                      state.cart.deliveryOption
-                        ? state.cart.deliveryOption
-                        : deliveryOptions[0]
-                    }
+                    value={state.cart.deliveryOption ?? deliveryOptions[0]}
                     onChange={(e: any) => {
                       console.log('radiogroup -- ', e)
                       Number(
-                        state.cart.total < 50 && e.name === 'Express' ? 8.95 : 0
+                        state.cart.subtotal < 50 && e.name === 'Express'
+                          ? (e.price = 8.95)
+                          : (e.price = 0)
                       ).toFixed(2)
 
                       dispatch({
@@ -731,10 +732,9 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                         >
                           <RadioGroup.Label as="span">
                             {option.name +
-                              ` ` +
-                              `$` +
+                              ` $` +
                               Number(
-                                state.cart.total < 50 &&
+                                state.cart.subtotal < 50 &&
                                   option.name === 'Express'
                                   ? 8.95
                                   : 0
@@ -757,7 +757,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                   )}
                 </dt>
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between pt-2">
                   <dt className="text-sm">G.S.T</dt>
                   <dd className="text-sm font-medium text-gray-900">
                     {`$` +
@@ -770,9 +770,9 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                 </div>
                 {state.cart.usedVoucher !== 0 && (
                   <div className="flex items-center justify-between">
-                    <dt className="text-sm">Thankly Voucher</dt>
+                    <dt className="text-sm">Thankly Voucher (applied)</dt>
                     <dd className="text-sm font-medium text-gray-900">
-                      `($` + Number(state.cart.usedVoucher).toFixed(2) + `)`
+                      {`-$` + Number(state.cart.usedVoucher).toFixed(2) + ``}
                     </dd>
                   </div>
                 )}
@@ -857,29 +857,36 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                         onChange={debounce(async (e: any) => {
                           // call api to validate voucher and set
                           setVoucherBalance(0)
-                          let data = await (
-                            await fetch(
-                              `${process.env.NEXT_PUBLIC_REST_API}/vouchers?fields=*` +
-                                `&filter[code][_eq]=${e.target.value}` +
-                                `&filter[status][_eq]=published`
-                            )
-                          ).json()
-                          data = data.data
 
-                          if (data?.length === 1) {
-                            data = data[0]
-                            setVoucherValid(true)
+                          if (e.target.value === '') {
+                            dispatch({
+                              type: 'REMOVE_VOUCHER',
+                            })
                           } else {
-                            data = null
-                            setVoucherValid(false)
+                            let data = await (
+                              await fetch(
+                                `${process.env.NEXT_PUBLIC_REST_API}/vouchers?fields=*` +
+                                  `&filter[code][_eq]=${e.target.value}` +
+                                  `&filter[status][_eq]=published`
+                              )
+                            ).json()
+                            data = data.data
+
+                            if (data?.length === 1) {
+                              data = data[0]
+                              setVoucherValid(true)
+                            } else {
+                              data = null
+                              setVoucherValid(false)
+                            }
+
+                            console.log('getVoucher', data)
+
+                            dispatch({
+                              type: 'APPLY_VOUCHER',
+                              payload: data,
+                            })
                           }
-
-                          console.log('getVoucher', data)
-
-                          dispatch({
-                            type: 'APPLY_VOUCHER',
-                            payload: data,
-                          })
                         }, 300)}
                       />
                     </div>
@@ -889,11 +896,8 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100 "
                     >
                       <Icon name={'attach_money'} />
-                      {/* <Icon
-                        className="animate-pulse"
-                        name={'hourglass_empty'}
-                      /> */}
-                      <span>
+                      <span className="font-medium text-gray-700">
+                        {`Balance `}
                         {state.cart.voucher
                           ? state.cart.voucher.value
                           : voucherBalance.toFixed(2)}

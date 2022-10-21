@@ -58,6 +58,8 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             priceId: product.default_price,
           }),
         })
+        console.log('product.created results',results)
+        
       }
 
       if (event.type === 'product.updated') {
@@ -79,6 +81,8 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             }),
           }
         )
+        console.log('product.updated results',results)
+
       }
 
       if (event.type === 'price.created' || event.type === 'price.updated') {
@@ -103,6 +107,8 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             }),
           }
         )
+        console.log('price.upserted results',results)
+
       }
 
       if (event.type === 'price.deleted') {
@@ -124,7 +130,31 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             }),
           }
         )
+        console.log('price.deleted results',results)
       }
+
+      if (event.type === 'customer.created') {
+        price = event.data.object as Stripe.Price
+        results = await fetch(
+          `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
+          {
+            method: 'PATCH',
+            redirect: 'follow',
+            headers: {
+              Authorization: `Bearer ${process.env.DIRECTUS}`,
+              'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+              priceId: '',
+              currency: '',
+              unit_amount: 0,
+            }),
+          }
+        )
+        console.log('price.deleted results',results)
+      }
+
     } catch (error) {
       console.log(error)
       return res
