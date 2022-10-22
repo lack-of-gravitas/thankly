@@ -10,11 +10,16 @@ const createCheckoutSession = async (
 ) => {
   if (req.method === 'POST') {
     console.log('stripe checkout ->', req.body)
-    // // have to create a Discount for the exact amount of the difference and auto apply that to the product
-    // const coupon = await stripe.coupons.create({
-    //   amount_off: 20,
-    //   duration: 'once',
-    // })
+    const cart = req.body
+    // have to create a Discount for the exact amount of the difference and auto apply that to the product
+    const coupon = await stripe.coupons.create({
+      name: 'Thankly Voucher Used',
+      amount_off: cart.totals.voucher * 100,
+      currency: 'aud',
+      duration: 'once',
+    })
+
+    console.log('coupon --', coupon)
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -25,46 +30,18 @@ const createCheckoutSession = async (
           quantity: 1,
         },
       ],
-      // discounts: [
-      //   {
-      //     coupon: `${coupon}`,
-      //   },
-      // ],
+      discounts: [
+        {
+          coupon: `${coupon}`,
+        },
+      ],
       mode: 'payment',
       success_url: `${req.headers.origin}/?success=true`,
       cancel_url: `${req.headers.origin}/?canceled=true`,
       automatic_tax: { enabled: false },
     })
 
-    //     try {
-    //       // const { user } = await getUser({ req, res })
-    //       // const customer = await createOrRetrieveCustomer({
-    //       //   uuid: user?.id || '',
-    //       //   email: user?.email || '',
-    //       // })
-
-    //       const session = await stripe.checkout.sessions.create({
-    //         // customer,
-    //         // line_items: [{ price: price.id, quantity }],
-    //         line_items: [{ price: `price_1LtM0gEvc4dteT8lK0IcPvmg`, quantity:1 }],
-    //         mode: `payment`, // price.type === 'one_time' ? 'payment' : 'subscription', // "payment" or "subscription",,
-    //         allow_promotion_codes: true,
-    //         billing_address_collection: 'auto',
-    // automatic_tax: { enabled: false },
-    //         metadata: { cart: req.body },
-
-    //         cancel_url:
-    //           (process.env.NEXT_PUBLIC_SITE_URL
-    //             ? process.env.NEXT_PUBLIC_SITE_URL
-    //             : 'http://localhost:3000') + `/orderconfirmation?canceled=true`,
-    //         success_url:
-    //           (process.env.NEXT_PUBLIC_SITE_URL
-    //             ? process.env.NEXT_PUBLIC_SITE_URL
-    //             : 'http://localhost:3000') +
-    //           `/account?success=true&session_id={CHECKOUT_SESSION_ID}`,
-
-    //         // {CHECKOUT_SESSION_ID} is a string literal; do not change it! the actual Session ID is returned in the query parameter when your customer is redirected to the success page.  // go to account page after success
-    //       })
+    const deleted = await stripe.coupons.del(coupon.id) // delete coupon once used and order is successful
 
     return res.status(200).json({ sessionId: session.id })
     // } catch (err: any) {

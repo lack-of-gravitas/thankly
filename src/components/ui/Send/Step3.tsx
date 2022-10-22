@@ -866,7 +866,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                         onChange={debounce(async (e: any) => {
                           // call api to validate voucher and set
                           setVoucherBalance(0)
-                          console.log('voucher', e.target.value)
+                          // console.log('voucher', e.target.value)
                           if (e.target.value === '') {
                             dispatch({
                               type: 'REMOVE_VOUCHER',
@@ -897,8 +897,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                             })
 
                             setVoucherBalance(
-                              state.cart.options.voucher.value * 1 -
-                                state.cart.options.voucher.used * 1
+                              state.cart.totals.voucher.toFixed(2)
                             )
                           }
                         }, 300)}
@@ -1002,17 +1001,30 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     console.log('initiating checkout...')
 
                     try {
-                      const { sessionId } = await postData({
-                        url: '/api/create-checkout-session',
-                        data: state.cart,
-                        // token: `${process.env.STRIPE_PUBLISHABLE_KEY}`,
-                      })
+                      if (state.cart.totals.net === 0) {
+                        // nothing to pay, complete processing of order directly (send to api)
+                        const { orderId } = await postData({
+                          url: '/api/createOrder',
+                          data: state.cart,
+                        })
+                        console.log('checkout orderId -- ', orderId)
 
-                      console.log('checkout sessionid -- ', sessionId)
+                        // redirect to order confirmation page
 
-                      const stripe = await getStripe()
-                      stripe?.redirectToCheckout({ sessionId })
-                      setProcessing(false)
+                        setProcessing(false)
+                      } else {
+                        // balance to pay -- total != 0
+                        const { sessionId } = await postData({
+                          url: '/api/createCheckoutSession',
+                          data: state.cart,
+                        })
+
+                        console.log('checkout sessionid -- ', sessionId)
+
+                        const stripe = await getStripe()
+                        stripe?.redirectToCheckout({ sessionId })
+                        setProcessing(false)
+                      }
                     } catch (error) {
                       return alert((error as Error)?.message)
                     } finally {

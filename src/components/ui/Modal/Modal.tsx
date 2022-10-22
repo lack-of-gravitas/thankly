@@ -41,7 +41,7 @@ const Modal: FC<ModalProps> = ({
 
   return (
     <>
-      <span className={className + ` `}>
+      <span className={className + ` bg-blend-darken`}>
         <Transition.Root show={show} as={Fragment}>
           <Dialog
             as="div"

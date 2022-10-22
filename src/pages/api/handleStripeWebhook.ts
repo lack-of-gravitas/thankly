@@ -18,7 +18,7 @@ async function buffer(readable: Readable) {
   return Buffer.concat(chunks)
 }
 
-const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleStripeWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST' || req.method === 'PATCH') {
     const buf = await buffer(req)
     const sig = req.headers['stripe-signature']
@@ -172,4 +172,4 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export default webhookHandler
+export default handleStripeWebhook
