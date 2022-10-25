@@ -15,6 +15,34 @@ export async function getBrand() {
   return brand
 }
 
+export async function getOrder(order: any) {
+  console.log(process.env.DIRECTUS)
+  console.log(order)
+  console.log(
+    'req: ',
+    `${process.env.NEXT_PUBLIC_REST_API}/items/orders?fields=*&filter[id][_eq]=${order}`
+  )
+
+  let data = await (
+    await fetch(
+      `${process.env.NEXT_PUBLIC_REST_API}/orders?fields=*,items.*&filter[id][_eq]=${order}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${process.env.DIRECTUS}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin',
+      }
+    )
+  ).json()
+
+  data.data?.length > 0 ? (data = data.data[0]) : data
+  console.log('order query--', data)
+
+  return data
+}
+
 export async function getVoucher(voucher: any) {
   let data = await (
     await fetch(
