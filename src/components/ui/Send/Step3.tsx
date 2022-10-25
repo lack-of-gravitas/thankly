@@ -1,10 +1,9 @@
 import cn from 'clsx'
-import Fuse from 'fuse.js'
 import { useState, useEffect, useRef, useContext, Fragment } from 'react'
 import { SwrBrand } from '@/lib/swr-helpers'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import Script from 'next/script'
+// import Script from 'next/script'
 import Image from 'next/future/image'
 import debounce from 'lodash/debounce'
 import usePlacesAutocomplete, {
@@ -20,6 +19,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { postData } from '@/lib/api-helpers'
 import { stripe } from '@/lib/stripe'
 import { getStripe } from '@/lib/stripe-client'
+import { useRouter } from 'next/router'
 
 const Icon = dynamic(() => import('@/components/common/Icon'))
 const Modal = dynamic(() => import('@/components/ui/Modal'))
@@ -36,6 +36,8 @@ const stripePromise = loadStripe(
 
 // eslint-disable-next-line react/display-name
 const Step3: React.FC<Step3Props> = ({ className }) => {
+  const router = useRouter()
+
   const brand = SwrBrand()
   const { state, dispatch } = useContext(Store)
   const [voucherValid, setVoucherValid]: any = useState()
@@ -701,7 +703,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                   <RadioGroup
                     value={state.cart.options.delivery ?? deliveryOptions[0]}
                     onChange={(e: any) => {
-                      console.log('radiogroup -- ', e)
+                      // console.log('radiogroup -- ', e)
                       Number(
                         state.cart.totals.subtotal < 50 && e.name === 'Express'
                           ? (e.price = 8.95)
@@ -887,9 +889,8 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                               data = null
                               setVoucherValid(false)
                             }
-                            console.log('voucher data', data)
-
-                            console.log('getVoucher', data)
+                            // console.log('voucher data', data)
+                            // console.log('getVoucher', data)
 
                             dispatch({
                               type: 'APPLY_VOUCHER',
@@ -937,7 +938,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     setProcessing(true)
 
                     // final cart
-                    console.log('final cart --', state.cart)
+                    // console.log('final cart --', state.cart)
 
                     // collate any errors
                     let foundErrors: any[] = []
@@ -1003,15 +1004,26 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     try {
                       if (state.cart.totals.net === 0) {
                         // nothing to pay, complete processing of order directly (send to api)
-                        const { orderId } = await postData({
+                        const order = await postData({
                           url: '/api/createOrder',
                           data: state.cart,
                         })
-                        console.log('checkout orderId -- ', orderId)
+                        console.log('returned order -- ', order)
 
-                        // redirect to order confirmation page
+                        // redirect to order confirmed page with order data
+
+                        order.id != ''
+                          ? router.push({
+                              pathname: '/orderconfirmed',
+                              query: { id:order.id },
+                            })
+                          : null
 
                         setProcessing(false)
+                        setInitiateCheckout(false)
+                        dispatch({
+                          type: 'CLEAR_CART',
+                        })
                       } else {
                         // balance to pay -- total != 0
                         const { sessionId } = await postData({
@@ -1024,14 +1036,13 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                         const stripe = await getStripe()
                         stripe?.redirectToCheckout({ sessionId })
                         setProcessing(false)
+                        setInitiateCheckout(false)
+                        dispatch({
+                          type: 'CLEAR_CART',
+                        })
                       }
                     } catch (error) {
                       return alert((error as Error)?.message)
-                    } finally {
-                      setInitiateCheckout(false)
-                      dispatch({
-                        type: 'CLEAR_CART',
-                      })
                     }
 
                     // should already be redirected to orderConfirmation or orderError routes

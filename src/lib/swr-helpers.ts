@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import {
   getBrand,
-  getBrandColors,
+  
   getSection,
   getWritingStyles,
   getProducts,
@@ -15,6 +15,7 @@ export function SwrBrand() {
   })
   return data
 }
+
 
 export function SwrVoucher(voucher: any) {
   let { data } = useSWR(['voucher', voucher], () => getVoucher(voucher), {

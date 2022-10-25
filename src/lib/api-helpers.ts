@@ -52,7 +52,7 @@ export const postData = async ({
   data?: any
 }) => {
   // export const postData = async ({ url, token, data }) => {
-  console.log('posting,', url, token, data)
+  // console.log('posting,', url, token, data)
 
   const res: Response = await fetch(url, {
     method: 'POST',

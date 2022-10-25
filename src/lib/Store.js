@@ -46,29 +46,6 @@ const emptyCartObject = {
 }
 
 
-// [
-//   {
-//     "id": "prod_MeDPmTDVNQKYmM",
-//     "date_created": "2022-10-20T09:23:52.741Z",
-//     "date_updated": "2022-10-21T02:23:22.835Z",
-//     "name": "NEW NEW PRoduct",
-//     "description": "asdlkjasd",
-//     "stockQty": 1,
-//     "type": "card",
-//     "brand": null,
-//     "featured": false,
-//     "tags": null,
-//     "status": true,
-//     "priceId": "price_1LuuyiEvc4dteT8lAzxaZfZm",
-//     "currency": "aud",
-//     "unit_amount": "5.00",
-//     "categories": [],
-//     "images": [],
-//     "chosen": false
-//   }
-// ]
-
-
 const initialState = {
   cart: Cookies.get('cart') ? JSON.parse(Cookies.get('cart')) : emptyCartObject,
 }
@@ -115,7 +92,7 @@ function reducer(state, action) {
         state.cart.options.voucher.value * 1 -
         state.cart.options.voucher.used * 1
 
-      console.log('voucherBalance --', voucherBalance)
+      // console.log('voucherBalance --', voucherBalance)
 
       state.cart.totals.subtotal.toFixed(2) === voucherBalance.toFixed(2)
         ? (state.cart.totals.voucher = voucherBalance.toFixed(2))
@@ -176,7 +153,7 @@ function reducer(state, action) {
         expires: 1 / 600,
       })
 
-      console.log('state.cart -- ', state.cart)
+      // console.log('state.cart -- ', state.cart)
       return { ...state, cart: { ...state.cart } }
     }
 
@@ -223,7 +200,7 @@ function reducer(state, action) {
       Cookies.set('cart', JSON.stringify({ ...state.cart }), {
         expires: 1 / 600,
       })
-      console.log('state.cart -- ', state.cart)
+      // console.log('state.cart -- ', state.cart)
       return { ...state, cart: { ...state.cart } }
     }
 
@@ -233,12 +210,11 @@ function reducer(state, action) {
       Cookies.set('cart', JSON.stringify({ ...state.cart }), {
         expires: 1 / 600,
       })
-      console.log('state.cart -- ', state.cart)
+      // console.log('state.cart -- ', state.cart)
       return { ...state, cart: { ...state.cart } }
     }
 
     case 'APPLY_VOUCHER': {
-      console.log('voucher payload', action.payload)
       state.cart.options.voucher = action.payload
       updateCartTotals()
 
@@ -260,7 +236,8 @@ function reducer(state, action) {
     }
 
     case 'CLEAR_CART': {
-      Cookies.set('cart', JSON.stringify(emptyCartObject), { expires: 1 / 600 })
+      Cookies.set('cart', JSON.stringify({...emptyCartObject}), { expires: 1 / 600 })
+      state.cart = emptyCartObject
       return { ...state, cart: { ...emptyCartObject } }
     }
 
