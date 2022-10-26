@@ -12,7 +12,7 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log('createOrder ->', req.body)
     let results: any
     let product: Stripe.Product
-    const cart = req.body
+    const { cart, status } = req.body
 
     try {
       // directus api - https://docs.directus.io/reference/items.html
@@ -50,7 +50,7 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
           credentials: 'same-origin',
           body: JSON.stringify({
             id: uuidv4(),
-            status: 'placed', // draft, placed, processing, completed/cancelled
+            status: status, // draft, placed, processing, completed/cancelled
 
             // totals
             gross: cart.totals.items * 1,
@@ -119,7 +119,7 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
           }),
         }
       )
-      
+
       // // create customer move this to Order Confirmation Page
       // if (cart.options.createAccount === true) {
       //   // create customer record

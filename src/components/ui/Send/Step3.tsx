@@ -1006,16 +1006,15 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                         // nothing to pay, complete processing of order directly (send to api)
                         const order = await postData({
                           url: '/api/createOrder',
-                          data: state.cart,
+                          data: { cart: state.cart, status: 'placed' },
                         })
                         console.log('returned order -- ', order)
 
-                        // redirect to order confirmed page with order data
-
+                        // redirect to order page with order data
                         order.id != ''
                           ? router.push({
-                              pathname: '/orderconfirmed',
-                              query: { id:order.id },
+                              pathname: '/order',
+                              query: { id: order.id, status: true },
                             })
                           : null
 
@@ -1026,15 +1025,22 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                         })
                       } else {
                         // balance to pay -- total != 0
+
+                        // create draft order before initating checkout
+                        const order = await postData({
+                          url: '/api/createOrder',
+                          data: { cart: state.cart, status: 'draft' },
+                        })
+
                         const { sessionId } = await postData({
                           url: '/api/createCheckoutSession',
-                          data: state.cart,
+                          data: { cart: state.cart, orderId: order.id },
                         })
 
                         console.log('checkout sessionid -- ', sessionId)
 
                         const stripe = await getStripe()
-                        stripe?.redirectToCheckout({ sessionId })
+                        stripe?.redirectToCheckout({ sessionId }) // should re-direct to orderconfirm or fail
                         setProcessing(false)
                         setInitiateCheckout(false)
                         dispatch({

@@ -10,7 +10,8 @@ const createCheckoutSession = async (
 ) => {
   if (req.method === 'POST') {
     console.log('stripe checkout ->', req.body)
-    const cart = req.body
+    const { cart, orderId } = req.body
+
     // have to create a Discount for the exact amount of the difference and auto apply that to the product
     const coupon = await stripe.coupons.create({
       name: 'Thankly Voucher Used',
@@ -18,26 +19,24 @@ const createCheckoutSession = async (
       currency: 'aud',
       duration: 'once',
     })
-
+    let line_items: any
+    cart.items.map((item: any) => {
+      line_items = [...line_items, { price: item.priceId, quantity: 1 }]
+    })
     console.log('coupon --', coupon)
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
-        {
-          // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-          // price: '{{PRICE_ID}}',
-          price: `price_1LtM0gEvc4dteT8lK0IcPvmg`,
-          quantity: 1,
-        },
+        ...line_items,
+        // {
+        //   price: `price_1LtM0gEvc4dteT8lK0IcPvmg`,
+        //   quantity: 1,
+        // },
       ],
-      discounts: [
-        {
-          coupon: `${coupon}`,
-        },
-      ],
+      discounts: [{ coupon: `${coupon}` }],
       mode: 'payment',
-      success_url: `${req.headers.origin}/?success=true`,
-      cancel_url: `${req.headers.origin}/?canceled=true`,
+      success_url: `${req.headers.origin}/order?id=${orderId}&status='${true}'`,
+      cancel_url: `${req.headers.origin}/order?id=${orderId}&status=${false}`,
       automatic_tax: { enabled: false },
     })
 
