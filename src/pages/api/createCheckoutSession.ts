@@ -45,7 +45,11 @@ const createCheckoutSession = async (
     })
 
     // delete coupon once used and order is successful
-    if (coupon.id === undefined) {
+    if (
+      cart.totals.voucher > 0 &&
+      cart.totals.net > 0 &&
+      coupon?.id != undefined
+    ) {
       const deleted = await stripe.coupons.del(coupon.id)
     }
 
