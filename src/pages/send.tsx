@@ -101,7 +101,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                     type="button"
                     onClick={() => {
                       dispatch({ type: 'CLEAR_CART' })
-                    }}
+                    }}  
                   >
                     Cancel
                   </Button>
