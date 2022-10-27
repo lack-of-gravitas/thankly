@@ -36,8 +36,9 @@ const createCheckoutSession = async (
         //   quantity: 1,
         // },
       ],
+      allow_promotion_codes:true,
       discounts:
-        cart.totals.voucher > 0 ? [{ coupon: `${coupon}` }] : undefined,
+        cart.totals.voucher > 0 ? [{ coupon: `${coupon.id}` }] : undefined,
       mode: 'payment',
       success_url: `${req.headers.origin}/order?id=${orderId}&status='${true}'`,
       cancel_url: `${req.headers.origin}/order?id=${orderId}&status=${false}`,
