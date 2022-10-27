@@ -22,7 +22,7 @@ const createCheckoutSession = async (
         duration: 'once',
       })
     }
-    let line_items: any
+    let line_items: any[] = []
     cart.items.map((item: any) => {
       line_items = line_items.concat({ price: item.priceId, quantity: 1 })
     })

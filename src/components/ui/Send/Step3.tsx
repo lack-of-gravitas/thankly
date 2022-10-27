@@ -52,21 +52,6 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
   const [errors, setErrors]: any[] = useState([])
   const [initiateCheckout, setInitiateCheckout] = useState(false)
 
-  // console.log('env',process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
-
-  useEffect(() => {
-    // Check to see if this is a redirect back from Checkout
-    const query = new URLSearchParams(window.location.search)
-    if (query.get('success')) {
-      console.log('Order placed! You will receive an email confirmation.')
-    }
-
-    if (query.get('canceled')) {
-      console.log(
-        'Order cancelled -- continue to shop around and checkout when you’re ready.'
-      )
-    }
-  }, [])
 
   // https://github.com/wellyshen/use-places-autocomplete?ref=hackernoon.com#api
   const {
@@ -1002,6 +987,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     console.log('initiating checkout...')
 
                     try {
+                      console.log('final cart -- ', state.cart)
                       if (state.cart.totals.net === 0) {
                         // nothing to pay, complete processing of order directly (send to api)
                         const order = await postData({
