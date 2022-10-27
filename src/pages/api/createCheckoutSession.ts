@@ -44,7 +44,10 @@ const createCheckoutSession = async (
       automatic_tax: { enabled: false },
     })
 
-    const deleted = await stripe.coupons.del(coupon.id) // delete coupon once used and order is successful
+    // delete coupon once used and order is successful
+    if (coupon.id === undefined) {
+      const deleted = await stripe.coupons.del(coupon.id)
+    }
 
     return res.status(200).json({ sessionId: session.id })
     // } catch (err: any) {
