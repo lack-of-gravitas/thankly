@@ -74,13 +74,13 @@ function reducer(state, action) {
     }
 
     // update shipping cost
-    state.cart.totals.shipping = state.cart.options.shipping.amount*1 ?? 0
+    state.cart.totals.shipping = state.cart.options.shipping.amount * 1 ?? 0
 
     // update subtotal (items - discount + shipping)
     state.cart.totals.subtotal =
-      state.cart.totals.items*1 -
-      state.cart.totals.discount*1 +
-      state.cart.totals.shipping*1
+      state.cart.totals.items * 1 -
+      state.cart.totals.discount * 1 +
+      state.cart.totals.shipping * 1
 
     // update voucher
 
@@ -100,18 +100,18 @@ function reducer(state, action) {
         ? (state.cart.totals.voucher = voucherBalance.toFixed(2))
         : null
 
-      state.cart.totals.subtotal*1 < voucherBalance*1
-        ? (state.cart.totals.voucher = state.cart.totals.subtotal*1)
+      state.cart.totals.subtotal * 1 < voucherBalance * 1
+        ? (state.cart.totals.voucher = state.cart.totals.subtotal * 1)
         : null
 
-      state.cart.totals.subtotal*1 > voucherBalance*1
-        ? (state.cart.totals.voucher = voucherBalance*1)
+      state.cart.totals.subtotal * 1 > voucherBalance * 1
+        ? (state.cart.totals.voucher = voucherBalance * 1)
         : null
     }
 
     // update net total
     state.cart.totals.net =
-      state.cart.totals.subtotal*1 - state.cart.totals.voucher*1
+      state.cart.totals.subtotal * 1 - state.cart.totals.voucher * 1
   }
 
   switch (action.type) {

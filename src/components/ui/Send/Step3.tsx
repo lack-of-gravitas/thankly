@@ -674,14 +674,14 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                 <div className="flex items-center justify-between">
                   <dt className="text-sm">Subtotal</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {`$` + Number(state.cart.totals.subtotal).toFixed(2)}
+                    {`$` + Number(state.cart.totals.subtotal * 1).toFixed(2)}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between">
                   <dt className="text-sm">Shipping Options</dt>
 
                   <dd className="text-sm font-medium text-gray-900">
-                    {`$` + Number(state.cart.totals.shipping).toFixed(2)}
+                    {`$` + Number(state.cart.totals.shipping * 1).toFixed(2)}
                   </dd>
                 </div>
                 <dt className="text-sm">
@@ -748,28 +748,30 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                   <dd className="text-sm font-medium text-gray-900">
                     {`$` +
                       Number(
-                        state.cart.totals.subtotal +
-                          state.cart.totals.shipping ===
+                        state.cart.totals.subtotal * 1 +
+                          state.cart.totals.shipping * 1 ===
                           0
                           ? 0
-                          : (state.cart.totals.subtotal +
-                              state.cart.totals.shipping) /
+                          : (state.cart.totals.subtotal * 1 +
+                              state.cart.totals.shipping * 1) /
                               11
                       ).toFixed(2)}
                   </dd>
                 </div>
-                {state.cart.totals.voucher !== 0 && (
+                {state.cart.totals.voucher * 1 !== 0 && (
                   <div className="flex items-center justify-between">
                     <dt className="text-sm">Thankly Voucher (applied)</dt>
                     <dd className="text-sm font-medium text-gray-900">
-                      {`-$` + Number(state.cart.totals.voucher).toFixed(2) + ``}
+                      {`-$` +
+                        Number(state.cart.totals.voucher * 1).toFixed(2) +
+                        ``}
                     </dd>
                   </div>
                 )}
                 <div className="flex items-center justify-between pt-6 border-t border-gray-200">
                   <dt className="text-base font-semibold">Order Total</dt>
                   <dd className="text-base font-semibold text-gray-900">
-                    {`$` + Number(state.cart.totals.net).toFixed(2)}
+                    {`$` + Number(state.cart.totals.net * 1).toFixed(2)}
                   </dd>
                 </div>
 
@@ -982,7 +984,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
 
                     try {
                       console.log('final cart -- ', state.cart)
-                      if (state.cart.totals.net === 0) {
+                      if (state.cart.totals.net * 1 === 0) {
                         // nothing to pay, complete processing of order directly (send to api)
                         const order = await postData({
                           url: '/api/createOrder',

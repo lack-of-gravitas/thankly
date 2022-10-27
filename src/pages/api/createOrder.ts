@@ -115,7 +115,7 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
           },
           credentials: 'same-origin',
           body: JSON.stringify({
-            used: cart.totals.voucher,
+            used: cart.totals.voucher * 1,
           }),
         }
       )
