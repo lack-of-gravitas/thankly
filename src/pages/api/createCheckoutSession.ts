@@ -36,7 +36,6 @@ const createCheckoutSession = async (
         //   quantity: 1,
         // },
       ],
-      allow_promotion_codes:true,
       discounts:
         cart.totals.voucher > 0 ? [{ coupon: `${coupon.id}` }] : undefined,
       mode: 'payment',
