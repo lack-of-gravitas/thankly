@@ -39,6 +39,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
   const router = useRouter()
 
   const brand = SwrBrand()
+  const { shippingRates } = brand
   const { state, dispatch } = useContext(Store)
   const [voucherValid, setVoucherValid]: any = useState()
   const [voucherBalance, setVoucherBalance] = useState(
@@ -51,7 +52,6 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
   const [processing, setProcessing]: any = useState(false)
   const [errors, setErrors]: any[] = useState([])
   const [initiateCheckout, setInitiateCheckout] = useState(false)
-
 
   // https://github.com/wellyshen/use-places-autocomplete?ref=hackernoon.com#api
   const {
@@ -393,12 +393,12 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
 
             <div className="mt-5">
               <h3 className="text-lg font-medium text-gray-900">
-                Delivery Address
+                Shipping Address
               </h3>
               <p className="mt-2 text-sm italic leading-snug text-gray-500">
-                At this time, we only deliver Thanklys to addresses in
-                Australia. Please enter Floor, Apt / Unit, PO Box or Parcel
-                Lockers manually in the second field.
+                At this time, we only ship Thanklys to addresses in Australia.
+                Please enter Floor, Apt / Unit, PO Box or Parcel Lockers
+                manually in the second field.
               </p>
               <div className="grid grid-cols-1 mt-6 gap-y-3 gap-x-4 sm:grid-cols-3">
                 <div className="sm:col-span-3">
@@ -678,27 +678,21 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                   </dd>
                 </div>
                 <div className="flex items-center justify-between">
-                  <dt className="text-sm">Delivery Options</dt>
+                  <dt className="text-sm">Shipping Options</dt>
 
                   <dd className="text-sm font-medium text-gray-900">
-                    {`$` + Number(state.cart.totals.delivery).toFixed(2)}
+                    {`$` + Number(state.cart.totals.shipping).toFixed(2)}
                   </dd>
                 </div>
                 <dt className="text-sm">
                   <RadioGroup
-                    value={state.cart.options.delivery ?? deliveryOptions[0]}
+                    value={state.cart.options.shipping ?? shippingRates[0]}
                     onChange={(e: any) => {
                       // console.log('radiogroup -- ', e)
-                      Number(
-                        state.cart.totals.subtotal < 50 && e.name === 'Express'
-                          ? (e.price = 8.95)
-                          : (e.price = 0)
-                      ).toFixed(2)
-
                       dispatch({
-                        type: 'SET_DELIVERY',
+                        type: 'SET_SHIPPING',
                         payload: {
-                          deliveryOption: { ...e },
+                          shippingRate: { ...e },
                         },
                       })
                     }}
@@ -708,41 +702,41 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       {'Choose a memory option'}
                     </RadioGroup.Label>
                     <div className="grid grid-cols-3 gap-3 sm:grid-cols-3">
-                      {deliveryOptions.map((option: any) => (
-                        <RadioGroup.Option
-                          key={option.id}
-                          value={option}
-                          // {...register('deliveryOption', {required: true,})}
-                          className={cn(
-                            'cursor-pointer focus:outline-none',
-
-                            option.id === state.cart.options.delivery.id
-                              ? 'border-transparent bg-slate-600 text-white ring-2 ring-slate-500 ring-offset-2 hover:bg-slate-700'
-                              : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50',
-                            'flex items-center justify-center rounded-md border py-3 px-3 text-xs font-medium sm:flex-1'
+                      {shippingRates.map((option: any) => (
+                        <>
+                          {state.cart.totals.items * 1 < 50 &&
+                          option.name === 'Express (Free)' ? (
+                            <></>
+                          ) : (
+                            <RadioGroup.Option
+                              key={option.id}
+                              value={option}
+                              className={cn(
+                                'cursor-pointer focus:outline-none',
+                                option.id === state.cart.options.shipping.id
+                                  ? 'border-transparent bg-slate-600 text-white ring-2 ring-slate-500 ring-offset-2 hover:bg-slate-700'
+                                  : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50',
+                                'flex items-center justify-center rounded-md border py-3 px-3 text-xs font-medium sm:flex-1'
+                              )}
+                            >
+                              <RadioGroup.Label as="span">
+                                {option.name +
+                                  ` $` +
+                                  Number(option.amount).toFixed(2)}
+                              </RadioGroup.Label>
+                            </RadioGroup.Option>
                           )}
-                        >
-                          <RadioGroup.Label as="span">
-                            {option.name +
-                              ` $` +
-                              Number(
-                                state.cart.totals.subtotal < 50 &&
-                                  option.name === 'Express'
-                                  ? 8.95
-                                  : 0
-                              ).toFixed(2)}
-                          </RadioGroup.Label>
-                        </RadioGroup.Option>
+                        </>
                       ))}
                     </div>
                   </RadioGroup>
 
-                  {errors.filter((item: any) => item.id === 'deliveryOption')
+                  {errors.filter((item: any) => item.id === 'shippingRate')
                     .length > 0 && (
                     <p className="mt-2 text-xs leading-snug text-red-600">
                       {
                         errors.filter(
-                          (item: any) => item.id === 'deliveryOption'
+                          (item: any) => item.id === 'shippingRate'
                         )[0].message
                       }
                     </p>
@@ -755,11 +749,11 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     {`$` +
                       Number(
                         state.cart.totals.subtotal +
-                          state.cart.totals.delivery ===
+                          state.cart.totals.shipping ===
                           0
                           ? 0
                           : (state.cart.totals.subtotal +
-                              state.cart.totals.delivery) /
+                              state.cart.totals.shipping) /
                               11
                       ).toFixed(2)}
                   </dd>
@@ -955,12 +949,12 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     //     ]))
                     //   : null
 
-                    JSON.stringify(state.cart.options.delivery) === '{}'
+                    JSON.stringify(state.cart.options.shipping) === '{}'
                       ? (foundErrors = foundErrors.concat([
                           {
-                            id: 'deliveryOption',
-                            title: 'Delivery Option not selected.',
-                            message: `Please select a delivery option.`,
+                            id: 'shippingRate',
+                            title: 'Shipping Option not selected.',
+                            message: `Please select a shipping option.`,
                           },
                         ]))
                       : null
@@ -972,7 +966,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                           {
                             id: 'address',
                             title: 'Address Empty',
-                            message: `Recipient Address not provided. Please fill out the recipient's delivery Address.`,
+                            message: `Recipient Address not provided. Please fill out the recipient's shipping address.`,
                           },
                         ]))
                       : null
@@ -1089,8 +1083,3 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
 }
 
 export default Step3
-
-const deliveryOptions = [
-  { id: 1, name: 'Express', price: 0 },
-  { id: 2, name: 'Standard', price: 0 },
-]

@@ -135,10 +135,10 @@ export default function Home({ slug, preview, data }: any) {
                         </dd>
                       </div>
                       <div className="flex items-center justify-between">
-                        <dt className="text-sm">{`Delivery Options (${order.cart.options.delivery.name})`}</dt>
+                        <dt className="text-sm">{`Shipping Options (${order.cart.options.shipping.name})`}</dt>
 
                         <dd className="text-sm font-medium text-gray-900">
-                          {`$` + Number(order.delivery).toFixed(2)}
+                          {`$` + Number(order.shipping).toFixed(2)}
                         </dd>
                       </div>
                       <dt className="text-sm"></dt>
@@ -148,9 +148,9 @@ export default function Home({ slug, preview, data }: any) {
                         <dd className="text-sm font-medium text-gray-900">
                           {`$` +
                             Number(
-                              order.subtotal * 1 + order.delivery * 1 === 0
+                              order.subtotal * 1 + order.shipping * 1 === 0
                                 ? 0
-                                : (order.subtotal * 1 + order.delivery * 1) / 11
+                                : (order.subtotal * 1 + order.shipping * 1) / 11
                             ).toFixed(2)}
                         </dd>
                       </div>

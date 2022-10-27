@@ -30,7 +30,7 @@ const emptyCartObject = {
 
   options: {
     voucher: {},
-    delivery: {},
+    shipping: {},
     termsAccepted: false,
     createAccount: false,
   },
@@ -38,13 +38,12 @@ const emptyCartObject = {
   totals: {
     items: 0,
     discount: 0, // free cards for large value orders
-    delivery: 0,
+    shipping: 0,
     subtotal: 0,
     voucher: 0,
     net: 0,
   },
 }
-
 
 const initialState = {
   cart: Cookies.get('cart') ? JSON.parse(Cookies.get('cart')) : emptyCartObject,
@@ -57,7 +56,7 @@ function reducer(state, action) {
     state.cart.totals = {
       items: 0,
       discount: 0, // free cards for large value orders
-      delivery: 0,
+      shipping: 0,
       subtotal: 0,
       voucher: 0,
       net: 0,
@@ -74,18 +73,21 @@ function reducer(state, action) {
       state.cart.totals.discount = -1 * card.unit_amount
     }
 
-    // update delivery cost
-    state.cart.totals.delivery = state.cart.options.delivery.price ?? 0
+    // update shipping cost
+    state.cart.totals.shipping = state.cart.options.shipping.amount*1 ?? 0
 
-    // update subtotal (items - discount + delivery)
+    // update subtotal (items - discount + shipping)
     state.cart.totals.subtotal =
-      state.cart.totals.items -
-      state.cart.totals.discount +
-      state.cart.totals.delivery
+      state.cart.totals.items*1 -
+      state.cart.totals.discount*1 +
+      state.cart.totals.shipping*1
 
     // update voucher
 
-    if (state.cart.options.voucher === {} || state.cart.options.voucher === null) {
+    if (
+      state.cart.options.voucher === {} ||
+      state.cart.options.voucher === null
+    ) {
       state.cart.totals.voucher = 0
     } else {
       const voucherBalance =
@@ -98,18 +100,18 @@ function reducer(state, action) {
         ? (state.cart.totals.voucher = voucherBalance.toFixed(2))
         : null
 
-      state.cart.totals.subtotal < voucherBalance
-        ? (state.cart.totals.voucher = state.cart.totals.subtotal)
+      state.cart.totals.subtotal*1 < voucherBalance*1
+        ? (state.cart.totals.voucher = state.cart.totals.subtotal*1)
         : null
 
-      state.cart.totals.subtotal > voucherBalance
-        ? (state.cart.totals.voucher = voucherBalance)
+      state.cart.totals.subtotal*1 > voucherBalance*1
+        ? (state.cart.totals.voucher = voucherBalance*1)
         : null
     }
 
     // update net total
     state.cart.totals.net =
-      state.cart.totals.subtotal - state.cart.totals.voucher
+      state.cart.totals.subtotal*1 - state.cart.totals.voucher*1
   }
 
   switch (action.type) {
@@ -145,8 +147,8 @@ function reducer(state, action) {
       return { ...state, cart: { ...state.cart } }
     }
 
-    case 'SET_DELIVERY': {
-      state.cart.options.delivery = action.payload.deliveryOption
+    case 'SET_SHIPPING': {
+      state.cart.options.shipping = action.payload.shippingRate
       updateCartTotals()
 
       Cookies.set('cart', JSON.stringify({ ...state.cart }), {
@@ -236,9 +238,11 @@ function reducer(state, action) {
     }
 
     case 'CLEAR_CART': {
-      Cookies.set('cart', JSON.stringify({...emptyCartObject}), { expires: 1 / 600 })
+      Cookies.set('cart', JSON.stringify({ ...emptyCartObject }), {
+        expires: 1 / 600,
+      })
       state.cart = emptyCartObject
-      return { ...state, cart: { ...emptyCartObject } }
+      return state //{ ...state, cart: { ...emptyCartObject } }
     }
 
     default:

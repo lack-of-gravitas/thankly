@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { stripe } from '@/lib/stripe'
+import { verify } from 'crypto'
 // import { getUser, withApiAuth } from '@supabase/supabase-auth-helpers/nextjs'
 // import { createOrRetrieveCustomer } from '@/lib/supabase-admin'
 
@@ -12,7 +13,7 @@ const createCheckoutSession = async (
     console.log('stripe checkout ->', req.body)
     const { cart, orderId } = req.body
 
-    // have to create a Discount for the exact amount of the difference and auto apply that to the product
+    // create a temp coupon for the exact amount of the difference
     let coupon: any
     if (cart.totals.voucher > 0 && cart.totals.net > 0) {
       coupon = await stripe.coupons.create({
@@ -22,11 +23,17 @@ const createCheckoutSession = async (
         duration: 'once',
       })
     }
+
+    // check shipping rate supplied is valid so not breaking checkout
+    let shippingRate: any = await stripe.shippingRates.retrieve(
+      cart.options.shipping.id
+    )
+
+    // put all products into checkout session
     let line_items: any[] = []
     cart.items.map((item: any) => {
       line_items = line_items.concat({ price: item.priceId, quantity: 1 })
     })
-    console.log('coupon --', coupon)
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -38,6 +45,7 @@ const createCheckoutSession = async (
       ],
       discounts:
         cart.totals.voucher > 0 ? [{ coupon: `${coupon.id}` }] : undefined,
+      shipping_options: shippingRate != undefined ? [shippingRate] : undefined,
       mode: 'payment',
       success_url: `${req.headers.origin}/order?id=${orderId}&status='${true}'`,
       cancel_url: `${req.headers.origin}/order?id=${orderId}&status=${false}`,

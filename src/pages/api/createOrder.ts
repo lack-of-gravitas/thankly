@@ -55,7 +55,7 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             // totals
             gross: cart.totals.items * 1,
             discount: cart.totals.discount * 1,
-            delivery: cart.totals.delivery * 1,
+            shipping: cart.totals.shipping * 1,
             subtotal: cart.totals.subtotal * 1,
             voucher: cart.totals.voucher * 1,
             net: cart.totals.net * 1,
