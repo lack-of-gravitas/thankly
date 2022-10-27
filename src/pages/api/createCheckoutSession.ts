@@ -14,7 +14,7 @@ const createCheckoutSession = async (
 
     // have to create a Discount for the exact amount of the difference and auto apply that to the product
     let coupon: any
-    if (cart.totals.voucher > 0) {
+    if (cart.totals.voucher > 0 && cart.totals.net > 0) {
       coupon = await stripe.coupons.create({
         name: 'Thankly Voucher Used',
         amount_off: cart.totals.voucher * 100,
@@ -24,7 +24,7 @@ const createCheckoutSession = async (
     }
     let line_items: any
     cart.items.map((item: any) => {
-      line_items = [...line_items, { price: item.priceId, quantity: 1 }]
+      line_items = line_items.concat({ price: item.priceId, quantity: 1 })
     })
     console.log('coupon --', coupon)
 
