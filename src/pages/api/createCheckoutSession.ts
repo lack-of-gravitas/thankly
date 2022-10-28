@@ -28,13 +28,14 @@ const createCheckoutSession = async (
     // put all products into checkout session
     let line_items: any[] = []
     cart.items.map((item: any) => {
-      line_items = line_items.concat({ price: item.priceId })
+      line_items = line_items.concat({ price: item.priceId, quantity: 1 })
     })
 
     // add extra product for Shipping
     if (cart.options.shipping.priceId != '') {
       line_items = line_items.concat({
         price: cart.options.shipping.priceId,
+        quantity: 1,
       })
     }
 
