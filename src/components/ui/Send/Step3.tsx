@@ -53,6 +53,12 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
   const [errors, setErrors]: any[] = useState([])
   const [initiateCheckout, setInitiateCheckout] = useState(false)
 
+  useEffect(() => {
+    dispatch({
+      type: 'UPDATE_TOTALS',
+    })
+  }, [])
+
   // https://github.com/wellyshen/use-places-autocomplete?ref=hackernoon.com#api
   const {
     ready,
@@ -672,9 +678,9 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
 
               <dl className="px-4 py-6 space-y-2 sm:px-6">
                 <div className="flex items-center justify-between">
-                  <dt className="text-sm">Subtotal</dt>
+                  <dt className="text-sm">Items</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {`$` + Number(state.cart.totals.subtotal * 1).toFixed(2)}
+                    {`$` + Number(state.cart.totals.items * 1).toFixed(2)}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between">
@@ -704,8 +710,11 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     <div className="grid grid-cols-3 gap-3 sm:grid-cols-3">
                       {shippingRates.map((option: any) => (
                         <>
-                          {state.cart.totals.items * 1 < 50 &&
-                          option.name === 'Express (Free)' ? (
+                          {state.cart.totals.items * 1 <= 50 &&
+                          option.name === 'Express Shipping (FREE)' ? (
+                            <></>
+                          ) : state.cart.totals.items * 1 > 50 &&
+                            option.name === 'Express Shipping' ? (
                             <></>
                           ) : (
                             <RadioGroup.Option
@@ -722,7 +731,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                               <RadioGroup.Label as="span">
                                 {option.name +
                                   ` $` +
-                                  Number(option.amount).toFixed(2)}
+                                  Number(option.unit_amount * 1).toFixed(2)}
                               </RadioGroup.Label>
                             </RadioGroup.Option>
                           )}
@@ -742,9 +751,14 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     </p>
                   )}
                 </dt>
-
                 <div className="flex items-center justify-between pt-2">
-                  <dt className="text-sm">G.S.T</dt>
+                  <dt className="text-sm">Subtotal</dt>
+                  <dd className="text-sm font-medium text-gray-900">
+                    {`$` + Number(state.cart.totals.subtotal * 1).toFixed(2)}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between pt-2">
+                  <dt className="text-sm">G.S.T Included</dt>
                   <dd className="text-sm font-medium text-gray-900">
                     {`$` +
                       Number(
@@ -879,7 +893,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                             })
 
                             setVoucherBalance(
-                              state.cart.totals.voucher.toFixed(2)
+                              state.cart.totals.voucher.toFixed(2) * 1
                             )
                           }
                         }, 300)}

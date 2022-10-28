@@ -12,12 +12,14 @@ export async function getBrand() {
   brand = brand.data[0]
 
   let shippingRates = await (
-    await fetch(`${process.env.NEXT_PUBLIC_REST_API}/shippingRates?fields=*`)
+    await fetch(
+      `${process.env.NEXT_PUBLIC_REST_API}/products?fields=*&filter[status][_eq]=true&filter[type][_eq]=shipping`
+    )
   ).json()
   shippingRates = shippingRates.data
 
   brand.shippingRates = shippingRates
-  console.log('brand query--', brand)
+  // console.log('brand query--', brand)
 
   return brand
 }

@@ -74,7 +74,11 @@ function reducer(state, action) {
     }
 
     // update shipping cost
-    state.cart.totals.shipping = state.cart.options.shipping.amount * 1 ?? 0
+    state.cart.options.shipping != undefined &&
+    Object.keys(state.cart.options.shipping).length != 0 &&
+    state.cart.options.shipping.unit_amount != ''
+      ? (state.cart.totals.shipping = state.cart.options.shipping.unit_amount * 1)
+      : 0
 
     // update subtotal (items - discount + shipping)
     state.cart.totals.subtotal =
@@ -83,10 +87,10 @@ function reducer(state, action) {
       state.cart.totals.shipping * 1
 
     // update voucher
-
     if (
       state.cart.options.voucher === {} ||
-      state.cart.options.voucher === null
+      state.cart.options.voucher === null ||
+      state.cart.options.voucher === undefined
     ) {
       state.cart.totals.voucher = 0
     } else {
@@ -246,15 +250,11 @@ function reducer(state, action) {
     }
 
     default:
+      updateCartTotals()
       return state
   }
 
-  function setCartCookie(cart) {
-    Cookies.set('cart', JSON.stringify({ ...cart }), {
-      expires: 1 / 600,
-    })
-    return { ...state, cart: { ...state.cart } }
-  }
+ 
 }
 
 // provides store info across the website
