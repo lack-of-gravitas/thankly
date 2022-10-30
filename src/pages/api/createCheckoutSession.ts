@@ -45,6 +45,8 @@ const createCheckoutSession = async (
       discounts:
         cart.totals.voucher > 0 ? [{ coupon: `${coupon.id}` }] : undefined,
       mode: 'payment',
+      billing_address_collection:'required',
+      consent_collection: {promotions:'auto'},
       success_url: `${req.headers.origin}/order?id=${orderId}&status='${true}'`,
       cancel_url: `${req.headers.origin}/order?id=${orderId}&status=${false}`,
       automatic_tax: { enabled: false },

@@ -117,7 +117,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                     })}
                   </div>
                   {/* mobile menu options */}
-                  {true ? (
+                  {false ? (
                     <div className="px-4 py-6 space-y-6 border-t border-gray-200">
                       <div className="flow-root">
                       <Link passHref href="#"><a
@@ -250,7 +250,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
 
                     <div className="flex items-center justify-end flex-1">
                       <div className="flex items-center lg:ml-8">
-                        {true ? (
+                        {false ? (
                           <Menu as="div" className="relative ml-3 ">
                             <Menu.Button className="flex text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                               <span className="sr-only">Open user menu</span>

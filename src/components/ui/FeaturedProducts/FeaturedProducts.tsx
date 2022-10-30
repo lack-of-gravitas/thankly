@@ -90,7 +90,7 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                         {product.description}
                       </p>
                     </div>
-                    <div className="mt-2">
+                    {/* <div className="mt-2">
                       <a
                         style={{
                           backgroundColor: brand.firstAccentColour
@@ -103,7 +103,7 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                         Send
                         <span className="sr-only">, {product.name}</span>
                       </a>
-                    </div>
+                    </div> */}
                   </div>
                 </>
               )

@@ -149,7 +149,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
               </div>
             </div>
 
-            <Progress currentStep={currentStep} data={prefetchedData} />
+            <Progress currentStep={currentStep}  />
             <Modal
               show={showError}
               icon={

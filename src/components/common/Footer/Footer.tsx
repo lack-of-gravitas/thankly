@@ -19,11 +19,11 @@ const Footer: FC<Props | any> = ({ data, className }) => {
   return (
     <>
       <footer
-        style={{
-          backgroundColor: data.backgroundColour
-            ? data.backgroundColour
-            : '#fff',
-        }}
+        // style={{
+        //   backgroundColor: data.backgroundColour
+        //     ? data.backgroundColour
+        //     : '#fff',
+        // }}
       >
         <h2 id="footer-heading" className="sr-only">
           Footer

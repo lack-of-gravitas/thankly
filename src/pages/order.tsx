@@ -8,6 +8,8 @@ import { fetchGetJSON } from '@/lib/api-helpers'
 import { getOrder } from '@/lib/queries'
 import Image from 'next/future/image'
 import { Cart } from '@/types'
+import { Store } from '@/lib/Store'
+import { useContext } from 'react'
 
 const Layout = dynamic(() => import('@/components/common/Layout'))
 const Icon = dynamic(() => import('@/components/common/Icon'))
@@ -16,12 +18,17 @@ export default function Home({ slug, preview, data }: any) {
   console.log('prefetchedData->', data)
   const router = useRouter()
   const brand = SwrBrand()
+  const { state, dispatch } = useContext(Store)
 
-  const { order, status } = data
+  const { order } = data
+  const status = Boolean(data.status === 'true')
 
-  if (!order || !status || Object.keys(data).length === 0 || status === '') {
-    router.push('/')
-  } else {
+  // if (!order || !status || Object.keys(data).length === 0) {
+  //   dispatch({
+  //     type: 'CLEAR_CART',
+  //   })
+  //   router.push('/')
+  // } else {
     return (
       <>
         <main className="relative lg:min-h-auto">
@@ -48,7 +55,7 @@ export default function Home({ slug, preview, data }: any) {
                     ? `We appreciate your order, we’re currently processing it. Check your email for the order confirmation and we'll keep you updated as your order progresses. Something doesn't look quite right? Get in touch with us.`
                     : `Payment for your order has been cancelled and your cart has been cleared. Please start again if you'd like to send a new Thankly.`}
                 </p>
-                <Link className="pt-6" passHref href={'/account'}>
+               {status && <Link className="pt-6" passHref href={'/account'}>
                   <Button
                     style={{
                       backgroundColor: brand.firstAccentColour
@@ -61,7 +68,7 @@ export default function Home({ slug, preview, data }: any) {
                     <Icon className="mr-2 text-white" name={'person'} />
                     {/* {`Create ` : `Your ` + ` Account`} */}Account
                   </Button>
-                </Link>
+                </Link>}
                 {/* <Link className="pt-6" passHref href={'/account'}>
                 <Button
                   style={{
@@ -79,7 +86,7 @@ export default function Home({ slug, preview, data }: any) {
               */}
               </div>
 
-              <div className="mt-16">
+              {status && <div className="mt-16">
                 <div className="p-2 px-3 mt-10 shadow-md rounded-xs bg-gray-50 lg:mt-0">
                   <div className="mt-4">
                     <ul
@@ -131,14 +138,14 @@ export default function Home({ slug, preview, data }: any) {
                       <div className="flex items-center justify-between">
                         <dt className="text-sm">Subtotal</dt>
                         <dd className="text-sm font-medium text-gray-900">
-                          {`$` + Number(order.subtotal).toFixed(2)}
+                          {`$` + Number(order.subtotal*1).toFixed(2)}
                         </dd>
                       </div>
                       <div className="flex items-center justify-between">
                         <dt className="text-sm">{`Shipping Options (${order.cart.options.shipping.name})`}</dt>
 
                         <dd className="text-sm font-medium text-gray-900">
-                          {`$` + Number(order.shipping).toFixed(2)}
+                          {`$` + Number(order.shipping*1).toFixed(2)}
                         </dd>
                       </div>
                       <dt className="text-sm"></dt>
@@ -165,20 +172,20 @@ export default function Home({ slug, preview, data }: any) {
                       <div className="flex items-center justify-between pt-6 border-t border-gray-200">
                         <dt className="text-base font-semibold">Order Total</dt>
                         <dd className="text-base font-semibold text-gray-900">
-                          {`$` + Number(order.net).toFixed(2)}
+                          {`$` + Number(order.net*1).toFixed(2)}
                         </dd>
                       </div>
                     </dl>
                   </div>
                 </div>
-              </div>
+              </div>}
             </div>
             )
           </div>
         </main>
       </>
     )
-  }
+  // }
 }
 
 Home.Layout = Layout

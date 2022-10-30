@@ -18,7 +18,7 @@ const Layout: React.FC = ({ children, brand }: any) => {
     return (
       <>
         <div 
-      style={{ backgroundColor: brand.backgroundColour ? brand.backgroundColour : '#fff' }}
+      // style={{ backgroundColor: brand.backgroundColour ? brand.backgroundColour : '#fff' }}
         
         className="relative ">
           <Navbar data={brand ? brand : null} />
