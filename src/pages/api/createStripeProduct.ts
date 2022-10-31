@@ -4,7 +4,7 @@ import Stripe from 'stripe'
 import { postData } from '@/lib/api-helpers'
 import { v4 as uuidv4 } from 'uuid'
 
-const createProducts = async (req: NextApiRequest, res: NextApiResponse) => {
+const createStripeProduct = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     console.log('createOrder ->', req.body)
     let results: any
@@ -25,4 +25,4 @@ const createProducts = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export default createProducts
+export default createStripeProduct
