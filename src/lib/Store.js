@@ -31,6 +31,7 @@ const emptyCartObject = {
   options: {
     voucher: {},
     shipping: {},
+    ribbon: {},
     termsAccepted: false,
     createAccount: false,
   },
@@ -77,7 +78,8 @@ function reducer(state, action) {
     state.cart.options.shipping != undefined &&
     Object.keys(state.cart.options.shipping).length != 0 &&
     state.cart.options.shipping.unit_amount != ''
-      ? (state.cart.totals.shipping = state.cart.options.shipping.unit_amount * 1)
+      ? (state.cart.totals.shipping =
+          state.cart.options.shipping.unit_amount * 1)
       : 0
 
     // update subtotal (items - discount + shipping)
@@ -172,6 +174,8 @@ function reducer(state, action) {
       return { ...state, cart: { ...state.cart } }
     }
 
+
+
     case 'SET_MESSAGE': {
       state.cart.cardContent.message = action.payload
 
@@ -220,6 +224,17 @@ function reducer(state, action) {
       return { ...state, cart: { ...state.cart } }
     }
 
+
+    case 'SET_RIBBON': {
+      state.cart.options.ribbon = action.payload.ribbon
+
+      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
+        expires: 1 / 600,
+      })
+      return { ...state, cart: { ...state.cart } }
+    }
+
+
     case 'APPLY_VOUCHER': {
       state.cart.options.voucher = action.payload
       updateCartTotals()
@@ -253,8 +268,6 @@ function reducer(state, action) {
       updateCartTotals()
       return state
   }
-
- 
 }
 
 // provides store info across the website

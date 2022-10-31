@@ -54,9 +54,9 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
             <Image
               key={image}
               className="object-cover object-center min-w-full"
-              src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${image}`}
-              width={900}
-              height={900}
+              src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${image}?fit=cover&width=500&height=500&quality=80`}
+              width={500}
+              height={500}
             />
           ))}
         </div>

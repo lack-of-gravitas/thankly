@@ -85,6 +85,29 @@ const handleStripeWebhook = async (req: NextApiRequest, res: NextApiResponse) =>
 
       }
 
+      if (event.type === 'product.deleted') {
+        product = event.data.object as Stripe.Product
+        results = await fetch(
+          `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id,
+          {
+            method: 'PATCH',
+            headers: {
+              Authorization: `Bearer ${process.env.DIRECTUS}`,
+              'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+              //name: product.name,
+             // description: product.description,
+              status: false,
+              //priceId: product.default_price,
+            }),
+          }
+        )
+        console.log('product.updated results',results)
+
+      }
+
       if (event.type === 'price.created' || event.type === 'price.updated') {
         price = event.data.object as Stripe.Price
         results = await fetch(

@@ -2,7 +2,7 @@ import cn from 'clsx'
 import Fuse from 'fuse.js'
 import { useState } from 'react'
 
-import { SwrBrand, SwrWritingStyles } from '@/lib/swr-helpers'
+import { SwrBrand, SwrWritingStyles, SwrRibbons } from '@/lib/swr-helpers'
 import dynamic from 'next/dynamic'
 import { RadioGroup } from '@headlessui/react'
 import { useContext, useEffect } from 'react'
@@ -20,10 +20,16 @@ interface Step2Props {
 // eslint-disable-next-line react/display-name
 const Step2: React.FC<Step2Props> = ({ className, data }) => {
   const brand = SwrBrand()
+  
   const writingStyles = SwrWritingStyles()
+  const ribbons = SwrRibbons()
+  console.log('ribbons --', ribbons)
   const { state, dispatch } = useContext(Store)
   const [selectedWritingStyle, setSelectedWritingStyle] = useState(
     state.cart.cardContent.writingStyle
+  )
+  const [selectedRibbon, setSelecedRibbon] = useState(
+    state.cart.options.ribbon
   )
 
   return (
@@ -159,6 +165,78 @@ const Step2: React.FC<Step2Props> = ({ className, data }) => {
               </div>
             </RadioGroup>
           </div>
+
+          <div className="mt-10 lg:mt-0">
+            <RadioGroup
+              value={selectedRibbon}
+              onChange={(ribbon: any) => {
+                setSelecedRibbon(ribbon)
+                dispatch({
+                  type: 'SET_RIBBON',
+                  payload: { ribbon },
+                })
+              }}
+            >
+              <RadioGroup.Label className="text-lg font-medium text-gray-900">
+                Add a Ribbon
+              </RadioGroup.Label>
+
+              <div className="grid grid-cols-1 mt-4 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                {ribbons?.map((item: any) => (
+                  <RadioGroup.Option
+                    key={item.id}
+                    value={item}
+                    className={({ checked, active }) =>
+                      cn(
+                        checked ? 'border-transparent' : 'border-gray-300',
+                        active ? 'ring-2 ring-slate-700' : '',
+                        'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none'
+                      )
+                    }
+                  >
+                    {({ checked, active }) => (
+                      <>
+                        <span className="flex flex-1">
+                          <span className="flex flex-col">
+                            {checked ? (
+                              <Icon className="" name={`check`} />
+                            ) : null}
+                            <img
+                              className="h-auto mx-3 my-3 rounded-md w-15 lg:w-25 lg:h-auto"
+                              src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${item.image}`}
+                              alt=""
+                            />
+
+                            <RadioGroup.Label
+                              as="span"
+                              className="block mx-3 text-sm font-semibold text-gray-900"
+                            >
+                              {item.name}
+                            </RadioGroup.Label>
+                            <RadioGroup.Description
+                              as="span"
+                              className="flex items-center mx-3 mt-1 text-sm leading-tight text-gray-500"
+                            >
+                              {item.description}
+                            </RadioGroup.Description>
+                          </span>
+                        </span>
+
+                        <span
+                          className={cn(
+                            active ? 'border' : 'border-2',
+                            checked ? 'border-slate-700' : 'border-transparent',
+                            'pointer-events-none absolute -inset-px rounded-lg'
+                          )}
+                          aria-hidden="true"
+                        />
+                      </>
+                    )}
+                  </RadioGroup.Option>
+                ))}
+              </div>
+            </RadioGroup>
+          </div>
         </form>
       </div>
     </div>
@@ -166,21 +244,3 @@ const Step2: React.FC<Step2Props> = ({ className, data }) => {
 }
 
 export default Step2
-
-// const writingStyles = [
-//   {
-//     id: 1,
-//     title: 'Natural Print',
-//     description: 'Handwritten messge with naturally printed letters.',
-//   },
-//   {
-//     id: 2,
-//     title: 'Cursive Italics',
-//     description: 'Handwritten messge with cursive, italicized letters.',
-//   },
-//   {
-//     id: 2,
-//     title: 'Full Caps',
-//     description: 'Handwritten messge with all letters capitalised.',
-//   },
-// ]

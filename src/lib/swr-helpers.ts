@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import {
   getBrand,
-  
+  getRibbons,
   getSection,
   getWritingStyles,
   getProducts,
@@ -62,6 +62,14 @@ export function SwrFeaturedProducts(type: any, limit: any) {
 
 export function SwrWritingStyles() {
   let { data } = useSWR('writingStyles', () => getWritingStyles(), {
+    revalidateOnReconnect: false,
+  })
+  // console.log('getWritingStyles->', data)
+  return data
+}
+
+export function SwrRibbons() {
+  let { data } = useSWR('ribbons', () => getRibbons(), {
     revalidateOnReconnect: false,
   })
   // console.log('getWritingStyles->', data)

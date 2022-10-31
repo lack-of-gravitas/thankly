@@ -26,7 +26,7 @@ const SeenOn: FC<SeenOnProps> = ({ data }) => {
                 {image && image !== '' ? (
                   <Image
                     className="h-12"
-                    src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${image}`}
+                    src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${image}?quality=80`}
                     // layout="fill"
                     width={100}
                     height={50}

@@ -60,7 +60,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
           setErrorMessage({
             title: 'Message not provided',
             description:
-              'You need to provide a message to put on the card select at least one Card to send as your Thankly. Please write a message to your recipient and click Next Step.',
+              'You need to provide a message to put on the card. Please write a message to your recipient and click Next Step.',
           })
           setShowError(true)
           setCurrentStep(currentStep)

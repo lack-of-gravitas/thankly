@@ -342,6 +342,22 @@ export async function getWritingStyles() {
   return data
 }
 
+export async function getRibbons() {
+  // console.log('query', path)
+  let data = await (
+    await fetch(
+      `${process.env.NEXT_PUBLIC_REST_API}/products` +
+        `?fields=*,categories.item.*,images.directus_files_id` + // key fields
+        `&filter[status][_eq]=true` +
+        `&filter[stockQty][_gt]=0` +
+        `&filter[type][_in]=ribbon`
+    )
+  ).json()
+  data = data.data
+  // console.log(data)
+  return data
+}
+
 export async function getFeaturedProducts(type: any, limit: any) {
   let data = await (
     await fetch(
