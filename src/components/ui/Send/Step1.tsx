@@ -18,7 +18,7 @@ interface Step1Props {
 
 // eslint-disable-next-line react/display-name
 const Step1: React.FC<Step1Props> = ({ className, data }) => {
-  console.log('prod data ->',data)
+  // console.log('prod data ->',data)
   const brand = SwrBrand()
   const products = SwrProducts()
   const [query, updateQuery] = useState('')
@@ -148,6 +148,6 @@ const Step1: React.FC<Step1Props> = ({ className, data }) => {
 
 export default Step1
 
-export async function getServerSideProps(context: any) {
-  return { props: { data: await getProducts() } }
-}
+// export async function getServerSideProps(context: any) {
+//   return { props: { data: await getProducts() } }
+// }

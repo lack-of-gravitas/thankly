@@ -165,7 +165,7 @@ export default function Home({ slug, preview, data }: any) {
                         <div className="flex items-center justify-between">
                           <dt className="text-sm">Thankly Voucher (applied)</dt>
                           <dd className="text-sm font-medium text-gray-900">
-                            {`-$` + Number(order.voucher).toFixed(2) + ``}
+                            {`-$` + Number(order.voucher*1).toFixed(2) + ``}
                           </dd>
                         </div>
                       )}

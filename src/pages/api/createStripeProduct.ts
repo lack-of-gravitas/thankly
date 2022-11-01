@@ -28,6 +28,7 @@ const createStripeProduct = async (
           description: product.description,
           images: [product.image],
           default_price_data: {
+            
             currency: 'aud',
             unit_amount: product.unit_amount,
           },

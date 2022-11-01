@@ -43,7 +43,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
   const { state, dispatch } = useContext(Store)
   const [voucherValid, setVoucherValid]: any = useState()
   const [voucherBalance, setVoucherBalance] = useState(
-    state.cart.options.voucher
+    state.cart.options.voucher *1
       ? state.cart.options.voucher.value * 1 -
           state.cart.options.voucher.used * 1
       : 0
@@ -907,7 +907,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       <Icon name={'attach_money'} />
                       <span className="font-medium text-gray-700">
                         {`Balance `}
-                        {(state.cart.options.voucher
+                        {(state.cart.options.voucher *1
                           ? state.cart.options.voucher.value * 1 -
                             state.cart.options.voucher.used * 1
                           : 0

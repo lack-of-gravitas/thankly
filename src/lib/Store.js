@@ -103,7 +103,7 @@ function reducer(state, action) {
       // console.log('voucherBalance --', voucherBalance)
 
       state.cart.totals.subtotal.toFixed(2) === voucherBalance.toFixed(2)
-        ? (state.cart.totals.voucher = voucherBalance.toFixed(2))
+        ? (state.cart.totals.voucher = voucherBalance.toFixed(2)*1)
         : null
 
       state.cart.totals.subtotal * 1 < voucherBalance * 1
