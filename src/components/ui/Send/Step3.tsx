@@ -879,6 +879,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                             data = data.data
                             if (data?.length === 1) {
                               data = data[0]
+                              console.log('voucher data >', data)
                               setVoucherValid(true)
                             } else {
                               data = null
@@ -905,10 +906,14 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       <Icon name={'attach_money'} />
                       <span className="font-medium text-gray-700">
                         {`Balance `}
-                        {state.cart.options.voucher * 1
-                          ? state.cart.options.voucher.value * 1 -
-                            state.cart.options.voucher.used * 1
-                          : 0}
+                        {state.cart.options.voucher &&
+                        state.cart.options.voucher != undefined &&
+                        Object.keys(state.cart.options.voucher).length != 0
+                          ? (
+                              state.cart.options.voucher.value * 1 -
+                              state.cart.options.voucher.used * 1
+                            ).toFixed(2)
+                          : (0).toFixed(2)}
                       </span>
                     </button>
                   </div>

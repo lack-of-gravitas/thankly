@@ -139,7 +139,9 @@ function reducer(state, action) {
     }
 
     case 'APPLY_VOUCHER': {
+      newCart.options.voucher = {}
       newCart.options.voucher = action.payload
+
       updateTotals()
       setCookies(newCart)
       return { ...state, cart: { ...newCart } }
