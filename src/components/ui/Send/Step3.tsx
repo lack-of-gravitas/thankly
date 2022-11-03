@@ -43,7 +43,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
   const { state, dispatch } = useContext(Store)
   const [voucherValid, setVoucherValid]: any = useState()
   const [voucherBalance, setVoucherBalance] = useState(
-    state.cart.options.voucher *1
+    state.cart.options.voucher * 1
       ? state.cart.options.voucher.value * 1 -
           state.cart.options.voucher.used * 1
       : 0
@@ -52,12 +52,6 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
   const [processing, setProcessing]: any = useState(false)
   const [errors, setErrors]: any[] = useState([])
   const [initiateCheckout, setInitiateCheckout] = useState(false)
-
-  useEffect(() => {
-    dispatch({
-      type: 'UPDATE_TOTALS',
-    })
-  }, [])
 
   // https://github.com/wellyshen/use-places-autocomplete?ref=hackernoon.com#api
   const {
@@ -680,14 +674,20 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                 <div className="flex items-center justify-between">
                   <dt className="text-sm">Items</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {`$` + Number(state.cart.totals.items * 1).toFixed(2)}
+                    {`$ ${(state.cart.totals.items * 1).toFixed(2)}`}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between">
-                  <dt className="text-sm">Shipping Options</dt>
-
+                  <dt className="text-sm">- Discounted Card with Gifts</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {`$` + Number(state.cart.totals.shipping * 1).toFixed(2)}
+                    {`($ ${(state.cart.totals.discount * 1).toFixed(2)})`}
+                  </dd>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <dt className="text-sm">+ Shipping</dt>
+                  <dd className="text-sm font-medium text-gray-900">
+                    {`$` + (state.cart.totals.shipping * 1).toFixed(2)}
                   </dd>
                 </div>
                 <dt className="text-sm">
@@ -731,7 +731,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                               <RadioGroup.Label as="span">
                                 {option.name +
                                   ` $` +
-                                  Number(option.unit_amount * 1).toFixed(2)}
+                                  Number(option.unit_amount * 1)}
                               </RadioGroup.Label>
                             </RadioGroup.Option>
                           )}
@@ -752,40 +752,40 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                   )}
                 </dt>
                 <div className="flex items-center justify-between pt-2">
-                  <dt className="text-sm">Subtotal</dt>
-                  <dd className="text-sm font-medium text-gray-900">
-                    {`$` + Number(state.cart.totals.subtotal * 1).toFixed(2)}
+                  <dt className="text-sm font-bold">Subtotal</dt>
+                  <dd className="text-sm font-bold text-gray-900">
+                    {`$ ${(state.cart.totals.subtotal * 1).toFixed(2)}`}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between pt-2">
                   <dt className="text-sm">G.S.T Included</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {`$` +
-                      Number(
+                    {`$ 
+                      ${
                         state.cart.totals.subtotal * 1 +
                           state.cart.totals.shipping * 1 ===
-                          0
+                        0
                           ? 0
-                          : (state.cart.totals.subtotal * 1 +
-                              state.cart.totals.shipping * 1) /
+                          : (
+                              (state.cart.totals.subtotal * 1 +
+                                state.cart.totals.shipping * 1) /
                               11
-                      ).toFixed(2)}
+                            ).toFixed(2)
+                      }`}
                   </dd>
                 </div>
                 {state.cart.totals.voucher * 1 !== 0 && (
                   <div className="flex items-center justify-between">
-                    <dt className="text-sm">Thankly Voucher (applied)</dt>
+                    <dt className="text-sm">- used Thankly Voucher</dt>
                     <dd className="text-sm font-medium text-gray-900">
-                      {`-$` +
-                        Number(state.cart.totals.voucher * 1).toFixed(2) +
-                        ``}
+                      {`($ ${(state.cart.totals.voucher * 1).toFixed(2)})`}
                     </dd>
                   </div>
                 )}
                 <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-                  <dt className="text-base font-semibold">Order Total</dt>
+                  <dt className="text-base font-semibold">Total Outstanding</dt>
                   <dd className="text-base font-semibold text-gray-900">
-                    {`$` + Number(state.cart.totals.net * 1).toFixed(2)}
+                    {`$ ${(state.cart.totals.net * 1).toFixed(2)}`}
                   </dd>
                 </div>
 
@@ -892,9 +892,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                               payload: data,
                             })
 
-                            setVoucherBalance(
-                              state.cart.totals.voucher.toFixed(2) * 1
-                            )
+                            setVoucherBalance(state.cart.totals.voucher * 1)
                           }
                         }, 300)}
                       />
@@ -907,11 +905,10 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       <Icon name={'attach_money'} />
                       <span className="font-medium text-gray-700">
                         {`Balance `}
-                        {(state.cart.options.voucher *1
+                        {state.cart.options.voucher * 1
                           ? state.cart.options.voucher.value * 1 -
                             state.cart.options.voucher.used * 1
-                          : 0
-                        ).toFixed(2)}
+                          : 0}
                       </span>
                     </button>
                   </div>

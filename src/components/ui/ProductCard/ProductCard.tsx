@@ -6,6 +6,7 @@ import { SwrBrand } from '@/lib/swr-helpers'
 import { useContext, useEffect, useState } from 'react'
 import cn from 'clsx'
 import dynamic from 'next/dynamic'
+import { set } from 'lodash'
 
 const Icon = dynamic(() => import('@/components/common/Icon'))
 const ProductCarousel = dynamic(
@@ -19,11 +20,23 @@ interface ProductCardProps {
 }
 
 const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
-  const brand: any = SwrBrand()
   const { state, dispatch } = useContext(Store)
-  const [productAdded, setProductAdded] = useState(
-    inCart(product.id) ? true : false
-  )
+  const [productAdded, setProductAdded] = useState(false)
+
+  // check if product in cart and flip to remove button
+  useEffect(() => {
+    const found = state.cart.items?.filter(
+      (item: any) => item.id === product.id
+    )
+
+    if (found && found != undefined && found.length > 0) {
+      setProductAdded(true)
+    } else {
+      setProductAdded(false)
+    }
+  }, [state.cart])
+
+  // console.log('currentCart ->',state.cart)
 
   return (
     <div
@@ -38,7 +51,9 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
       <div className="flex flex-col flex-1 p-4 space-y-2">
         <div className="flex items-center justify-between mt-4 space-x-8 text-gray-900">
           <h3 className="text-base font-bold text-slate-700">{product.name}</h3>
-          <p  className="text-base font-bold text-slate-700">${product.unit_amount}</p>
+          <p className="text-base font-bold text-slate-700">
+            ${(product.unit_amount * 1).toFixed(2)}
+          </p>
         </div>
 
         <p className="text-sm text-gray-500">{product.description}</p>
@@ -47,8 +62,9 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
       <div className="mt-3">
         {productAdded === false ? (
           <button
-            onClick={() => {
-              addItem(product)
+            onClick={(e: any) => {
+              // addItem(product)
+              dispatch({ type: 'ADD_ITEM', payload: { ...product } })
               setProductAdded(true)
             }}
             className="relative flex items-center justify-center w-full px-8 py-2 text-xs font-semibold tracking-wider text-gray-900 uppercase bg-gray-100 border border-transparent hover:bg-gray-200"
@@ -59,8 +75,8 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
           </button>
         ) : (
           <button
-            onClick={() => {
-              removeItem(product)
+            onClick={(e: any) => {
+              dispatch({ type: 'REMOVE_ITEM', payload: { ...product } })
               setProductAdded(false)
             }}
             className="relative flex items-center justify-center w-full px-8 py-2 text-xs font-semibold tracking-wider text-gray-900 uppercase bg-gray-100 border border-transparent hover:bg-gray-200"
@@ -73,25 +89,6 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
       </div>
     </div>
   )
-
-  // cart functions
-  function addItem(product: any) {
-    dispatch({
-      type: 'ADD_ITEM',
-      payload: { ...product },
-    })
-  }
-
-  function removeItem(product: any) {
-    dispatch({ type: 'REMOVE_ITEM', payload: { ...product } })
-  }
-
-  function inCart(stripeId: any) {
-    const existItem = state.cart.items?.find(
-      (x: any) => x.id === stripeId
-    )
-    return existItem ? true : false
-  }
 }
 
 export default ProductCard

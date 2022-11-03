@@ -18,7 +18,6 @@ interface Step1Props {
 
 // eslint-disable-next-line react/display-name
 const Step1: React.FC<Step1Props> = ({ className, data }) => {
-  // console.log('prod data ->',data)
   const brand = SwrBrand()
   const products = SwrProducts()
   const [query, updateQuery] = useState('')

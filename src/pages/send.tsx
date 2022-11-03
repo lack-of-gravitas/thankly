@@ -26,7 +26,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
   const [errorMessage, setErrorMessage] = useState({})
 
   const { state, dispatch } = useContext(Store)
-  console.log('current cart', state.cart)
+  // console.log('current cart', state.cart)
 
   const handleNextStep = () => {
     switch (currentStep) {

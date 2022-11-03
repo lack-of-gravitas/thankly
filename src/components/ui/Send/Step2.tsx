@@ -23,7 +23,6 @@ const Step2: React.FC<Step2Props> = ({ className, data }) => {
   
   const writingStyles = SwrWritingStyles()
   const ribbons = SwrRibbons()
-  console.log('ribbons --', ribbons)
   const { state, dispatch } = useContext(Store)
   const [selectedWritingStyle, setSelectedWritingStyle] = useState(
     state.cart.cardContent.writingStyle
@@ -203,7 +202,7 @@ const Step2: React.FC<Step2Props> = ({ className, data }) => {
                             ) : null}
                             <img
                               className="h-auto mx-3 my-3 rounded-md w-15 lg:w-25 lg:h-auto"
-                              src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${item.image}`}
+                              src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${item.images[0].directus_files_id}`}
                               alt=""
                             />
 

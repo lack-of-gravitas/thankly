@@ -18,7 +18,10 @@ async function buffer(readable: Readable) {
   return Buffer.concat(chunks)
 }
 
-const handleStripeWebhook = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleStripeWebhook = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   if (req.method === 'POST' || req.method === 'PATCH') {
     const buf = await buffer(req)
     const sig = req.headers['stripe-signature']
@@ -58,8 +61,7 @@ const handleStripeWebhook = async (req: NextApiRequest, res: NextApiResponse) =>
             priceId: product.default_price,
           }),
         })
-        console.log('product.created results',results)
-        
+        console.log('product.created results', results)
       }
 
       if (event.type === 'product.updated') {
@@ -81,8 +83,7 @@ const handleStripeWebhook = async (req: NextApiRequest, res: NextApiResponse) =>
             }),
           }
         )
-        console.log('product.updated results',results)
-
+        console.log('product.updated results', results)
       }
 
       if (event.type === 'product.deleted') {
@@ -98,14 +99,13 @@ const handleStripeWebhook = async (req: NextApiRequest, res: NextApiResponse) =>
             credentials: 'same-origin',
             body: JSON.stringify({
               //name: product.name,
-             // description: product.description,
+              // description: product.description,
               status: false,
               //priceId: product.default_price,
             }),
           }
         )
-        console.log('product.updated results',results)
-
+        console.log('product.updated results', results)
       }
 
       if (event.type === 'price.created' || event.type === 'price.updated') {
@@ -126,12 +126,11 @@ const handleStripeWebhook = async (req: NextApiRequest, res: NextApiResponse) =>
               unit_amount:
                 price.unit_amount === 0 || price.unit_amount === null
                   ? 0
-                  : (price.unit_amount / 100).toFixed(2),
+                  : price.unit_amount / 100,
             }),
           }
         )
-        console.log('price.upserted results',results)
-
+        console.log('price.upserted results', results)
       }
 
       if (event.type === 'price.deleted') {
@@ -153,7 +152,7 @@ const handleStripeWebhook = async (req: NextApiRequest, res: NextApiResponse) =>
             }),
           }
         )
-        console.log('price.deleted results',results)
+        console.log('price.deleted results', results)
       }
 
       if (event.type === 'customer.created') {
@@ -175,9 +174,8 @@ const handleStripeWebhook = async (req: NextApiRequest, res: NextApiResponse) =>
             }),
           }
         )
-        console.log('price.deleted results',results)
+        console.log('price.deleted results', results)
       }
-
     } catch (error) {
       console.log(error)
       return res

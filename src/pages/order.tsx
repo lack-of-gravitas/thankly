@@ -138,14 +138,14 @@ export default function Home({ slug, preview, data }: any) {
                       <div className="flex items-center justify-between">
                         <dt className="text-sm">Subtotal</dt>
                         <dd className="text-sm font-medium text-gray-900">
-                          {`$` + Number(order.subtotal*1).toFixed(2)}
+                          {`$` + Number(order.subtotal*1)}
                         </dd>
                       </div>
                       <div className="flex items-center justify-between">
                         <dt className="text-sm">{`Shipping Options (${order.cart.options.shipping.name})`}</dt>
 
                         <dd className="text-sm font-medium text-gray-900">
-                          {`$` + Number(order.shipping*1).toFixed(2)}
+                          {`$` + Number(order.shipping*1)}
                         </dd>
                       </div>
                       <dt className="text-sm"></dt>
@@ -154,25 +154,25 @@ export default function Home({ slug, preview, data }: any) {
                         <dt className="text-sm">G.S.T</dt>
                         <dd className="text-sm font-medium text-gray-900">
                           {`$` +
-                            Number(
+                            (
                               order.subtotal * 1 + order.shipping * 1 === 0
                                 ? 0
                                 : (order.subtotal * 1 + order.shipping * 1) / 11
-                            ).toFixed(2)}
+                            )}
                         </dd>
                       </div>
                       {order.voucher !== 0 && (
                         <div className="flex items-center justify-between">
                           <dt className="text-sm">Thankly Voucher (applied)</dt>
                           <dd className="text-sm font-medium text-gray-900">
-                            {`-$` + Number(order.voucher*1).toFixed(2) + ``}
+                            {`-$` + (order.voucher*1) + ``}
                           </dd>
                         </div>
                       )}
                       <div className="flex items-center justify-between pt-6 border-t border-gray-200">
                         <dt className="text-base font-semibold">Order Total</dt>
                         <dd className="text-base font-semibold text-gray-900">
-                          {`$` + Number(order.net*1).toFixed(2)}
+                          {`$` + Number(order.net*1)}
                         </dd>
                       </div>
                     </dl>

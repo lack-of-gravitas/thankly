@@ -2,7 +2,6 @@
 import { createContext, useReducer } from 'react'
 import Cookies from 'js-cookie'
 import { v4 as uuidv4 } from 'uuid'
-import { update } from 'lodash'
 
 export const Store = createContext()
 const emptyCartObject = {
@@ -50,223 +49,175 @@ const initialState = {
   cart: Cookies.get('cart') ? JSON.parse(Cookies.get('cart')) : emptyCartObject,
 }
 
+function setCookies(obj) {
+  Cookies.set('cart', JSON.stringify({ ...obj }), {
+    expires: 1 / 600,
+  })
+  console.log('cookie >', JSON.parse(Cookies.get('cart')))
+}
+
 function reducer(state, action) {
   // console.log('action.payload --', action.payload)
-
-  function updateCartTotals() {
-    state.cart.totals = {
-      items: 0,
-      discount: 0, // free cards for large value orders
-      shipping: 0,
-      subtotal: 0,
-      voucher: 0,
-      net: 0,
-    }
-
-    // update item totals
-    state.cart.items.map(
-      (item) => (state.cart.totals.items += item.unit_amount * 1)
-    )
-
-    // if order contains gift, add discount equivalent to card price
-    if (state.cart.items.filter((item) => item.type === 'gift').length > 0) {
-      const card = state.cart.items.filter((item) => item.type === 'card')
-      state.cart.totals.discount = -1 * card.unit_amount
-    }
-
-    // update shipping cost
-    state.cart.options.shipping != undefined &&
-    Object.keys(state.cart.options.shipping).length != 0 &&
-    state.cart.options.shipping.unit_amount != ''
-      ? (state.cart.totals.shipping =
-          state.cart.options.shipping.unit_amount * 1)
-      : 0
-
-    // update subtotal (items - discount + shipping)
-    state.cart.totals.subtotal =
-      state.cart.totals.items * 1 -
-      state.cart.totals.discount * 1 +
-      state.cart.totals.shipping * 1
-
-    // update voucher
-    if (
-      state.cart.options.voucher === {} ||
-      state.cart.options.voucher === null ||
-      state.cart.options.voucher === undefined
-    ) {
-      state.cart.totals.voucher = 0
-    } else {
-      const voucherBalance =
-        state.cart.options.voucher.value * 1 -
-        state.cart.options.voucher.used * 1
-
-      // console.log('voucherBalance --', voucherBalance)
-
-      state.cart.totals.subtotal.toFixed(2) === voucherBalance.toFixed(2)
-        ? (state.cart.totals.voucher = voucherBalance.toFixed(2)*1)
-        : null
-
-      state.cart.totals.subtotal * 1 < voucherBalance * 1
-        ? (state.cart.totals.voucher = state.cart.totals.subtotal * 1)
-        : null
-
-      state.cart.totals.subtotal * 1 > voucherBalance * 1
-        ? (state.cart.totals.voucher = voucherBalance * 1)
-        : null
-    }
-
-    // update net total
-    state.cart.totals.net =
-      state.cart.totals.subtotal * 1 - state.cart.totals.voucher * 1
-  }
+  let newCart = state.cart
+  // console.log('cookie >', Cookies.get('cart')) // should be blank for fresh
+  // console.log('newCart...', newCart) // should be blank for fresh
 
   switch (action.type) {
     case 'ADD_ITEM': {
-      action.payload.type === 'card'
-        ? (state.cart.items = state.cart.items.filter(
-            (item) => item.type !== 'card'
-          ))
-        : null
+      if (
+        action.payload.type === 'card' &&
+        // newCart.items != undefined &&
+        newCart.items.length > 0
+      ) {
+        newCart.items = newCart.items.filter((item) => item.type !== 'card')
+      }
 
-      let items = [...state.cart.items, action.payload]
-
-      // update totals
-      updateCartTotals()
-
-      Cookies.set('cart', JSON.stringify({ ...state.cart, items }), {
-        expires: 1 / 600,
-      })
-
-      return { ...state, cart: { ...state.cart, items } }
+      newCart.items = [...newCart.items, action.payload]
+      console.log('newCart.items >', newCart.items)
+      updateTotals()
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
     }
 
     case 'REMOVE_ITEM': {
-      state.cart.items = state.cart.items.filter(
-        (item) => item.stripeId !== action.payload.stripeId
+      newCart.items = newCart.items.filter(
+        (item) => item.id !== action.payload.id
       )
-
-      updateCartTotals()
-
-      Cookies.set('cart', JSON.stringify({ ...state.cart.items }), {
-        expires: 1 / 600,
-      })
-      return { ...state, cart: { ...state.cart } }
+      updateTotals()
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
     }
 
     case 'SET_SHIPPING': {
-      state.cart.options.shipping = action.payload.shippingRate
-      updateCartTotals()
-
-      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
-        expires: 1 / 600,
-      })
-
-      // console.log('state.cart -- ', state.cart)
-      return { ...state, cart: { ...state.cart } }
+      newCart.options.shipping = action.payload.shippingRate
+      updateTotals()
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
     }
 
     case 'SET_STYLE': {
-      state.cart.cardContent.writingStyle = action.payload.style
-
-      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
-        expires: 1 / 600,
-      })
-      return { ...state, cart: { ...state.cart } }
+      newCart.cardContent.writingStyle = action.payload.style
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
     }
 
-
-
     case 'SET_MESSAGE': {
-      state.cart.cardContent.message = action.payload
-
-      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
-        expires: 1 / 600,
-      })
-      return { ...state, cart: { ...state.cart } }
+      newCart.cardContent.message = action.payload
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
     }
 
     case 'SET_INSTRUCTIONS': {
-      state.cart.cardContent.instructions = action.payload
-
-      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
-        expires: 1 / 600,
-      })
-      return { ...state, cart: { ...state.cart } }
+      newCart.cardContent.instructions = action.payload
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
     }
 
     case 'SET_RECIPIENT': {
       let payload = action.payload
-      state.cart.recipient = { ...state.cart.recipient, ...payload }
-
-      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
-        expires: 1 / 600,
-      })
-      return { ...state, cart: { ...state.cart } }
+      newCart.recipient = { ...newCart.recipient, ...action.payload }
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
     }
 
     case 'SET_TERMS': {
-      state.cart.options.termsAccepted = action.payload.termsAccepted
-
-      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
-        expires: 1 / 600,
-      })
-      // console.log('state.cart -- ', state.cart)
-      return { ...state, cart: { ...state.cart } }
+      newCart.options.termsAccepted = action.payload.termsAccepted
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
     }
 
     case 'SET_ACCOUNT': {
-      state.cart.options.createAccount = action.payload.createAccount
-
-      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
-        expires: 1 / 600,
-      })
-      // console.log('state.cart -- ', state.cart)
-      return { ...state, cart: { ...state.cart } }
+      newCart.options.createAccount = action.payload.createAccount
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
     }
-
 
     case 'SET_RIBBON': {
-      state.cart.options.ribbon = action.payload.ribbon
-
-      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
-        expires: 1 / 600,
-      })
-      return { ...state, cart: { ...state.cart } }
+      newCart.options.ribbon = action.payload.ribbon
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
     }
 
-
     case 'APPLY_VOUCHER': {
-      state.cart.options.voucher = action.payload
-      updateCartTotals()
-
-      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
-        expires: 1 / 600,
-      })
-      return { ...state, cart: { ...state.cart } }
+      newCart.options.voucher = action.payload
+      updateTotals()
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
     }
 
     case 'REMOVE_VOUCHER': {
-      state.cart.options.voucher = {}
-      updateCartTotals()
-
-      // return setCartCookie(state.cart)
-      Cookies.set('cart', JSON.stringify({ ...state.cart }), {
-        expires: 1 / 600,
-      })
-      return { ...state, cart: { ...state.cart } }
+      newCart.options.voucher = {}
+      updateTotals()
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
     }
 
     case 'CLEAR_CART': {
-      Cookies.set('cart', JSON.stringify({ ...emptyCartObject }), {
-        expires: 1 / 600,
-      })
+      setCookies(emptyCartObject)
       state.cart = emptyCartObject
-      return state //{ ...state, cart: { ...emptyCartObject } }
+      return state
+    }
+  }
+
+  function updateTotals() {
+    // update item totals
+    newCart.totals.items = 0
+    newCart.items.map((item) => (newCart.totals.items += item.unit_amount * 1))
+
+    // add discount for card value if gift also ordered
+    newCart.totals.discount = 0
+    if (newCart.items?.filter((item) => item.type === 'gift').length > 0) {
+      const card = newCart.items.filter((item) => item.type === 'card')
+      card.map((item) => (newCart.totals.discount += item.unit_amount * 1))
     }
 
-    default:
-      updateCartTotals()
-      return state
+    // update shipping cost
+    newCart.totals.shipping = 0
+    newCart.options.shipping != undefined &&
+    Object.keys(newCart.options.shipping).length != 0 &&
+    newCart.options.shipping.unit_amount != ''
+      ? (newCart.totals.shipping = newCart.options.shipping.unit_amount * 1)
+      : 0
+
+    // update subtotals (items - discount + shipping)
+    newCart.totals.subtotal = 0
+
+    newCart.totals.subtotal =
+      newCart.totals.items * 1 -
+      newCart.totals.discount * 1 +
+      newCart.totals.shipping * 1
+
+    // update voucher
+    newCart.totals.voucher = 0
+    if (
+      newCart.options.voucher === {} ||
+      newCart.options.voucher === null ||
+      newCart.options.voucher === undefined
+    ) {
+      newCart.totals.voucher = 0
+    } else {
+      const voucherBalance =
+        newCart.options.voucher.value * 1 - newCart.options.voucher.used * 1
+
+      newCart.totals.subtotal === voucherBalance
+        ? (newCart.totals.voucher = voucherBalance * 1)
+        : null
+
+      newCart.totals.subtotal * 1 < voucherBalance * 1
+        ? (newCart.totals.voucher = newCart.totals.subtotal * 1)
+        : null
+
+      newCart.totals.subtotal * 1 > voucherBalance * 1
+        ? (newCart.totals.voucher = voucherBalance * 1)
+        : null
+    }
+
+    // update net
+    newCart.totals.net = 0
+    newCart.totals.net =
+      newCart.totals.subtotal * 1 - newCart.totals.voucher * 1
+
+    state.cart = { ...state, cart: { ...newCart } }
   }
 }
 
