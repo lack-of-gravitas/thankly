@@ -102,10 +102,11 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       })
 
       // update voucher used balance
-      let data = getVoucher(cart.options.voucher.code)
+
+      let data: any = getVoucher(cart.options.voucher.code)
       if (data && data != undefined && Object.keys(data).length != 0) {
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/vouchers/${data.code}`,
+          `${process.env.NEXT_PUBLIC_REST_API}/vouchers/${data[0].code}`,
           {
             method: 'PATCH',
             headers: {
