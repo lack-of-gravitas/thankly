@@ -47,8 +47,8 @@ const createCheckoutSession = async (
       mode: 'payment',
       billing_address_collection:'required',
       // consent_collection: {promotions:'auto'},
-      success_url: `${req.headers.origin}/order?id=${orderId}&status='${true}'`,
-      cancel_url: `${req.headers.origin}/order?id=${orderId}&status=${false}`,
+      success_url: `${req.headers.origin}/order?id=${orderId}&status=true`,
+      cancel_url: `${req.headers.origin}/order?id=${orderId}&status=false`,
       automatic_tax: { enabled: false },
     })
 

@@ -20,8 +20,9 @@ export default function Home({ slug, preview, data }: any) {
   const brand = SwrBrand()
   const { state, dispatch } = useContext(Store)
 
-  const { order } = data
-  const status = Boolean(data.status === 'true')
+  const { status } = data
+  const { cart } = data.order
+  // const status = Boolean(data.status === 'true')
 
   // if (!order || !status || Object.keys(data).length === 0) {
   //   dispatch({
@@ -29,33 +30,34 @@ export default function Home({ slug, preview, data }: any) {
   //   })
   //   router.push('/')
   // } else {
-    return (
-      <>
-        <main className="relative lg:min-h-auto">
-          <div className="bg-white">
-            (
-            <div className="max-w-4xl py-16 mx-auto sm:px-6 sm:py-24">
-              <div className="px-4 sm:px-0">
-                <h2
-                  style={{
-                    color: brand.firstAccentColour
-                      ? brand.firstAccentColour
-                      : '#2e2e2e',
-                  }}
-                  className="text-sm font-semibold tracking-widest uppercase "
-                >
-                  {status ? `Payment Successful` : `Payment Cancelled`}
-                </h2>
-                <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-                  {status ? `Order confirmation` : `Order cancelled`}
-                </h1>
+  return (
+    <>
+      <main className="relative lg:min-h-auto">
+        <div className="bg-white">
+          (
+          <div className="max-w-4xl py-16 mx-auto sm:px-6 sm:py-24">
+            <div className="px-4 sm:px-0">
+              <h2
+                style={{
+                  color: brand.firstAccentColour
+                    ? brand.firstAccentColour
+                    : '#2e2e2e',
+                }}
+                className="text-sm font-semibold tracking-widest uppercase "
+              >
+                {status ? `Payment Successful` : `Payment Cancelled`}
+              </h2>
+              <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+                {status ? `Order confirmation` : `Order cancelled`}
+              </h1>
 
-                <p className="mt-2 mb-5 text-base text-gray-500">
-                  {status
-                    ? `We appreciate your order, we’re currently processing it. Check your email for the order confirmation and we'll keep you updated as your order progresses. Something doesn't look quite right? Get in touch with us.`
-                    : `Payment for your order has been cancelled and your cart has been cleared. Please start again if you'd like to send a new Thankly.`}
-                </p>
-               {status && <Link className="pt-6" passHref href={'/account'}>
+              <p className="mt-2 mb-5 text-base text-gray-500">
+                {status
+                  ? `We appreciate your order, we’re currently processing it. Check your email for the order confirmation and we'll keep you updated as your order progresses. Something doesn't look quite right? Get in touch with us.`
+                  : `Payment for your order has been cancelled and your cart has been cleared. Please start again if you'd like to send a new Thankly.`}
+              </p>
+              {false && (
+                <Link className="pt-6" passHref href={'/account'}>
                   <Button
                     style={{
                       backgroundColor: brand.firstAccentColour
@@ -68,8 +70,9 @@ export default function Home({ slug, preview, data }: any) {
                     <Icon className="mr-2 text-white" name={'person'} />
                     {/* {`Create ` : `Your ` + ` Account`} */}Account
                   </Button>
-                </Link>}
-                {/* <Link className="pt-6" passHref href={'/account'}>
+                </Link>
+              )}
+              {/* <Link className="pt-6" passHref href={'/account'}>
                 <Button
                   style={{
                     backgroundColor: brand.firstAccentColour
@@ -84,16 +87,17 @@ export default function Home({ slug, preview, data }: any) {
                 </Button>
               </Link>
               */}
-              </div>
+            </div>
 
-              {status && <div className="mt-16">
+            {status && (
+              <div className="mt-16">
                 <div className="p-2 px-3 mt-10 shadow-md rounded-xs bg-gray-50 lg:mt-0">
                   <div className="mt-4">
                     <ul
                       role="list"
                       className="px-3 border-b border-gray-200 divide-y divide-gray-200"
                     >
-                      {order.cart.items?.map((product: any) => (
+                      {cart.items?.map((product: any) => (
                         <li key={product.id} className="flex py-6">
                           <div className="flex-shrink-0 border rounded-sm shadow-sm border-gray-150">
                             <Image
@@ -138,14 +142,14 @@ export default function Home({ slug, preview, data }: any) {
                       <div className="flex items-center justify-between">
                         <dt className="text-sm">Subtotal</dt>
                         <dd className="text-sm font-medium text-gray-900">
-                          {`$` + Number(order.subtotal*1)}
+                        {`$ ${(cart.totals.subtotal * 1).toFixed(2)}`}
                         </dd>
                       </div>
                       <div className="flex items-center justify-between">
-                        <dt className="text-sm">{`Shipping Options (${order.cart.options.shipping.name})`}</dt>
+                        <dt className="text-sm">{`Shipping Options (${cart.options.shipping.name})`}</dt>
 
                         <dd className="text-sm font-medium text-gray-900">
-                          {`$` + Number(order.shipping*1)}
+                        {`$` + (cart.totals.shipping * 1).toFixed(2)}
                         </dd>
                       </div>
                       <dt className="text-sm"></dt>
@@ -153,38 +157,45 @@ export default function Home({ slug, preview, data }: any) {
                       <div className="flex items-center justify-between pt-2">
                         <dt className="text-sm">G.S.T</dt>
                         <dd className="text-sm font-medium text-gray-900">
-                          {`$` +
-                            (
-                              order.subtotal * 1 + order.shipping * 1 === 0
-                                ? 0
-                                : (order.subtotal * 1 + order.shipping * 1) / 11
-                            )}
+                        {`$ 
+                      ${
+                        cart.totals.subtotal * 1 +
+                          cart.totals.shipping * 1 ===
+                        0
+                          ? 0
+                          : (
+                              (cart.totals.subtotal * 1 +
+                                cart.totals.shipping * 1) /
+                              11
+                            ).toFixed(2)
+                      }`}
                         </dd>
                       </div>
-                      {order.voucher !== 0 && (
+                      {cart.totals.voucher * 1 !== 0 && (
                         <div className="flex items-center justify-between">
                           <dt className="text-sm">Thankly Voucher (applied)</dt>
                           <dd className="text-sm font-medium text-gray-900">
-                            {`-$` + (order.voucher*1) + ``}
+                          {`($ ${(cart.totals.voucher * 1).toFixed(2)})`}
                           </dd>
                         </div>
                       )}
                       <div className="flex items-center justify-between pt-6 border-t border-gray-200">
                         <dt className="text-base font-semibold">Order Total</dt>
                         <dd className="text-base font-semibold text-gray-900">
-                          {`$` + Number(order.net*1)}
+                        {`$ ${(cart.totals.net * 1).toFixed(2)}`}
                         </dd>
                       </div>
                     </dl>
                   </div>
                 </div>
-              </div>}
-            </div>
-            )
+              </div>
+            )}
           </div>
-        </main>
-      </>
-    )
+          )
+        </div>
+      </main>
+    </>
+  )
   // }
 }
 
