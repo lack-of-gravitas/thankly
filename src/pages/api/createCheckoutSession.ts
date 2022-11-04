@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { stripe } from '@/lib/stripe'
-import { verify } from 'crypto'
+
 // import { getUser, withApiAuth } from '@supabase/supabase-auth-helpers/nextjs'
 // import { createOrRetrieveCustomer } from '@/lib/supabase-admin'
 
@@ -10,7 +10,7 @@ const createCheckoutSession = async (
   res: NextApiResponse
 ) => {
   if (req.method === 'POST') {
-    console.log('stripe checkout ->', req.body)
+    // console.log('stripe checkout ->', req.body)
     const { cart, orderId } = req.body
 
     // create a temp coupon if Voucher is used
