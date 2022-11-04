@@ -11,15 +11,14 @@ import {
 
 export function SwrBrand() {
   let { data } = useSWR('brand', () => getBrand(), {
-    revalidateOnReconnect: false,
+    revalidateOnReconnect: true,
   })
   return data
 }
 
-
 export function SwrVoucher(voucher: any) {
   let { data } = useSWR(['voucher', voucher], () => getVoucher(voucher), {
-    revalidateOnReconnect: false,
+    revalidateOnReconnect: true,
   })
   return data.length === 1 ? data.data[0] : null
 }
@@ -29,7 +28,7 @@ export function SwrSection(queryParams: any) {
     [queryParams.collection, queryParams.id],
     () => getSection(queryParams),
     {
-      revalidateOnReconnect: false,
+      revalidateOnReconnect: true,
     }
   )
   // console.log('data->', data)
@@ -38,7 +37,8 @@ export function SwrSection(queryParams: any) {
 
 export function SwrProducts() {
   let { data } = useSWR('products', () => getProducts(), {
-    revalidateOnReconnect: false,
+    revalidateOnReconnect: true,
+    refreshInterval: 120000,
   })
   // console.log('data --', data)
   // add key to manage state of "choose / chosen button"
@@ -53,7 +53,7 @@ export function SwrFeaturedProducts(type: any, limit: any) {
     'featuredProducts',
     () => getFeaturedProducts(type, limit),
     {
-      revalidateOnReconnect: false,
+      revalidateOnReconnect: true,
     }
   )
 
@@ -62,7 +62,7 @@ export function SwrFeaturedProducts(type: any, limit: any) {
 
 export function SwrWritingStyles() {
   let { data } = useSWR('writingStyles', () => getWritingStyles(), {
-    revalidateOnReconnect: false,
+    revalidateOnReconnect: true,
   })
   // console.log('getWritingStyles->', data)
   return data
@@ -70,7 +70,7 @@ export function SwrWritingStyles() {
 
 export function SwrRibbons() {
   let { data } = useSWR('ribbons', () => getRibbons(), {
-    revalidateOnReconnect: false,
+    revalidateOnReconnect: true,
   })
   // console.log('getWritingStyles->', data)
   return data
