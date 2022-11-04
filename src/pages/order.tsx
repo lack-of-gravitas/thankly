@@ -9,27 +9,39 @@ import { getOrder } from '@/lib/queries'
 import Image from 'next/future/image'
 import { Cart } from '@/types'
 import { Store } from '@/lib/Store'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 
 const Layout = dynamic(() => import('@/components/common/Layout'))
 const Icon = dynamic(() => import('@/components/common/Icon'))
 
 export default function Home({ slug, preview, data }: any) {
-  console.log('prefetchedData->', data)
+  // console.log('prefetchedData->', data)
   const router = useRouter()
   const brand = SwrBrand()
   const { state, dispatch } = useContext(Store)
 
-  const { status } = data
+  let { order, status } = data
   const { cart } = data.order
-  // const status = Boolean(data.status === 'true')
+  status = Boolean(data.status === 'true')
 
-  // if (!order || !status || Object.keys(data).length === 0) {
-  //   dispatch({
-  //     type: 'CLEAR_CART',
-  //   })
-  //   router.push('/')
-  // } else {
+  async function deleteOrder(orderId: any) {
+    if (status === false) {
+      console.log('deleting cancelled order...', order.id)
+      fetch(`${process.env.NEXT_PUBLIC_REST_API}/orders/${order.id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${process.env.DIRECTUS}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin',
+      })
+    }
+  }
+
+  useEffect(() => {
+    status === false ? deleteOrder(order.id) : null
+  }, [])
+
   return (
     <>
       <main className="relative lg:min-h-auto">
@@ -142,14 +154,14 @@ export default function Home({ slug, preview, data }: any) {
                       <div className="flex items-center justify-between">
                         <dt className="text-sm">Subtotal</dt>
                         <dd className="text-sm font-medium text-gray-900">
-                        {`$ ${(cart.totals.subtotal * 1).toFixed(2)}`}
+                          {`$ ${(cart.totals.subtotal * 1).toFixed(2)}`}
                         </dd>
                       </div>
                       <div className="flex items-center justify-between">
                         <dt className="text-sm">{`Shipping Options (${cart.options.shipping.name})`}</dt>
 
                         <dd className="text-sm font-medium text-gray-900">
-                        {`$` + (cart.totals.shipping * 1).toFixed(2)}
+                          {`$` + (cart.totals.shipping * 1).toFixed(2)}
                         </dd>
                       </div>
                       <dt className="text-sm"></dt>
@@ -157,10 +169,9 @@ export default function Home({ slug, preview, data }: any) {
                       <div className="flex items-center justify-between pt-2">
                         <dt className="text-sm">G.S.T</dt>
                         <dd className="text-sm font-medium text-gray-900">
-                        {`$ 
+                          {`$ 
                       ${
-                        cart.totals.subtotal * 1 +
-                          cart.totals.shipping * 1 ===
+                        cart.totals.subtotal * 1 + cart.totals.shipping * 1 ===
                         0
                           ? 0
                           : (
@@ -175,14 +186,14 @@ export default function Home({ slug, preview, data }: any) {
                         <div className="flex items-center justify-between">
                           <dt className="text-sm">Thankly Voucher (applied)</dt>
                           <dd className="text-sm font-medium text-gray-900">
-                          {`($ ${(cart.totals.voucher * 1).toFixed(2)})`}
+                            {`($ ${(cart.totals.voucher * 1).toFixed(2)})`}
                           </dd>
                         </div>
                       )}
                       <div className="flex items-center justify-between pt-6 border-t border-gray-200">
                         <dt className="text-base font-semibold">Order Total</dt>
                         <dd className="text-base font-semibold text-gray-900">
-                        {`$ ${(cart.totals.net * 1).toFixed(2)}`}
+                          {`$ ${(cart.totals.net * 1).toFixed(2)}`}
                         </dd>
                       </div>
                     </dl>
@@ -208,7 +219,7 @@ export async function getServerSideProps(context: any) {
     props: {
       data: {
         order: context.query.id != undefined ? await getOrder(id) : {},
-        status: status ?? '',
+        status: (status === true || status === 'true') ?? false,
       },
     }, // will be passed to the page component as props
   }

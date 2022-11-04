@@ -3,6 +3,7 @@ import { stripe } from '@/lib/stripe'
 import Stripe from 'stripe'
 import { postData } from '@/lib/api-helpers'
 import { v4 as uuidv4 } from 'uuid'
+import { getVoucher } from '@/lib/queries'
 
 // import { getUser, withApiAuth } from '@supabase/supabase-auth-helpers/nextjs'
 // import { createOrRetrieveCustomer } from '@/lib/supabase-admin'
@@ -63,9 +64,6 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             // product(s) snapshot
             items: [...line_items],
 
-            // link to customer -- BELOW LINE DOESN"T WORK
-            // customer: customer?.id ?? '',
-
             // recipient
             firstname: cart.recipient.firstname,
             lastname: cart.recipient.lastname,
@@ -104,21 +102,27 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       })
 
       // update voucher used balance
-      await fetch(
-        `${process.env.NEXT_PUBLIC_REST_API}/vouchers/` +
-          cart.options.voucher.code,
-        {
-          method: 'PATCH',
-          headers: {
-            Authorization: `Bearer ${process.env.DIRECTUS}`,
-            'Content-Type': 'application/json',
-          },
-          credentials: 'same-origin',
-          body: JSON.stringify({
-            used: cart.totals.voucher * 1,
-          }),
-        }
-      )
+      let data = getVoucher(cart.options.voucher.code)
+      if (data && data != undefined && Object.keys(data).length != 0) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_REST_API}/vouchers/${data.code}`,
+          {
+            method: 'PATCH',
+            headers: {
+              Authorization: `Bearer ${process.env.DIRECTUS}`,
+              'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+              used: cart.totals.voucher * 1,
+            }),
+          }
+        )
+      }
+      // await (
+
+      // ).json()
+      // data = data.data
 
       // // create customer move this to Order Confirmation Page
       // if (cart.options.createAccount === true) {
