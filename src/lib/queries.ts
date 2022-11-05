@@ -40,7 +40,7 @@ export async function getOrder(order: any) {
   ).json()
 
   data.data?.length > 0 ? (data = data.data[0]) : data
-  console.log('order query--', data)
+  // console.log('order query--', data)
 
   return data
 }

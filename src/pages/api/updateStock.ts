@@ -3,9 +3,8 @@ import { stripe } from '@/lib/stripe'
 import Stripe from 'stripe'
 
 
-const deleteCoupon = async (req: NextApiRequest, res: NextApiResponse) => {
+const updateStock = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    console.log('deleteCoupon req >',req)
     let coupon: any = req.body
 
     try {
@@ -27,4 +26,4 @@ const deleteCoupon = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export default deleteCoupon
+export default updateStock

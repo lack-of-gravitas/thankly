@@ -228,10 +228,9 @@ export async function getServerSideProps(context: any) {
     }
   } else {
     // call deleteStripeCoupon api to blow away Coupon used
-    const coupon = await postData({
-      url: '/api/deleteCoupon',
-      data: { coupon: order.id },
-    })
+    const coupon = await fetch(
+      `${process.env.NEXT_PUBLIC_REST_API}/api/deleteCoupon?id=${order.id}`
+    )
 
     // update voucher balance
     if (Object.keys(order.cart.options.voucher).length != 0) {

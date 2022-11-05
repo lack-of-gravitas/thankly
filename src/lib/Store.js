@@ -53,7 +53,7 @@ function setCookies(obj) {
   Cookies.set('cart', JSON.stringify({ ...obj }), {
     expires: 1 / 600,
   })
-  console.log('cookie >', JSON.parse(Cookies.get('cart')))
+  // console.log('cookie >', JSON.parse(Cookies.get('cart')))
 }
 
 function reducer(state, action) {

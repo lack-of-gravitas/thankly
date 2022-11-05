@@ -879,7 +879,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                             data = data.data
                             if (data?.length === 1) {
                               data = data[0]
-                              console.log('voucher data >', data)
+                              // console.log('voucher data >', data)
                               setVoucherValid(true)
                             } else {
                               data = null
@@ -991,7 +991,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
 
                     if (foundErrors.length > 0) {
                       setErrors(foundErrors)
-                      console.log('errors --', errors)
+                      // console.log('errors --', errors)
                       setProcessing(false)
                       return
                     }
@@ -1006,7 +1006,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                           url: '/api/createOrder',
                           data: { cart: state.cart, status: 'placed' },
                         })
-                        console.log('returned order -- ', order)
+                        // console.log('returned order -- ', order)
 
                         // redirect to order page with order data
                         order.id != ''
@@ -1034,8 +1034,6 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                           url: '/api/createCheckoutSession',
                           data: { cart: state.cart, orderId: order.id },
                         })
-
-                        console.log('checkout sessionid -- ', sessionId)
 
                         const stripe = await getStripe()
                         stripe?.redirectToCheckout({ sessionId }) // should re-direct to orderconfirm or fail

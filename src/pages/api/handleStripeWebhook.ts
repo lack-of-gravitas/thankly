@@ -2,6 +2,7 @@ import { stripe } from '@/lib/stripe'
 import { NextApiRequest, NextApiResponse } from 'next'
 import Stripe from 'stripe'
 import { Readable } from 'node:stream'
+import deleteCoupon from './deleteCoupon'
 
 // Stripe requires the raw body to construct the event.
 export const config = {
@@ -42,7 +43,15 @@ const handleStripeWebhook = async (
       // directus api - https://docs.directus.io/reference/items.html
       let product: Stripe.Product
       let price: Stripe.Price
+      
       let results: any
+
+      // if (event.type === 'checkout.session.completed') {
+      //   const coupon = deleteCoupon(event.data.object)
+        
+        
+      // }
+
 
       if (event.type === 'product.created') {
         product = event.data.object as Stripe.Product
@@ -61,7 +70,7 @@ const handleStripeWebhook = async (
             priceId: product.default_price,
           }),
         })
-        console.log('product.created results', results)
+        console.log('product.created',)
       }
 
       if (event.type === 'product.updated') {
