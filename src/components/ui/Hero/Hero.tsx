@@ -16,7 +16,6 @@ const Hero: FC<HeroProps> = ({ data }) => {
 
   return (
     <div className="relative bg-gray-900 animate-fade-in">
-      
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
         {data.image && data.image !== '' ? (
           <Image
@@ -51,41 +50,78 @@ const Hero: FC<HeroProps> = ({ data }) => {
           switch (collection) {
             case 'posts':
               coll = 'blog/'
+              case 'pages':
+              return (
+                <Link
+                  key={id}
+                  href={'/' + coll + item.slug}
+                  className="flex items-center text-sm font-medium text-slate-500"
+                >
+                  <Button
+                    style={{
+                      backgroundColor: brand.firstAccentColour
+                        ? brand.firstAccentColour
+                        : '#fff',
+                    }}
+                    className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                    type="button"
+                  >
+                    {item.name}
+                    <span className="ml-2 align-middle material-symbols-outlined">
+                      arrow_forward
+                    </span>
+                  </Button>
+                </Link>
+              )
               break
-            // case 'products':
-            //   coll = item.type + 's/'
-            //   break
+            case 'CustomLinks':
+              return (
+                <a
+                  key={id}
+                  target="_blank"
+                  href={item.slug}
+                  className="flex items-center text-sm font-medium text-slate-500"
+                >
+                 <Button
+                    style={{
+                      backgroundColor: brand.firstAccentColour
+                        ? brand.firstAccentColour
+                        : '#fff',
+                    }}
+                    className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                    type="button"
+                  >
+                    {item.name}
+                    <span className="ml-2 align-middle material-symbols-outlined">
+                      arrow_forward
+                    </span>
+                  </Button>
+                </a>
+              )
+            default:
+              return (
+                <Link
+                  key={id}
+                  href={'/' + coll + item.slug}
+                  className="flex items-center text-sm font-medium text-slate-500"
+                >
+                  <Button
+                    style={{
+                      backgroundColor: brand.firstAccentColour
+                        ? brand.firstAccentColour
+                        : '#fff',
+                    }}
+                    className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                    type="button"
+                  >
+                    {item.name}
+                    <span className="ml-2 align-middle material-symbols-outlined">
+                      arrow_forward
+                    </span>
+                  </Button>
+                </Link>
+              )
           }
-
-          return (
-            <Link
-            key={id}
-              href={
-                ((item.slug === 'home' || item.slug === '') && '/') ||
-                (collection === 'CustomLinks'
-                  ? item.slug
-                  : '/' + coll + item.slug)
-              }
-            >
-              <Button
-                
-                style={{
-                  backgroundColor: brand.firstAccentColour
-                    ? brand.firstAccentColour
-                    : '#fff',
-                }}
-                className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
-                type="button"
-                // item={item}
-                // collection={collection}
-              >
-                {item.name}
-                <span className="ml-2 align-middle material-symbols-outlined">
-                  arrow_forward
-                </span>
-              </Button>
-            </Link>
-          )
         })}
       </div>
     </div>
