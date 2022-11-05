@@ -19,24 +19,22 @@ const Footer: FC<Props | any> = ({ data, className }) => {
   return (
     <>
       <footer
-        // style={{
-        //   backgroundColor: data.backgroundColour
-        //     ? data.backgroundColour
-        //     : '#fff',
-        // }}
+      // style={{
+      //   backgroundColor: data.backgroundColour
+      //     ? data.backgroundColour
+      //     : '#fff',
+      // }}
       >
         <h2 id="footer-heading" className="sr-only">
           Footer
         </h2>
         <div className="flex justify-center mt-8 space-x-6">
           <Link passHref href="/">
-            
-              <Logo
-                className="w-auto h-10 align-middle"
-                height={'25'}
-                width={'100'}
-              />
-           
+            <Logo
+              className="w-auto h-10 align-middle"
+              height={'25'}
+              width={'100'}
+            />
           </Link>
         </div>
         <div className="px-4 py-12 mx-auto overflow-hidden max-w-7xl sm:px-6 lg:px-8">
@@ -51,31 +49,42 @@ const Footer: FC<Props | any> = ({ data, className }) => {
                 switch (collection) {
                   case 'posts':
                     coll = 'blog/'
+                    case 'pages':
+                    return (
+                      <Link
+                        key={sort}
+                        href={'/' + coll + item.slug}
+                        className="flex items-center ml-5 mr-5 text-sm font-medium text-slate-500"
+                      >
+                        {item.name}
+                      </Link>
+                    )
                     break
-                  // case 'products':
-                  //   coll = item.type + 's/'
-                  //   break
+
+                  case 'CustomLinks':
+                    return (
+                      <a
+                        key={sort}
+                        target="_blank"
+                        href={item.slug}
+                        className="flex items-center ml-5 mr-5 text-sm font-medium text-slate-500"
+                      >
+                        {item.name}
+                      </a>
+                    )
+                  default:
+                    return (
+                      <Link
+                        key={sort}
+                        href={'/'}
+                        className="flex items-center ml-5 mr-5 text-sm font-medium text-slate-500"
+                      >
+                        <span className="text-base text-gray-500 hover:text-gray-900">
+                          {item.name}
+                        </span>
+                      </Link>
+                    )
                 }
-                return (
-                  <Link
-                    key={sort}
-                    passHref
-                    className="px-5 py-2"
-                    href={
-                      ((item.slug === 'home' || item.slug === '') && '/') ||
-                      (collection === 'CustomLinks'
-                        ? item.slug
-                        : '/' + coll + item.slug)
-                    }
-                  >
-                    <span
-                      className="text-base text-gray-500 hover:text-gray-900"
-                      // className="pl-6 ml-6 text-sm text-gray-500 border-l border-gray-200 hover:text-gray-600"
-                    >
-                      {item.name}
-                    </span>
-                  </Link>
-                )
               }
             )}
           </nav>

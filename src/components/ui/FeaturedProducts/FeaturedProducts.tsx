@@ -28,13 +28,11 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
         <div className="max-w-2xl px-4 py-16 mx-auto sm:px-6 sm:py-16 lg:max-w-7xl lg:px-8">
           {data.content && (
             <div className="flex flex-col items-center text-center">
-              <article className="max-w-4xl text-base prose prose-img:rounded-md text-slate-700 prose-a:text-blue-600 md:pt-5">
+              <article className="max-w-4xl text-base prose text-slate-700 prose-a:text-blue-600 prose-img:rounded-md md:pt-5">
                 {parse(data.content)}
               </article>
             </div>
           )}
-
-          
 
           <div
             className={cn(
@@ -50,7 +48,8 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                     className="relative flex flex-col overflow-hidden bg-white rounded-md group"
                   >
                     <div className="bg-gray-200 aspect-w-3 aspect-h-4 group-hover:opacity-75 sm:aspect-none sm:h-96">
-                      {product.images && product.images[0]?.directus_files_id !== '' ? (
+                      {product.images &&
+                      product.images[0]?.directus_files_id !== '' ? (
                         <Image
                           className="object-cover object-center w-full h-full sm:h-full sm:w-full"
                           src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${product.images[0].directus_files_id}`}
@@ -114,44 +113,87 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
           <div className="flex flex-col items-center pt-5 text-center justify-middle">
             {data.buttons?.map(({ id, item, collection }: any) => {
               let coll = ''
-
               switch (collection) {
                 case 'posts':
                   coll = 'blog/'
+                  case 'pages':
+                  return (
+                    <Link
+                      key={id}
+                      href={'/' + coll + item.slug}
+                      className="flex items-center text-sm font-medium text-slate-500"
+                    >
+                      <Button
+                        style={{
+                          backgroundColor: brand.firstAccentColour
+                            ? brand.firstAccentColour
+                            : '#fff',
+                        }}
+                        className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                        type="button"
+                        // item={item}
+                        // collection={collection}
+                      >
+                        {item.name}
+                        <span className="ml-2 align-middle material-symbols-outlined">
+                          arrow_forward
+                        </span>
+                      </Button>
+                    </Link>
+                  )
                   break
-                // case 'products':
-                //   coll = item.type + 's/'
-                //   break
+                case 'CustomLinks':
+                  return (
+                    <a
+                      key={id}
+                      target="_blank"
+                      href={item.slug}
+                      className="flex items-center text-sm font-medium text-slate-500"
+                    >
+                      <Button
+                        style={{
+                          backgroundColor: brand.firstAccentColour
+                            ? brand.firstAccentColour
+                            : '#fff',
+                        }}
+                        className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                        type="button"
+                        // item={item}
+                        // collection={collection}
+                      >
+                        {item.name}
+                        <span className="ml-2 align-middle material-symbols-outlined">
+                          arrow_forward
+                        </span>
+                      </Button>
+                    </a>
+                  )
+                default:
+                  return (
+                    <Link
+                      key={id}
+                      href={'/'}
+                      className="flex items-center text-sm font-medium text-slate-500"
+                    >
+                      <Button
+                        style={{
+                          backgroundColor: brand.firstAccentColour
+                            ? brand.firstAccentColour
+                            : '#fff',
+                        }}
+                        className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                        type="button"
+                        // item={item}
+                        // collection={collection}
+                      >
+                        {item.name}
+                        <span className="ml-2 align-middle material-symbols-outlined">
+                          arrow_forward
+                        </span>
+                      </Button>
+                    </Link>
+                  )
               }
-
-              return (
-                <Link
-                  key={id}
-                  href={
-                    ((item.slug === 'home' || item.slug === '') && '/') ||
-                    (collection === 'CustomLinks'
-                      ? item.slug
-                      : '/' + coll + item.slug)
-                  }
-                >
-                  <Button
-                    style={{
-                      backgroundColor: brand.firstAccentColour
-                        ? brand.firstAccentColour
-                        : '#fff',
-                    }}
-                    className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
-                    type="button"
-                    // item={item}
-                    // collection={collection}
-                  >
-                    {item.name}
-                    <span className="ml-2 align-middle material-symbols-outlined">
-                      arrow_forward
-                    </span>
-                  </Button>
-                </Link>
-              )
             })}
           </div>
         </div>

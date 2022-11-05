@@ -36,7 +36,6 @@ const Features: FC<FeaturesOnProps> = ({ data }) => {
           <FeatureColumns data={data} />
         </>
       )}
-
     </div>
   )
 }
@@ -75,7 +74,6 @@ export function FeatureColumns({ data }: any) {
                     width={400}
                     height={800}
                     // alt={data?.name || ''}
-                    
                   />
                 ) : (
                   <>
@@ -86,7 +84,6 @@ export function FeatureColumns({ data }: any) {
                       width={800}
                       height={600}
                       alt=""
-                      
                     />
                   </>
                 )}
@@ -106,41 +103,85 @@ export function FeatureColumns({ data }: any) {
 
           switch (collection) {
             case 'posts':
-              coll = 'blog/'
+                                coll = 'blog/'
+                                case 'pages':
+              return (
+                <Link
+                  key={id}
+                  href={'/' + coll + item.slug}
+                  className="flex items-center text-sm font-medium text-slate-500"
+                >
+                  <Button
+                    style={{
+                      backgroundColor: brand.firstAccentColour
+                        ? brand.firstAccentColour
+                        : '#fff',
+                    }}
+                    className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                    type="button"
+                    // item={item}
+                    // collection={collection}
+                  >
+                    {item.name}
+                    <span className="ml-2 align-middle material-symbols-outlined">
+                      arrow_forward
+                    </span>
+                  </Button>
+                </Link>
+              )
               break
-            // case 'products':
-            //   coll = item.type + 's/'
-            //   break
-          }
-
-          return (
-            <Link
-            key={id}
-              href={
-                ((item.slug === 'home' || item.slug === '') && '/') ||
-                (collection === 'CustomLinks'
-                  ? item.slug
-                  : '/' + coll + item.slug)
-              }
-            >
-              <Button
-                style={{
-                  backgroundColor: brand.firstAccentColour
-                    ? brand.firstAccentColour
-                    : '#fff',
-                }}
-                className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
-                type="button"
-                // item={item}
-                // collection={collection}
+            case 'CustomLinks':
+              return (
+                <a
+                  key={id}
+                  target="_blank"
+                  href={item.slug}
+                  className="flex items-center text-sm font-medium text-slate-500"
+                >
+                  <Button
+                    style={{
+                      backgroundColor: brand.firstAccentColour
+                        ? brand.firstAccentColour
+                        : '#fff',
+                    }}
+                    className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                    type="button"
+                    // item={item}
+                    // collection={collection}
+                  >
+                    {item.name}
+                    <span className="ml-2 align-middle material-symbols-outlined">
+                      arrow_forward
+                    </span>
+                  </Button>
+                </a>
+              )
+            default:
+              return (
+                <Link
+                key={id}
+                href={'/' + coll + item.slug}
+                className="flex items-center text-sm font-medium text-slate-500"
               >
-                {item.name}
-                <span className="ml-2 align-middle material-symbols-outlined">
-                  arrow_forward
-                </span>
-              </Button>
-            </Link>
-          )
+                <Button
+                  style={{
+                    backgroundColor: brand.firstAccentColour
+                      ? brand.firstAccentColour
+                      : '#fff',
+                  }}
+                  className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                  type="button"
+                  // item={item}
+                  // collection={collection}
+                >
+                  {item.name}
+                  <span className="ml-2 align-middle material-symbols-outlined">
+                    arrow_forward
+                  </span>
+                </Button>
+              </Link>
+              )
+          }
         })}
       </div>
     </div>

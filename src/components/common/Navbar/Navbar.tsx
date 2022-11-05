@@ -30,7 +30,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
   const { state, dispatch } = useContext(Store)
   const { cart } = state
   const [open, setOpen] = useState(false)
-  // console.log('navbar data->', data)
+  console.log('navbar data->', data)
   const [bannerVisible, setBannerVisible] = useState(true)
   const { header } = data
   return (
@@ -91,25 +91,42 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
 
                       switch (collection) {
                         case 'posts':
-                          coll = 'blog/'
+                                coll = 'blog/'
+                                case 'pages':
+                          return (
+                            <Link
+                              key={sort}
+                              href={'/' + coll + item.slug}
+                              className="block p-2 -m-2 font-medium text-gray-900"
+                            >
+                              {item.name}
+                            </Link>
+                          )
                           break
+                        case 'CustomLinks':
+                          return (
+                            <a
+                              key={sort}
+                              target="_blank"
+                              href={item.slug}
+                              className="block p-2 -m-2 font-medium text-gray-900"
+                            >
+                              {item.name}
+                            </a>
+                          )
+                        default:
+                          return (
+                            <Link
+                              key={sort}
+                              href={'/'}
+                              className="block p-2 -m-2 font-medium text-gray-900"
+                            >
+                              <span className="text-base text-gray-500 hover:text-gray-900">
+                                {item.name}
+                              </span>
+                            </Link>
+                          )
                       }
-                      return (
-                        <Link
-                          key={sort}
-                          passHref
-                          className="block p-2 -m-2 font-medium text-gray-900"
-                          href={
-                            ((item.slug === 'home' || item.slug === '') &&
-                              '/') ||
-                            (collection === 'CustomLinks'
-                              ? item.slug
-                              : '/' + coll + item.slug)
-                          }
-                        >
-                          {item.name}
-                        </Link>
-                      )
                     })}
                   </div>
                   {/* mobile menu options */}
@@ -192,28 +209,55 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                         <div className="flex justify-center h-full space-x-8">
                           {header.map(({ sort, collection, item }: any) => {
                             let coll = ''
+                            // BECAUSE FUICKING NEXTJS IS GARBAGE I HAVE TO USE <a> for external links
 
                             switch (collection) {
                               case 'posts':
                                 coll = 'blog/'
+                                case 'pages':
+                                
+                                return (
+                                  <Link
+                                    key={sort}
+                                    href={'/' + coll + item.slug}
+                                    className="flex items-center text-sm font-medium text-slate-500"
+                                  >
+                                    {item.name}
+                                  </Link>
+                                )
                                 break
+                              case 'CustomLinks':
+                                return (
+                                  <a
+                                    key={sort}
+                                    target="_blank"
+                                    href={item.slug}
+                                    className="flex items-center text-sm font-medium text-slate-500"
+                                  >
+                                    {item.name}
+                                  </a>
+                                )
+                              case 'pages':
+                                return (
+                                  <Link
+                                    key={sort}
+                                    href={'/' + coll + item.slug}
+                                    className="flex items-center text-sm font-medium text-slate-500"
+                                  >
+                                    {item.name}
+                                  </Link>
+                                )
+                              default:
+                                return (
+                                  <a
+                                    key={sort}
+                                    href={'/'}
+                                    className="flex items-center text-sm font-medium text-slate-500"
+                                  >
+                                    {item.name}
+                                  </a>
+                                )
                             }
-                            return (
-                              <Link
-                                key={sort}
-                                passHref
-                                className="flex items-center text-sm font-medium text-slate-500"
-                                href={
-                                  ((item.slug === 'home' || item.slug === '') &&
-                                    '/') ||
-                                  (collection === 'CustomLinks'
-                                    ? item.slug
-                                    : '/' + coll + item.slug)
-                                }
-                              >
-                                {item.name}
-                              </Link>
-                            )
                           })}
                         </div>
                       </Popover.Group>
@@ -266,9 +310,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                 <Menu.Item>
                                   {({ active }) => (
                                     <Link passHref href="#">
-                                      
                                       <a
-                                      
                                         className={cn(
                                           active ? 'bg-gray-100' : '',
                                           'block px-4 py-2 text-sm text-gray-700'
