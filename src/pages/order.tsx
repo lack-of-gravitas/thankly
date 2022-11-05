@@ -1,15 +1,21 @@
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 const Button = dynamic(() => import('@/components/ui/Button'))
 import { SwrBrand } from '@/lib/swr-helpers'
 import Link from 'next/link'
-import { fetchGetJSON } from '@/lib/api-helpers'
-import { getOrder } from '@/lib/queries'
+import { fetchGetJSON, postData } from '@/lib/api-helpers'
+import {
+  getOrder,
+  deleteOrder,
+  updateVoucher,
+  updateStock,
+} from '@/lib/queries'
 import Image from 'next/future/image'
 import { Cart } from '@/types'
 import { Store } from '@/lib/Store'
 import { useContext, useEffect } from 'react'
+import deleteCoupon from './api/deleteCoupon'
 
 const Layout = dynamic(() => import('@/components/common/Layout'))
 const Icon = dynamic(() => import('@/components/common/Icon'))
@@ -18,29 +24,10 @@ export default function Home({ slug, preview, data }: any) {
   // console.log('prefetchedData->', data)
   const router = useRouter()
   const brand = SwrBrand()
-  const { state, dispatch } = useContext(Store)
 
-  let { order, status } = data
+  let { status } = data
   const { cart } = data.order
   status = Boolean(data.status === 'true')
-
-  async function deleteOrder(orderId: any) {
-    if (status === false) {
-      console.log('deleting cancelled order...', order.id)
-      fetch(`${process.env.NEXT_PUBLIC_REST_API}/orders/${order.id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${process.env.DIRECTUS}`,
-          'Content-Type': 'application/json',
-        },
-        credentials: 'same-origin',
-      })
-    }
-  }
-
-  useEffect(() => {
-    status === false ? deleteOrder(order.id) : null
-  }, [])
 
   return (
     <>
@@ -214,13 +201,57 @@ Home.Layout = Layout
 
 export async function getServerSideProps(context: any) {
   const { id, status } = context.query
-  console.log(id, status)
-  return {
-    props: {
-      data: {
-        order: context.query.id != undefined ? await getOrder(id) : {},
-        status: (status === true || status === 'true') ?? false,
+  const order = context.query.id != undefined ? await getOrder(id) : null
+  // console.log('order >', order)
+
+  // redirect to home if order is not found
+  if (context.query.id === undefined || order.id === undefined) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
       },
-    }, // will be passed to the page component as props
+    }
+  }
+  // send deleteOrder api if order cancelled
+  if (status === false || status === 'false') {
+    // delete order if it exists
+    deleteOrder(id)
+    // return false to show cancelled
+    return {
+      props: {
+        data: {
+          order: {}, // context.query.id != undefined ? await deleteOrder(id) : {},
+          status: false,
+        },
+      },
+    }
+  } else {
+    // call deleteStripeCoupon api to blow away Coupon used
+    const coupon = await postData({
+      url: '/api/deleteCoupon',
+      data: { coupon: order.id },
+    })
+
+    // update voucher balance
+    if (Object.keys(order.cart.options.voucher).length != 0) {
+      const voucher = updateVoucher(order.cart)
+    }
+
+    // update stockQty
+    const stock = updateStock(order.cart.items)
+
+    //TODO:create/update customer if selected / signedin
+    // const customer = upsertCustomer(order)
+
+    // get and pass orderInfo for confirmation
+    return {
+      props: {
+        data: {
+          order: order, //context.query.id != undefined ? await getOrder(id) : {},
+          status: (status === true || status === 'true') ?? false,
+        },
+      },
+    }
   }
 }

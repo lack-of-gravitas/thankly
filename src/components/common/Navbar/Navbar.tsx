@@ -78,16 +78,12 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                   </div>
 
                   <div className="px-4 py-6 space-y-6 ">
-                    <Link passHref href="/">
-                      <a>
-                        <span className="sr-only">{data.name}</span>
-                        <Logo
-                          className="w-auto h-8"
-                          height={'25'}
-                          width={'80'}
-                        />
-                      </a>
-                    </Link>
+                    {/* <Link passHref href="/">
+                      <a> */}
+                    <span className="sr-only">{data.name}</span>
+                    <Logo className="w-auto h-8" height={'25'} width={'80'} />
+                    {/* </a>
+                    </Link> */}
                   </div>
                   <div className="px-4 pb-6 space-y-6 ">
                     {header.map(({ sort, collection, item }: any) => {
@@ -111,7 +107,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                               : '/' + coll + item.slug)
                           }
                         >
-                          <a>{item.name}</a>
+                          {item.name}
                         </Link>
                       )
                     })}
@@ -120,19 +116,21 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                   {false ? (
                     <div className="px-4 py-6 space-y-6 border-t border-gray-200">
                       <div className="flow-root">
-                      <Link passHref href="#"><a
-                          href="#"
-                          className="block p-2 -m-2 font-medium text-gray-900"
-                        >
-                          Your account
-                        </a></Link>
+                        <Link passHref href="#">
+                          <a
+                            href="#"
+                            className="block p-2 -m-2 font-medium text-gray-900"
+                          >
+                            Your account
+                          </a>
+                        </Link>
                       </div>
                       <div className="flow-root">
-                        <Link passHref href="#"><a
-                          className="block p-2 -m-2 font-medium text-gray-900"
-                        >
-                          Sign out
-                        </a></Link>
+                        <Link passHref href="#">
+                          <a className="block p-2 -m-2 font-medium text-gray-900">
+                            Sign out
+                          </a>
+                        </Link>
                       </div>
                     </div>
                   ) : (
@@ -181,16 +179,12 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                 <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                   <div className="flex items-center justify-between h-16">
                     <div className="hidden lg:flex lg:flex-1 lg:items-center">
-                      <Link passHref href="/">
-                        <a>
-                          <span className="sr-only">{data.name}</span>
-                          <Logo
-                            className="w-auto h-8"
-                            height={'25'}
-                            width={'80'}
-                          />
-                        </a>
-                      </Link>
+                      {/* <Link passHref href="/">
+                        <a> */}
+                      <span className="sr-only">{data.name}</span>
+                      <Logo className="w-auto h-8" height={'25'} width={'80'} />
+                      {/* </a>
+                      </Link> */}
                     </div>
 
                     <div className="hidden h-full lg:flex">
@@ -217,7 +211,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                     : '/' + coll + item.slug)
                                 }
                               >
-                                <a>{item.name}</a>
+                                {item.name}
                               </Link>
                             )
                           })}
@@ -237,16 +231,14 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                       </button>
                     </div>
 
-                    <Link passHref href="/" className="lg:hidden">
-                      <a>
-                        <span className="sr-only">{data.name}</span>
-                        <Logo
-                          className="w-auto h-8"
-                          height={'25'}
-                          width={'80'}
-                        />
-                      </a>
-                    </Link>
+                    {/* <Link passHref href="/" className="lg:hidden">
+                      <a> */}
+                    <span className="lg:hidden">
+                      <span className="sr-only">{data.name}</span>
+                      <Logo className="w-auto h-8" height={'25'} width={'80'} />
+                    </span>
+                    {/* </a>
+                    </Link> */}
 
                     <div className="flex items-center justify-end flex-1">
                       <div className="flex items-center lg:ml-8">
@@ -273,31 +265,33 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                               <Menu.Items className="absolute right-0 z-10 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 <Menu.Item>
                                   {({ active }) => (
-                                      <Link passHref href="#"> <a
-                                      href="#"
-                                      className={cn(
-                                        active ? 'bg-gray-100' : '',
-                                        'block px-4 py-2 text-sm text-gray-700'
-                                      )}
-                                    >
-                                      Your Account
-                                    </a></Link>
+                                    <Link passHref href="#">
+                                      
+                                      <a
+                                      
+                                        className={cn(
+                                          active ? 'bg-gray-100' : '',
+                                          'block px-4 py-2 text-sm text-gray-700'
+                                        )}
+                                      >
+                                        Your Account
+                                      </a>
+                                    </Link>
                                   )}
                                 </Menu.Item>
 
                                 <Menu.Item>
                                   {({ active }) => (
-                                    
                                     <Link passHref href="#">
-                                    <a
-                                     
-                                      className={cn(
-                                        active ? 'bg-gray-100' : '',
-                                        'block px-4 py-2 text-sm text-gray-700'
-                                      )}
-                                    >
-                                      Sign out
-                                    </a></Link>
+                                      <a
+                                        className={cn(
+                                          active ? 'bg-gray-100' : '',
+                                          'block px-4 py-2 text-sm text-gray-700'
+                                        )}
+                                      >
+                                        Sign out
+                                      </a>
+                                    </Link>
                                   )}
                                 </Menu.Item>
                               </Menu.Items>

@@ -15,12 +15,17 @@ const createCheckoutSession = async (
 
     // create a temp coupon if Voucher is used
     let coupon: any
-    if (cart.totals.voucher > 0 && cart.totals.net > 0) {
+    if (
+      cart.totals.voucher > 0 &&
+      cart.options.voucher &&
+      cart.totals.net > 0
+    ) {
       coupon = await stripe.coupons.create({
         name: 'Used Thankly Voucher',
+        id: orderId,
         amount_off: cart.totals.voucher * 100,
         currency: 'aud',
-        duration: 'once',
+        duration: 'forever',
       })
     }
     console.log('coupon created ', JSON.stringify(coupon))
@@ -32,9 +37,9 @@ const createCheckoutSession = async (
     })
 
     // add extra product for Shipping
-    if (cart.options.shipping.priceId != '') {
+    if (cart.options.shipping.id != '') {
       line_items = line_items.concat({
-        price: cart.options.shipping.priceId,
+        price: cart.options.shipping.id,
         quantity: 1,
       })
     }
@@ -45,21 +50,13 @@ const createCheckoutSession = async (
       discounts:
         cart.totals.voucher > 0 ? [{ coupon: `${coupon.id}` }] : undefined,
       mode: 'payment',
-      billing_address_collection:'required',
-      // consent_collection: {promotions:'auto'},
+      billing_address_collection: 'required',
       success_url: `${req.headers.origin}/order?id=${orderId}&status=true`,
       cancel_url: `${req.headers.origin}/order?id=${orderId}&status=false`,
       automatic_tax: { enabled: false },
     })
 
-    // delete coupon once used and order is successful
-    if (
-      cart.totals.voucher > 0 &&
-      cart.totals.net > 0 &&
-      coupon?.id != undefined
-    ) {
-      const deleted = await stripe.coupons.del(coupon.id)
-    }
+   
 
     return res.status(200).json({ sessionId: session.id })
     // } catch (err: any) {

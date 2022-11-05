@@ -105,7 +105,7 @@ const Form: FC<FormProps> = ({ data }) => {
                       passHref
                       className="font-medium underline"
                     >
-                      <a>Privacy Policy.</a>
+                      Privacy Policy.
                     </Link>
                   </p>
 

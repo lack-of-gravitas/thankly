@@ -25,13 +25,6 @@ export async function getBrand() {
 }
 
 export async function getOrder(order: any) {
-  console.log(process.env.DIRECTUS)
-  console.log(order)
-  console.log(
-    'req: ',
-    `${process.env.NEXT_PUBLIC_REST_API}/items/orders?fields=*&filter[id][_eq]=${order}`
-  )
-
   let data = await (
     await fetch(
       `${process.env.NEXT_PUBLIC_REST_API}/orders?fields=*,items.*&filter[id][_eq]=${order}`,
@@ -52,6 +45,67 @@ export async function getOrder(order: any) {
   return data
 }
 
+export async function deleteOrder(order: any) {
+  // console.log ('deleteOrder > ', order)
+
+  let data = await (
+    await fetch(`${process.env.NEXT_PUBLIC_REST_API}/orders/${order}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${process.env.DIRECTUS}`,
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+    })
+  ).json()
+  // console.log ('deleteOrder data > ', data)
+
+  data.data?.length > 0 ? (data = data.data[0]) : data
+
+  return data
+}
+
+// // create customer move this to Order Confirmation Page
+// if (cart.options.createAccount === true) {
+//   // create customer record
+//   console.log(`${process.env.VERCEL_URL}/users`)
+//   customer = await fetch(`${process.env.VERCEL_URL}/users`, {
+//     method: 'POST',
+//     headers: {
+//       Authorization: `Bearer ${process.env.DIRECTUS}`,
+//       'Content-Type': 'application/json',
+//     },
+//     credentials: 'same-origin',
+//     body: JSON.stringify({
+//       first_name: '',
+//       last_name: '',
+//       email: '',
+//       // password: '',
+//       role: '32a2785c-037a-4b09-bd9a-c29ec2ae9de3',
+//     }),
+//   })
+//   console.log('customer created -- ', customer.id)
+
+//   results = await fetch(
+//     `${process.env.NEXT_PUBLIC_REST_API}/orders/${order.id}`,
+//     {
+//       method: 'PATCH',
+//       headers: {
+//         Authorization: `Bearer ${process.env.DIRECTUS}`,
+//         'Content-Type': 'application/json',
+//       },
+//       credentials: 'same-origin',
+//       body: JSON.stringify({ customer: customer.id }),
+//     }
+//   )
+// }
+
+// trigger email
+// const { emailSent } = await postData({
+//   url: '/api/sendEmail',
+//   data: state.cart,
+// })
+
 export async function getVoucher(voucher: any) {
   let data = await (
     await fetch(
@@ -64,6 +118,58 @@ export async function getVoucher(voucher: any) {
   // console.log('voucher query--', data)
 
   return data
+}
+
+export async function updateVoucher(cart: any) {
+  let voucher = cart.options.voucher
+  let used = cart.totals.voucher * 1
+  let data = await fetch(
+    `${process.env.NEXT_PUBLIC_REST_API}/vouchers/${voucher.id}`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${process.env.DIRECTUS}`,
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        used: voucher.used * 1 + used * 1,
+      }),
+    }
+  )
+
+  return data
+}
+
+export async function upsertCustomer(voucher: any) {
+  let data = await (
+    await fetch(
+      `${process.env.NEXT_PUBLIC_REST_API}/vouchers?fields=*` +
+        `&filter[code][_eq]=${voucher}` +
+        `&filter[status][_eq]=published`
+    )
+  ).json()
+  data = data.data
+  // console.log('voucher query--', data)
+
+  return data
+}
+
+export async function updateStock(items: any) {
+  items.map(async (product: any) => {
+    await fetch(`${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${process.env.DIRECTUS}`,
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        stockQty: (product.stockQty*1) - 1,
+      }),
+    })
+  })
+
 }
 
 // colors

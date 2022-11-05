@@ -30,13 +30,13 @@ const Footer: FC<Props | any> = ({ data, className }) => {
         </h2>
         <div className="flex justify-center mt-8 space-x-6">
           <Link passHref href="/">
-            <a>
+            
               <Logo
                 className="w-auto h-10 align-middle"
                 height={'25'}
                 width={'100'}
               />
-            </a>
+           
           </Link>
         </div>
         <div className="px-4 py-12 mx-auto overflow-hidden max-w-7xl sm:px-6 lg:px-8">
@@ -68,12 +68,12 @@ const Footer: FC<Props | any> = ({ data, className }) => {
                         : '/' + coll + item.slug)
                     }
                   >
-                    <a
+                    <span
                       className="text-base text-gray-500 hover:text-gray-900"
                       // className="pl-6 ml-6 text-sm text-gray-500 border-l border-gray-200 hover:text-gray-600"
                     >
                       {item.name}
-                    </a>
+                    </span>
                   </Link>
                 )
               }

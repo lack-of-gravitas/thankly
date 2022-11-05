@@ -7,7 +7,7 @@ const Layout = dynamic(() => import('@/components/common/Layout'))
 const Section = dynamic(() => import('@/components/ui/Section'))
 
 export default function Home({ slug, preview, prefetchedData }: any) {
-  // console.log('prefetchedData->', prefetchedData)
+  console.log('prefetchedData->', prefetchedData)
   const router = useRouter()
   if (!prefetchedData) {
     router.push('/404')

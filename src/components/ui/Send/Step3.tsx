@@ -1072,7 +1072,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                   />
                   We use{' '}
                   <Link className="underline" href="https://stripe.com/au">
-                    <a>Stripe</a>
+                    Stripe
                   </Link>
                   {' to securely process your payments.'}
                 </p>
