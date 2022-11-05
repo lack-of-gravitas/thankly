@@ -12,7 +12,7 @@ const createCheckoutSession = async (
   if (req.method === 'POST') {
     // console.log('stripe checkout ->', req.body)
     const { cart, orderId } = req.body
-
+const {items} = cart
     // create a temp coupon if Voucher is used
     let coupon: any
     if (
@@ -28,18 +28,18 @@ const createCheckoutSession = async (
         duration: 'forever',
       })
     }
-    console.log('coupon created ', JSON.stringify(coupon))
+    // console.log('coupon created ', JSON.stringify(coupon))
 
     // put all products into checkout session
     let line_items: any[] = []
-    cart.items.map((item: any) => {
-      line_items = line_items.concat({ price: item.priceId, quantity: 1 })
+    items.map((product: any) => {
+      line_items = line_items.concat({ price: product.priceId, quantity: 1 })
     })
 
     // add extra product for Shipping
     if (cart.options.shipping.id != '') {
       line_items = line_items.concat({
-        price: cart.options.shipping.id,
+        price: cart.options.shipping.priceId,
         quantity: 1,
       })
     }
