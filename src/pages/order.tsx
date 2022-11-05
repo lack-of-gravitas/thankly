@@ -27,7 +27,7 @@ export default function Home({ slug, preview, data }: any) {
 
   let { status } = data
   const { cart } = data.order
-  status = Boolean(data.status === 'true')
+  // status = Boolean(data.status === 'true')
 
   return (
     <>
@@ -213,6 +213,7 @@ export async function getServerSideProps(context: any) {
       },
     }
   }
+
   // send deleteOrder api if order cancelled
   if (status === false || status === 'false') {
     // delete order if it exists
@@ -244,11 +245,12 @@ export async function getServerSideProps(context: any) {
     // const customer = upsertCustomer(order)
 
     // get and pass orderInfo for confirmation
+   
     return {
       props: {
         data: {
           order: order, //context.query.id != undefined ? await getOrder(id) : {},
-          status: (status === true || status === 'true') ?? false,
+          status: true,
         },
       },
     }

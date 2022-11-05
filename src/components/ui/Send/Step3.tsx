@@ -1027,7 +1027,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                         // create draft order before initating checkout
                         const order = await postData({
                           url: '/api/createOrder',
-                          data: { cart: state.cart, status: 'draft' },
+                          data: { cart: state.cart, status: 'placed' },
                         })
 
                         const { sessionId } = await postData({
