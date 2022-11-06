@@ -245,13 +245,13 @@ export async function getServerSideProps(context: any) {
       `${process.env.NEXT_PUBLIC_REST_API}/api/deleteCoupon?id=${order.id}`
     )
 
-    // update voucher balance
+    // // update voucher balance
     if (Object.keys(order.cart.options.voucher).length != 0) {
       const voucher = updateVoucher(order.cart)
     }
 
-    // update stockQty
-    const stock = updateStock(order.cart.items)
+    // // update stockQty
+    // const stock = updateStock(order.cart.items)
 
     //TODO:create/update customer if selected / signedin
     // const customer = upsertCustomer(order)
