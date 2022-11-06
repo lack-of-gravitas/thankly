@@ -79,7 +79,7 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
             // recipient
             message: cart.cardContent.message,
-            writingStyle: cart.options.writingStyle.name,
+            writingStyle: cart.cardContent.writingStyle.name,
             instructions: cart.cardContent.specialInstructions,
             firstname: cart.recipient.firstname,
             lastname: cart.recipient.lastname,
