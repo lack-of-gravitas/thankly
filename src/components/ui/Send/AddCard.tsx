@@ -40,6 +40,8 @@ export default function AddGift() {
   const [query, updateQuery] = useState('')
 
   // useEffect(() => {
+
+  //   if ()
   //   products ? products = products.filter((item: any) => item.type === 'card'):null
   // }, [])
 
@@ -47,7 +49,8 @@ export default function AddGift() {
   // console.log('products -- ', products)
 
   function onSearch({ currentTarget }: any) {
-    currentTarget.value === '' || query === ''
+    console.log('currentTarget >', currentTarget)
+     || query === ""
       ? updateQuery('card')
       : updateQuery(currentTarget.value)
 
@@ -55,7 +58,13 @@ export default function AddGift() {
     let newResult = response.map((item: any) => {
       return item.item
     })
-    // console.log('new result', newResult)
+    if (currentTarget.value === "" ) {
+      response = fuse.search('card')
+      newResult = response.map((item: any) => {
+        return item.item
+      })
+    }
+    console.log('new result', newResult)
     updateSearchResults(newResult)
 
     // updateResult(fuse.search(query))
@@ -78,7 +87,12 @@ export default function AddGift() {
               id="search"
               className="flex max-w-full min-w-full pl-10 font-medium tracking-tight border-gray-300 rounded-md txt-slate-500 grow focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
               placeholder="Start searching here..."
-              onChange={onSearch}
+              onChange={
+                // (e: any) => {
+                // console.log('e.target.value >', e.target.value)
+                onSearch
+              // }
+            }
             />
           </div>
           {/* <div className="basis-1/8">

@@ -59,6 +59,7 @@ const createCheckoutSession = async (
       success_url: `${req.headers.origin}/order?id=${orderId}&status=true`,
       cancel_url: `${req.headers.origin}/order?id=${orderId}&status=false`,
       automatic_tax: { enabled: false },
+      expand:['line_items']
     })
 
     return res.status(200).json({ sessionId: session.id })

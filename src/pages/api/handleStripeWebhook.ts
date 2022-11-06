@@ -26,9 +26,7 @@ const handleStripeWebhook = async (
   if (req.method === 'POST' || req.method === 'PATCH') {
     const buf = await buffer(req)
     const sig = req.headers['stripe-signature']
-    const webhookSecret =
-      process.env.STRIPE_WEBHOOK_SECRET_LIVE ??
-      process.env.STRIPE_WEBHOOK_SECRET
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
     let event: Stripe.Event
 
     try {
@@ -47,8 +45,20 @@ const handleStripeWebhook = async (
       let results: any
 
       // if (event.type === 'checkout.session.completed') {
-      //   const coupon = deleteCoupon(event.data.object)
-        
+      //   // update stockQty
+      //   order.cart.items.map(async (product: any) => {
+      //     await fetch(`${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id, {
+      //       method: 'PATCH',
+      //       headers: {
+      //         Authorization: `Bearer ${process.env.DIRECTUS}`,
+      //         'Content-Type': 'application/json',
+      //       },
+      //       credentials: 'same-origin',
+      //       body: JSON.stringify({
+      //         stockQty: (product.stockQty*1) - 1,
+      //       }),
+      //     })
+      //   })
         
       // }
 

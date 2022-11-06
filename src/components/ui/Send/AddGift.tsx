@@ -56,6 +56,12 @@ export default function AddGift() {
     let newResult = response.map((item: any) => {
       return item.item
     })
+    if (currentTarget.value === "" ) {
+      response = fuse.search('gift')
+      newResult = response.map((item: any) => {
+        return item.item
+      })
+    }
     // console.log('new result', newResult)
     updateSearchResults(newResult)
 
