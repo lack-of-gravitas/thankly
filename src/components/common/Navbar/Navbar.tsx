@@ -33,6 +33,8 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
   // console.log('navbar data->', data)
   const [bannerVisible, setBannerVisible] = useState(true)
   const { header } = data
+console.log('header >',header)
+
   return (
     <>
       <div className="bg-white">
@@ -88,11 +90,10 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                   <div className="px-4 pb-6 space-y-6 ">
                     {header.map(({ sort, collection, item }: any) => {
                       let coll = ''
-
                       switch (collection) {
                         case 'posts':
                                 coll = 'blog/'
-                                case 'pages':
+                        case 'pages':
                           return (
                             <Link
                               key={sort}
@@ -103,7 +104,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                             </Link>
                           )
                           break
-                        case 'CustomLinks':
+                        case 'customLinks':
                           return (
                             <a
                               key={sort}
@@ -226,7 +227,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                   </Link>
                                 )
                                 break
-                              case 'CustomLinks':
+                              case 'customLinks':
                                 return (
                                   <a
                                     key={sort}

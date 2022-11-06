@@ -142,7 +142,7 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                     </Link>
                   )
                   break
-                case 'CustomLinks':
+                case 'customLinks':
                   return (
                     <a
                       key={id}

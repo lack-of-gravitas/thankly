@@ -130,7 +130,7 @@ export function FeatureColumns({ data }: any) {
                 </Link>
               )
               break
-            case 'CustomLinks':
+            case 'customLinks':
               return (
                 <a
                   key={id}

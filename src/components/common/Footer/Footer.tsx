@@ -61,7 +61,7 @@ const Footer: FC<Props | any> = ({ data, className }) => {
                     )
                     break
 
-                  case 'CustomLinks':
+                  case 'customLinks':
                     return (
                       <a
                         key={sort}

@@ -61,7 +61,7 @@ const Hero: FC<HeroProps> = ({ data }) => {
     //         <Link
     //           href={
     //             ((item.slug === 'home' || item.slug === '') && '/') ||
-    //             (collection === 'CustomLinks'
+    //             (collection === 'customLinks'
     //               ? item.slug
     //               : '/' + coll + item.slug)
     //           }
