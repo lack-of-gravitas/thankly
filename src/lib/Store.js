@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 export const Store = createContext()
 const emptyCartObject = {
   id: uuidv4(),
+  status: 'draft', // draft, ready_to_submit, submitted
   items: [], // gift and/or card
 
   cardContent: {
@@ -43,6 +44,8 @@ const emptyCartObject = {
     voucher: 0,
     net: 0,
   },
+
+  errors: [],
 }
 
 const initialState = {
@@ -53,12 +56,15 @@ function setCookies(obj) {
   Cookies.set('cart', JSON.stringify({ ...obj }), {
     expires: 1 / 600,
   })
+
   // console.log('cookie >', JSON.parse(Cookies.get('cart')))
 }
 
 function reducer(state, action) {
   // console.log('action.payload --', action.payload)
   let newCart = state.cart
+  console.log('newCart >', newCart)
+
   // console.log('cookie >', Cookies.get('cart')) // should be blank for fresh
   // console.log('newCart...', newCart) // should be blank for fresh
 
@@ -73,7 +79,6 @@ function reducer(state, action) {
       }
 
       newCart.items = [...newCart.items, action.payload]
-      console.log('newCart.items >', newCart.items)
       updateTotals()
       setCookies(newCart)
       return { ...state, cart: { ...newCart } }
@@ -154,9 +159,105 @@ function reducer(state, action) {
       return { ...state, cart: { ...newCart } }
     }
 
+    case 'SET_ERRORS': {
+      newCart.errors = [...action.payload]
+      // updateTotals()
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
+    }
+
+    case 'CLEAR_ERRORS': {
+      newCart.errors = []
+      // updateTotals()
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
+    }
+
     case 'CLEAR_CART': {
-      setCookies(emptyCartObject)
-      state.cart = emptyCartObject
+      state.cart = {
+        id: uuidv4(),
+        status: 'draft', // draft, ready_to_submit, submitted
+        items: [], // gift and/or card
+
+        cardContent: {
+          writingStyle: '',
+          message: '',
+          specialInstructions: '',
+        },
+
+        recipient: {
+          firstname: '',
+          lastname: '',
+          company: '',
+          address: {
+            state: '',
+            postcode: '',
+            suburb: '',
+            fulladdress: '',
+            line2: '',
+          },
+        },
+
+        options: {
+          voucher: {},
+          shipping: {},
+          ribbon: {},
+          termsAccepted: false,
+          createAccount: false,
+        },
+
+        totals: {
+          items: 0,
+          discount: 0, // free cards for large value orders
+          shipping: 0,
+          subtotal: 0,
+          voucher: 0,
+          net: 0,
+        },
+      }
+      // Cookies.remove('cart') // breaks everything
+      setCookies({
+        id: uuidv4(),
+        status: 'draft', // draft, ready_to_submit, submitted
+        items: [], // gift and/or card
+
+        cardContent: {
+          writingStyle: '',
+          message: '',
+          specialInstructions: '',
+        },
+
+        recipient: {
+          firstname: '',
+          lastname: '',
+          company: '',
+          address: {
+            state: '',
+            postcode: '',
+            suburb: '',
+            fulladdress: '',
+            line2: '',
+          },
+        },
+
+        options: {
+          voucher: {},
+          shipping: {},
+          ribbon: {},
+          termsAccepted: false,
+          createAccount: false,
+        },
+
+        totals: {
+          items: 0,
+          discount: 0, // free cards for large value orders
+          shipping: 0,
+          subtotal: 0,
+          voucher: 0,
+          net: 0,
+        },
+        errors: [],
+      })
       return state
     }
   }

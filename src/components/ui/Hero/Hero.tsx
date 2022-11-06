@@ -55,7 +55,7 @@ const Hero: FC<HeroProps> = ({ data }) => {
                 <Link
                   key={id}
                   href={'/' + coll + item.slug}
-                  className="flex items-center text-sm font-medium text-slate-500"
+                  className="flex items-center text-sm font-medium no-underline text-slate-500"
                 >
                   <Button
                     style={{
@@ -63,11 +63,11 @@ const Hero: FC<HeroProps> = ({ data }) => {
                         ? brand.firstAccentColour
                         : '#fff',
                     }}
-                    className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                    className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white no-underline border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
                     type="button"
                   >
                     {item.name}
-                    <span className="ml-2 align-middle material-symbols-outlined">
+                    <span className="ml-2 no-underline align-middle material-symbols-outlined">
                       arrow_forward
                     </span>
                   </Button>
@@ -78,9 +78,9 @@ const Hero: FC<HeroProps> = ({ data }) => {
               return (
                 <a
                   key={id}
-                  target="_blank"
+                  target="_blank" rel="noopener noreferrer"
                   href={item.slug}
-                  className="flex items-center text-sm font-medium text-slate-500"
+                  className="flex items-center text-sm font-medium no-underline text-slate-500"
                 >
                  <Button
                     style={{
@@ -103,7 +103,7 @@ const Hero: FC<HeroProps> = ({ data }) => {
                 <Link
                   key={id}
                   href={'/' + coll + item.slug}
-                  className="flex items-center text-sm font-medium text-slate-500"
+                  className="flex items-center text-sm font-medium no-underline text-slate-500"
                 >
                   <Button
                     style={{

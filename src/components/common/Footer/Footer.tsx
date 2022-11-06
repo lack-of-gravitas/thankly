@@ -65,7 +65,7 @@ const Footer: FC<Props | any> = ({ data, className }) => {
                     return (
                       <a
                         key={sort}
-                        target="_blank"
+                        target="_blank" rel="noopener noreferrer"
                         href={item.slug}
                         className="flex items-center ml-5 mr-5 text-sm font-medium text-slate-500"
                       >

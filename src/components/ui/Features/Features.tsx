@@ -109,7 +109,7 @@ export function FeatureColumns({ data }: any) {
                 <Link
                   key={id}
                   href={'/' + coll + item.slug}
-                  className="flex items-center text-sm font-medium text-slate-500"
+                  className="flex items-center text-sm font-medium no-underline text-slate-500"
                 >
                   <Button
                     style={{
@@ -134,9 +134,9 @@ export function FeatureColumns({ data }: any) {
               return (
                 <a
                   key={id}
-                  target="_blank"
+                  target="_blank" rel="noopener noreferrer"
                   href={item.slug}
-                  className="flex items-center text-sm font-medium text-slate-500"
+                  className="flex items-center text-sm font-medium no-underline text-slate-500"
                 >
                   <Button
                     style={{
@@ -161,7 +161,7 @@ export function FeatureColumns({ data }: any) {
                 <Link
                 key={id}
                 href={'/' + coll + item.slug}
-                className="flex items-center text-sm font-medium text-slate-500"
+                className="flex items-center text-sm font-medium no-underline text-slate-500"
               >
                 <Button
                   style={{

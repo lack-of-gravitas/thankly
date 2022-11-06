@@ -1,27 +1,28 @@
-import { Store } from '@/lib/Store'
-import { Switch } from '@headlessui/react'
-import { SwrBrand, SwrProducts } from '@/lib/swr-helpers'
-import { getProducts } from '@/lib/queries'
-import { useContext, useEffect, useState } from 'react'
-import cn from 'clsx'
+import React, { useState, useEffect, useRef, useContext } from 'react'
+import Image from 'next/future/image'
+import Link from 'next/link'
 import dynamic from 'next/dynamic'
+
+import { useRouter } from 'next/router'
+
+import cn from 'clsx'
 import Fuse from 'fuse.js'
-import { stripe } from '@/lib/stripe'
+// core imports
+// lib imports
+// ui imports
+import { SwrBrand, SwrCards, SwrGifts, SwrProducts } from '@/lib/swr-helpers'
+
+import { Store } from '@/lib/Store'
+import { getProducts } from '@/lib/queries'
 
 const Icon = dynamic(() => import('@/components/common/Icon'))
 const ProductCard = dynamic(() => import('@/components/ui/Product'))
-interface Step1Props {
-  className?: string
-  data?: any
-}
 
-// eslint-disable-next-line react/display-name
-const Step1: React.FC<Step1Props> = ({ className, data }) => {
-  const brand = SwrBrand()
-  const products = SwrProducts()
-  const [query, updateQuery] = useState('')
-  const [searchResults, updateSearchResults]: any = useState()
-  const [enabled, setEnabled] = useState(false)
+export default function AddGift() {
+  const { state, dispatch } = useContext(Store)
+  let fuse: any
+  let products = SwrGifts()
+
   const searchOptions = {
     includeScore: false,
     shouldSort: true,
@@ -36,7 +37,12 @@ const Step1: React.FC<Step1Props> = ({ className, data }) => {
       { name: 'categories.item.name', weight: 0.5 },
     ],
   }
-  let fuse: any
+  const [searchResults, updateSearchResults]: any = useState()
+  const [query, updateQuery] = useState('')
+
+  // useEffect(() => {
+  //   products ? products = products.filter((item: any) => item.type === 'gift'):null
+  // }, [])
 
   products ? (fuse = new Fuse(products, searchOptions)) : null
   // console.log('products -- ', products)
@@ -55,7 +61,9 @@ const Step1: React.FC<Step1Props> = ({ className, data }) => {
 
     // updateResult(fuse.search(query))
   }
-
+  // State & Variable Declarations
+  // Function Declarations
+  // Component Return
   return (
     <div className="max-w-2xl py-2 mx-auto sm:py-5 lg:max-w-7xl ">
       <h2 className="sr-only">Products</h2>
@@ -74,51 +82,45 @@ const Step1: React.FC<Step1Props> = ({ className, data }) => {
               onChange={onSearch}
             />
           </div>
-          <div className="basis-1/8">
-            <Switch.Group
-              as="div"
-              className="relative flex items-center ml-3 tracking-tight"
-            >
-              <Switch
-                checked={enabled}
-                onChange={() => {
-                  let response: any
-                  let newResult: any
-                  if (enabled === true) {
-                    setEnabled(false)
-                    response = fuse.search('gift')
-                  }
-                  if (enabled === false) {
-                    setEnabled(true)
-                    response = fuse.search('card')
-                  }
-                  newResult = response.map((item: any) => {
-                    return item.item
-                  })
-                  updateSearchResults(newResult)
-                }}
-                className={cn(
-                  enabled ? 'bg-slate-600' : 'bg-gray-200',
-                  'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2'
-                )}
+          {/* <div className="basis-1/8">
+              <Switch.Group
+                as="div"
+                className="relative flex items-center ml-3 tracking-tight"
               >
-                <span
-                  aria-hidden="true"
+                <Switch
+                  checked={enabled}
+                  onChange={() => {
+                    let response: any
+                    let newResult: any
+                    if (enabled === true) {
+                      setEnabled(false)
+                      response = fuse.search('gift')
+                    }
+                    if (enabled === false) {
+                      setEnabled(true)
+                      response = fuse.search('card')
+                    }
+                    newResult = response.map((item: any) => {
+                      return item.item
+                    })
+                    updateSearchResults(newResult)
+                  }}
                   className={cn(
-                    enabled ? 'translate-x-5' : 'translate-x-0',
-                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                    enabled ? 'bg-slate-600' : 'bg-gray-200',
+                    'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2'
                   )}
-                />
-              </Switch>
-              <Switch.Label as="span" className="flex ml-3">
-                <span className="text-sm font-medium leading-tight text-gray-900">
-                  <span className="hidden leading-tight md:block">{`Show `}</span>
-                  Cards Only
-                </span>
-                {/* <span className="text-sm text-gray-500">(Save 10%)</span> */}
-              </Switch.Label>
-            </Switch.Group>
-          </div>
+                >
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      enabled ? 'translate-x-5' : 'translate-x-0',
+                      'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                    )}
+                  />
+                </Switch>
+                
+              </Switch.Group>
+            </div> */}
         </div>
         <div className="px-4 py-2 text-sm italic leading-tight text-gray-500 grow">
           <p>
@@ -143,9 +145,3 @@ const Step1: React.FC<Step1Props> = ({ className, data }) => {
     </div>
   )
 }
-
-export default Step1
-
-// export async function getServerSideProps(context: any) {
-//   return { props: { data: await getProducts() } }
-// }

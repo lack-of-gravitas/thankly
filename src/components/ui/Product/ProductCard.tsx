@@ -10,7 +10,7 @@ import { set } from 'lodash'
 
 const Icon = dynamic(() => import('@/components/common/Icon'))
 const ProductCarousel = dynamic(
-  () => import('@/components/ui/Send/ProductCarousel')
+  () => import('@/components/ui/Product/ProductCarousel')
 )
 
 interface ProductCardProps {
@@ -25,7 +25,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
 
   // check if product in cart and flip to remove button
   useEffect(() => {
-    const found = state.cart.items?.filter(
+    const found = state.cart?.items?.filter(
       (item: any) => item.id === product.id
     )
 
@@ -50,13 +50,13 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
 
       <div className="flex flex-col flex-1 p-4 space-y-2">
         <div className="flex items-center justify-between mt-4 space-x-8 text-gray-900">
-          <h3 className="text-base font-bold text-slate-700">{product.name}</h3>
-          <p className="text-base font-bold text-slate-700">
+          <h3 className="text-base font-bold leading-tight text-slate-700">{product.name}</h3>
+          <p className="text-base font-bold leading-tight text-slate-700">
             ${(product.unit_amount * 1).toFixed(2)}
           </p>
         </div>
 
-        <p className="text-sm text-gray-500">{product.description}</p>
+        <p className="text-sm leading-tight text-gray-500">{product.description}</p>
       </div>
 
       <div className="mt-3">
@@ -67,9 +67,10 @@ const ProductCard: FC<ProductCardProps> = ({ className, product }) => {
               dispatch({ type: 'ADD_ITEM', payload: { ...product } })
               setProductAdded(true)
             }}
-            className="relative flex items-center justify-center w-full px-8 py-2 text-xs font-semibold tracking-wider text-gray-900 uppercase bg-gray-100 border border-transparent hover:bg-gray-200"
+            className="relative flex items-center justify-center w-full px-8 py-2 text-xs font-semibold tracking-wider text-gray-900 uppercase border border-transparent hover:bg-gray-200"
           >
-            <Icon className="mr-2" name={'loyalty'} />
+            {product.type === 'card' && <Icon className="mr-2" name={'mark_email_unread'} />}
+            {product.type === 'gift' && <Icon className="mr-2" name={'view_in_ar'} />}
             Add
             <span className="sr-only">, {product.name}</span>
           </button>

@@ -1,77 +1,85 @@
-import dynamic from 'next/dynamic'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { getProducts } from '@/lib/queries'
-import cn from 'clsx'
-import { useState, useRef } from 'react'
-import { SwrBrand } from '@/lib/swr-helpers'
 import Link from 'next/link'
-import React, { useContext } from 'react'
-import { Store } from '@/lib/Store'
+import dynamic from 'next/dynamic'
 
-const Layout = dynamic(() => import('@/components/common/Layout'))
-const Icon = dynamic(() => import('@/components/common/Icon'))
+import { Disclosure } from '@headlessui/react'
+import { SwrBrand } from '@/lib/swr-helpers'
+
+import Router, { useRouter } from 'next/router'
+import cn from 'clsx'
+import { Store } from '@/lib/Store'
+import Cookies from 'js-cookie'
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+} from 'react'
+
 const Button = dynamic(() => import('@/components/ui/Button'))
-const Progress = dynamic(() => import('@/components/ui/Send/Progress'))
-const Modal = dynamic(() => import('@/components/ui/Modal'))
+const Icon = dynamic(() => import('@/components/common/Icon'))
+const Layout = dynamic(() => import('@/components/common/Layout'))
+const AddCard = dynamic(() => import('@/components/ui/Send/AddCard'))
+const AddGift = dynamic(() => import('@/components/ui/Send/AddGift'))
+const PersonaliseOrder = dynamic(
+  () => import('@/components/ui/Send/PersonaliseOrder')
+)
+const ConfirmOrder = dynamic(() => import('@/components/ui/Send/ConfirmOrder'))
 
 export default function Send({ slug, preview, prefetchedData }: any) {
   // console.log('prefetchedData->', prefetchedData)
   const brand = SwrBrand()
-  const router = useRouter()
-
-  const [currentStep, setCurrentStep] = useState(1)
-  const [modal, setModal] = useState(false)
-  const [showError, setShowError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState({})
-
   const { state, dispatch } = useContext(Store)
-  // console.log('current cart', state.cart)
+  const router = useRouter()
+  // const [errors, setErrors]: any[] = useState([])
 
-  const handleNextStep = () => {
-    switch (currentStep) {
-      case 1:
-        // console.log('currentStep // ', currentStep)
-        // check if at least card is selected
-        const existCard = state.cart.items.find((x: any) => x.type === 'card')
-        if (existCard) {
-          // console.log('card picked')
-          setCurrentStep(currentStep + 1)
-        }
+  let { errors } = state.cart
 
-        if (!existCard) {
-          // console.log('card not picked')
-          setShowError(true)
-          setErrorMessage({
-            title: 'Card not selected',
-            description:
-              'You need to select at least one Card to send as your Thankly. Please select from one of our cards and click Next Step.',
-          })
-          setCurrentStep(currentStep)
-        }
+  const steps: any[] = [
+    {
+      id: 1,
+      name: 'Start with a card',
+      icon: <Icon className="mr-3 " name={'mark_email_unread'} />,
+      ui: (
+        <>
+          <AddCard />
+        </>
+      ),
+    },
+    {
+      id: 2,
+      name: 'Add a gift (optional)',
+      icon: <Icon className="mr-3" name={'view_in_ar'} />,
+      ui: (
+        <>
+          <AddGift />
+        </>
+      ),
+    },
+    {
+      id: 3,
+      name: 'Personalise',
+      icon: <Icon className="mr-3 text-2xl" name={'edit_note'} />,
+      ui: (
+        <>
+          <PersonaliseOrder />
+        </>
+      ),
+    },
+    {
+      id: 4,
+      name: 'Confirm & Send',
+      icon: <Icon className="mr-3" name={'send'} />,
+      ui: (
+        <>
+          <ConfirmOrder />
+        </>
+      ),
+    },
+  ]
 
-        break
-      case 2:
-        if (state.cart.cardContent.message != '') {
-          setCurrentStep(currentStep + 1)
-        }
-
-        if (state.cart.cardContent.message === '') {
-          setErrorMessage({
-            title: 'Message not provided',
-            description:
-              'You need to provide a message to put on the card. Please write a message to your recipient and click Next Step.',
-          })
-          setShowError(true)
-          setCurrentStep(currentStep)
-        }
-
-        break
-      case 3:
-        break
-    }
-  }
-
+  console.log('state.cart >', state.cart)
   return (
     <>
       <div className="bg-white">
@@ -88,49 +96,29 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                 >
                   Send a Thankly
                 </h2>
-                {/* <p className="mt-2 mb-5 text-base text-gray-500">
+                <p className="mt-2 mb-5 text-base text-gray-500">
                   Express your gratitude by sending a thoughtful gift that
-                  really hits that soft spot.
-                </p> */}
+                  really hits that soft spot. Choose a Card, add a Gift,
+                  personalise and send.
+                </p>
               </div>
               <div className="flex mt-4 md:mt-0 md:ml-4">
-                {/* remember to clear cart / order if created */}
-                <Link href={'/'}>
-                  <Button
-                    className="inline-flex items-center px-4 py-2 text-sm font-medium border border-gray-300 rounded-md shadow-sm bg-slate-100 text-slate-600 hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
-                    type="button"
-                    onClick={() => {
-                      dispatch({ type: 'CLEAR_CART' })
-                    }}  
-                  >
-                    Cancel
-                  </Button>
-                </Link>
-
                 <Button
-                  style={{
-                    backgroundColor: brand.secondAccentColour
-                      ? brand.secondAccentColour
-                      : '#fff',
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium border border-gray-300 rounded-md shadow-sm bg-slate-100 text-slate-600 hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                  type="button"
+                  onClick={() => {
+                    dispatch({ type: 'CLEAR_CART' })
+                    console.log('cart >', state.cart)
+                    console.log('cookie >', Cookies?.get('cart'))
+                    router.reload
                   }}
-                  disabled={currentStep === 1}
-                  className={cn(
-                    `ml-3 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium shadow-sm   focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2`,
-                    currentStep === 1
-                      ? `border-gray-300 bg-slate-100 text-slate-300 `
-                      : `text-slate-500 hover:bg-slate-500 hover:text-white `
-                  )}
-                  onClick={() =>
-                    currentStep === 1
-                      ? setCurrentStep(currentStep)
-                      : setCurrentStep(currentStep - 1)
-                  }
                 >
-                  Back
+                  <Icon name="undo" className="mr-2" /> Start Over
                 </Button>
-                <Button
-                  disabled={currentStep === 3}
-                  onClick={handleNextStep}
+
+                {/* <Button
+                  disabled={state.cart?.status === 'ready_to_submit'}
+                  // onClick={handleNextStep}
                   style={{
                     backgroundColor: brand.firstAccentColour
                       ? brand.firstAccentColour
@@ -138,50 +126,104 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                   }}
                   className={cn(
                     `ml-3 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2`,
-                    currentStep === 3
-                      ? `border-gray-300 bg-slate-100 text-slate-300 `
-                      : `text-white hover:bg-slate-500 hover:text-white `
+                    `text-white hover:bg-slate-500 hover:text-white `
                   )}
                   type="button"
                 >
-                  Next Step
-                </Button>
+                  <Icon name="shopping_basket" className="mr-2" /> Checkout
+                </Button> */}
               </div>
             </div>
 
-            <Progress currentStep={currentStep}  />
-            <Modal
-              show={showError}
-              icon={
-                <Icon
-                  className="text-red-600"
-                  aria-hidden="true"
-                  name="warning"
-                />
-              }
-              content={errorMessage}
-              buttons={
-                <>
-                  <Button
-                    onClick={() => setShowError(false)}
-                    style={{
-                      backgroundColor: brand.firstAccentColour
-                        ? brand.firstAccentColour
-                        : '#fff',
-                    }}
-                    className={cn(
-                      `ml-3 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2`,
-                      currentStep === 3
-                        ? `border-gray-300 bg-slate-100 text-slate-300 `
-                        : `text-white hover:bg-slate-500 hover:text-white `
-                    )}
-                    type="button"
-                  >
-                    OK
-                  </Button>
-                </>
-              }
-            />
+            {errors?.length > 0 && (
+              <>
+                <div className="p-4 rounded-md bg-red-50">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <Icon
+                        name="warning"
+                        className="w-5 h-5 text-red-600"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-red-600">{`There were ${errors.length} errors with your order`}</h3>
+                      <div className="mt-2 -ml-5 text-sm text-red-600">
+                        <ul role="list" className="space-y-0 list-disc">
+                          {errors.map((error: any) => (
+                            <li
+                              key={error.id}
+                              className="flex space-x-0 leading-snug"
+                            >
+                              <Icon
+                                name="close"
+                                className="flex-shrink-0 w-5 h-5 text-sm leading-snug text-red-600"
+                                aria-hidden="true"
+                              />
+                              <span className="pr-1 text-sm font-medium leading-snug text-red-600">
+                                {/* {`${error.title}: `} */}
+                              {/* </span>
+                              <span className="text-sm leading-snug text-red-600"> */}
+                                {` ${error.message}`}
+                              </span>
+                            </li>
+                          ))}
+                          {/* <li>Your password must be at least 8 characters</li>
+                          <li>
+                            Your password must include at least one pro
+                            wrestling finishing move
+                          </li> */}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            <dl className="space-y-4 ">
+              {steps.map((step) => (
+                <Disclosure
+                  as="div"
+                  key={step.id}
+                  className="p-3 pt-4 pl-4 border border-gray-300 rounded-md shadow-sm bg-slate-100"
+                  style={{
+                    backgroundColor: brand.backgroundColor
+                      ? brand.backgroundColor
+                      : '#fff',
+                  }}
+                >
+                  {({ open }) => (
+                    <>
+                      <dt className="text-lg">
+                        <Disclosure.Button className="flex items-start w-full text-left text-gray-400">
+                          <span className="font-medium text-gray-900">
+                            {step.icon}
+                          </span>
+
+                          <span className="font-medium text-gray-900">
+                            {step.name}
+                          </span>
+                          <span className="flex ml-6 items-right h-7">
+                            <Icon
+                              name="expand_more"
+                              className={cn(
+                                open ? '-rotate-180' : 'rotate-0',
+                                'h-6 w-6 transform font-medium'
+                              )}
+                              aria-hidden="true"
+                            />
+                          </span>
+                        </Disclosure.Button>
+                      </dt>
+                      <Disclosure.Panel as="dd" className="mt-2 ">
+                        <p className="text-base text-gray-500">{step.ui}</p>
+                      </Disclosure.Panel>
+                    </>
+                  )}
+                </Disclosure>
+              ))}
+            </dl>
           </div>
         </section>
       </div>

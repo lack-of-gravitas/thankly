@@ -121,7 +121,7 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                     <Link
                       key={id}
                       href={'/' + coll + item.slug}
-                      className="flex items-center text-sm font-medium text-slate-500"
+                      className="flex items-center text-sm font-medium no-underline text-slate-500"
                     >
                       <Button
                         style={{
@@ -146,9 +146,9 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                   return (
                     <a
                       key={id}
-                      target="_blank"
+                      target="_blank" rel="noopener noreferrer"
                       href={item.slug}
-                      className="flex items-center text-sm font-medium text-slate-500"
+                      className="flex items-center text-sm font-medium no-underline text-slate-500"
                     >
                       <Button
                         style={{
@@ -173,7 +173,7 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                     <Link
                       key={id}
                       href={'/'}
-                      className="flex items-center text-sm font-medium text-slate-500"
+                      className="flex items-center text-sm font-medium no-underline text-slate-500"
                     >
                       <Button
                         style={{

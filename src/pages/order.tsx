@@ -89,15 +89,15 @@ export default function Home({ slug, preview, data }: any) {
             </div>
 
             {status && (
-              <div className="mt-16">
-                <div className="p-2 px-3 mt-10 shadow-md rounded-xs bg-gray-50 lg:mt-0">
+              <>
+
+                <div className="max-w-3xl p-10 mt-10 border border-gray-300 rounded-md shadow-sm bg-gray-50 lg:mt-0">
+                 
+
                   <div className="mt-4">
-                    <ul
-                      role="list"
-                      className="px-3 border-b border-gray-200 divide-y divide-gray-200"
-                    >
+                    <ul role="list" className="divide-y divide-gray-200">
                       {cart.items?.map((product: any) => (
-                        <li key={product.id} className="flex py-6">
+                        <li key={product.id} className="flex ">
                           <div className="flex-shrink-0 border rounded-sm shadow-sm border-gray-150">
                             <Image
                               className="object-cover object-center w-24 h-24 rounded-md sm:h-32 sm:w-32"
@@ -110,7 +110,7 @@ export default function Home({ slug, preview, data }: any) {
                             />
                           </div>
 
-                          <div className="flex flex-col flex-1 ml-4 sm:ml-6">
+                          <div className="flex flex-col flex-1 ml-4 ">
                             <div>
                               <div className="flex justify-between">
                                 <h4 className="text-sm">
@@ -137,48 +137,60 @@ export default function Home({ slug, preview, data }: any) {
                       ))}
                     </ul>
 
-                    <dl className="px-4 py-6 space-y-2 sm:px-6">
+                    <dl className="py-3 ">
                       <div className="flex items-center justify-between">
-                        <dt className="text-sm">Subtotal</dt>
+                        <dt className="text-sm">Items</dt>
                         <dd className="text-sm font-medium text-gray-900">
-                          {`$ ${(cart.totals.subtotal * 1).toFixed(2)}`}
+                          {`$ ${(cart.totals.items * 1).toFixed(2)}`}
                         </dd>
                       </div>
                       <div className="flex items-center justify-between">
-                        <dt className="text-sm">{`Shipping Options (${cart.options.shipping.name})`}</dt>
+                        <dt className="text-sm">
+                          - Discounted Card with Gifts
+                        </dt>
+                        <dd className="text-sm font-medium text-gray-900">
+                          {`($ ${(cart.totals.discount * 1).toFixed(2)})`}
+                        </dd>
+                      </div>
 
+                      <div className="flex items-center justify-between">
+                        <dt className="text-sm">+ Shipping</dt>
                         <dd className="text-sm font-medium text-gray-900">
                           {`$` + (cart.totals.shipping * 1).toFixed(2)}
                         </dd>
                       </div>
-                      <dt className="text-sm"></dt>
 
                       <div className="flex items-center justify-between pt-2">
-                        <dt className="text-sm">G.S.T</dt>
+                        <dt className="text-sm font-bold">Subtotal</dt>
+                        <dd className="text-sm font-bold text-gray-900">
+                          {`$ ${(cart.totals.subtotal * 1).toFixed(2)}`}
+                        </dd>
+                      </div>
+                      <div className="flex items-center justify-between pt-2">
+                        <dt className="text-sm">G.S.T Included</dt>
                         <dd className="text-sm font-medium text-gray-900">
                           {`$ 
-                      ${
-                        cart.totals.subtotal * 1 + cart.totals.shipping * 1 ===
-                        0
-                          ? 0
-                          : (
-                              (cart.totals.subtotal * 1 +
-                                cart.totals.shipping * 1) /
-                              11
-                            ).toFixed(2)
-                      }`}
+                    ${
+                      cart.totals.subtotal * 1 + cart.totals.shipping * 1 === 0
+                        ? 0
+                        : (
+                            (cart.totals.subtotal * 1 +
+                              cart.totals.shipping * 1) /
+                            11
+                          ).toFixed(2)
+                    }`}
                         </dd>
                       </div>
                       {cart.totals.voucher * 1 !== 0 && (
                         <div className="flex items-center justify-between">
-                          <dt className="text-sm">Thankly Voucher (applied)</dt>
+                          <dt className="text-sm">- used Thankly Voucher</dt>
                           <dd className="text-sm font-medium text-gray-900">
                             {`($ ${(cart.totals.voucher * 1).toFixed(2)})`}
                           </dd>
                         </div>
                       )}
-                      <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-                        <dt className="text-base font-semibold">Order Total</dt>
+                      <div className="flex items-center justify-between py-6 border-t border-b border-gray-200">
+                        <dt className="text-base font-semibold">Total Paid</dt>
                         <dd className="text-base font-semibold text-gray-900">
                           {`$ ${(cart.totals.net * 1).toFixed(2)}`}
                         </dd>
@@ -186,7 +198,7 @@ export default function Home({ slug, preview, data }: any) {
                     </dl>
                   </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
           )
@@ -245,7 +257,7 @@ export async function getServerSideProps(context: any) {
     // const customer = upsertCustomer(order)
 
     // get and pass orderInfo for confirmation
-   
+
     return {
       props: {
         data: {

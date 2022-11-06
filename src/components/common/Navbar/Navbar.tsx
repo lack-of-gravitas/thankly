@@ -30,7 +30,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
   const { state, dispatch } = useContext(Store)
   const { cart } = state
   const [open, setOpen] = useState(false)
-  console.log('navbar data->', data)
+  // console.log('navbar data->', data)
   const [bannerVisible, setBannerVisible] = useState(true)
   const { header } = data
   return (
@@ -107,7 +107,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                           return (
                             <a
                               key={sort}
-                              target="_blank"
+                              target="_blank" rel="noopener noreferrer"
                               href={item.slug}
                               className="block p-2 -m-2 font-medium text-gray-900"
                             >
@@ -220,7 +220,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                   <Link
                                     key={sort}
                                     href={'/' + coll + item.slug}
-                                    className="flex items-center text-sm font-medium text-slate-500"
+                                    className="flex items-center text-sm font-medium no-underline text-slate-500"
                                   >
                                     {item.name}
                                   </Link>
@@ -230,9 +230,9 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                 return (
                                   <a
                                     key={sort}
-                                    target="_blank"
+                                    target="_blank" rel="noopener noreferrer"
                                     href={item.slug}
-                                    className="flex items-center text-sm font-medium text-slate-500"
+                                    className="flex items-center text-sm font-medium no-underline text-slate-500"
                                   >
                                     {item.name}
                                   </a>
@@ -242,7 +242,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                   <Link
                                     key={sort}
                                     href={'/' + coll + item.slug}
-                                    className="flex items-center text-sm font-medium text-slate-500"
+                                    className="flex items-center text-sm font-medium no-underline text-slate-500"
                                   >
                                     {item.name}
                                   </Link>
@@ -252,7 +252,7 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                                   <a
                                     key={sort}
                                     href={'/'}
-                                    className="flex items-center text-sm font-medium text-slate-500"
+                                    className="flex items-center text-sm font-medium no-underline text-slate-500"
                                   >
                                     {item.name}
                                   </a>

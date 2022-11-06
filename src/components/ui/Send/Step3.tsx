@@ -253,14 +253,14 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                         })
                       }, 300)}
                       className={cn(
-                        errors.filter((item: any) => item.id === 'firstname')
+                        errors?.filter((error: any) => error.id === 'firstname')
                           .length > 0
                           ? `border-red-600 pr-10 text-red-600 placeholder-red-600 focus:border-red-600 focus:ring-red-600`
                           : `border-gray-300 focus:border-slate-500 focus:ring-slate-500`,
                         `block w-full rounded-md shadow-sm sm:text-sm`
                       )}
                     />
-                    {errors.filter((item: any) => item.id === 'firstname')
+                    {errors?.filter((error: any) => error.id === 'firstname')
                       .length > 0 && (
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <Icon
@@ -271,11 +271,11 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       </div>
                     )}
                   </div>
-                  {errors.filter((item: any) => item.id === 'firstname')
+                  {errors?.filter((error: any) => error.id === 'firstname')
                     .length > 0 && (
                     <p className="mt-2 text-xs leading-snug text-red-600">
                       {
-                        errors.filter((item: any) => item.id === 'firstname')[0]
+                        errors?.filter((error: any) => error.id === 'firstname')[0]
                           .message
                       }
                     </p>
@@ -311,14 +311,14 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                         })
                       }, 300)}
                       className={cn(
-                        errors.filter((item: any) => item.id === 'lastname')
+                        errors?.filter((error: any) => error.id === 'lastname')
                           .length > 0
                           ? `border-red-600 pr-10 text-red-600 placeholder-red-600 focus:border-red-600 focus:ring-red-600`
                           : `border-gray-300 focus:border-slate-500 focus:ring-slate-500`,
                         `block w-full rounded-md shadow-sm sm:text-sm`
                       )}
                     />
-                    {errors.filter((item: any) => item.id === 'lastname')
+                    {errors?.filter((error: any) => error.id === 'lastname')
                       .length > 0 && (
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <Icon
@@ -329,11 +329,11 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       </div>
                     )}
                   </div>
-                  {errors.filter((item: any) => item.id === 'lastname').length >
+                  {errors?.filter((error: any) => error.id === 'lastname').length >
                     0 && (
                     <p className="mt-2 text-xs leading-snug text-red-600">
                       {
-                        errors.filter((item: any) => item.id === 'lastname')[0]
+                        errors?.filter((error: any) => error.id === 'lastname')[0]
                           .message
                       }
                     </p>
@@ -369,14 +369,14 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       }, 300)}
                       aria-describedby="company-optional"
                       className={cn(
-                        errors.filter((item: any) => item.id === 'company')
+                        errors?.filter((error: any) => error.id === 'company')
                           .length > 0
                           ? `border-red-600 pr-10 text-red-600 placeholder-red-600 focus:border-red-600 focus:ring-red-600`
                           : `border-gray-300 focus:border-slate-500 focus:ring-slate-500`,
                         `block w-full rounded-md shadow-sm sm:text-sm`
                       )}
                     />
-                    {errors.filter((item: any) => item.id === 'company')
+                    {errors?.filter((error: any) => error.id === 'company')
                       .length > 0 && (
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <Icon
@@ -427,7 +427,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       placeholder="Start typing your street address..."
                       autoComplete="off"
                       className={cn(
-                        errors.filter((item: any) => item.id === 'address')
+                        errors?.filter((error: any) => error.id === 'address')
                           .length > 0
                           ? `border-red-600 pr-10 text-red-600 placeholder-red-600 focus:border-red-600 focus:ring-red-600`
                           : `border-gray-300 focus:border-slate-500 focus:ring-slate-500`,
@@ -436,7 +436,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     />
                     {status === 'OK' && <ul>{renderSuggestions()}</ul>}
 
-                    {errors.filter((item: any) => item.id === 'address')
+                    {errors?.filter((error: any) => error.id === 'address')
                       .length > 0 && (
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <Icon
@@ -447,11 +447,11 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                       </div>
                     )}
                   </div>
-                  {errors.filter((item: any) => item.id === 'address').length >
+                  {errors?.filter((error: any) => error.id === 'address').length >
                     0 && (
                     <p className="mt-2 text-xs leading-snug text-red-600">
                       {
-                        errors.filter((item: any) => item.id === 'address')[0]
+                        errors?.filter((error: any) => error.id === 'address')[0]
                           .message
                       }
                     </p>
@@ -740,11 +740,11 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     </div>
                   </RadioGroup>
 
-                  {errors.filter((item: any) => item.id === 'shippingRate')
+                  {errors?.filter((error: any) => error.id === 'shippingRate')
                     .length > 0 && (
                     <p className="mt-2 text-xs leading-snug text-red-600">
                       {
-                        errors.filter(
+                        errors?.filter(
                           (item: any) => item.id === 'shippingRate'
                         )[0].message
                       }
@@ -818,16 +818,16 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                     >
                       {'I accept the '}
                       <Link className="underline" passHref href="/privacy">
-                        <a target="_blank" rel="noopener noreferrer">
+                        <a target="_blank"  rel="noopener noreferrer">
                           {' Thankly Terms & Conditions.'}
                         </a>
                       </Link>
                     </label>
-                    {errors.filter((item: any) => item.id === 'terms').length >
+                    {errors?.filter((error: any) => error.id === 'terms').length >
                       0 && (
                       <p className="mt-2 text-xs leading-snug text-red-600">
                         {
-                          errors.filter((item: any) => item.id === 'terms')[0]
+                          errors?.filter((error: any) => error.id === 'terms')[0]
                             .message
                         }
                       </p>

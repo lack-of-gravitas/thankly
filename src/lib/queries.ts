@@ -424,7 +424,7 @@ export async function getSection(params: any) {
   }
 }
 
-export async function getProducts() {
+export async function getProducts(type:string) {
   // console.log('query', path)
   let data = await (
     await fetch(
@@ -433,7 +433,7 @@ export async function getProducts() {
         `&filter[status][_eq]=true` +
         `&filter[stockQty][_gt]=0` +
         `&filter[live][_eq]=false` + // TODO: REMOVE IN PROD
-        `&filter[type][_in]=card,gift`
+        `&filter[type][_in]=${type}`
     )
   ).json()
   data = data.data

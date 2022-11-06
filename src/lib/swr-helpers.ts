@@ -36,7 +36,35 @@ export function SwrSection(queryParams: any) {
 }
 
 export function SwrProducts() {
-  let { data } = useSWR('products', () => getProducts(), {
+  let { data } = useSWR('products', () => getProducts('card,gift'), {
+    revalidateOnReconnect: true,
+    refreshInterval: 120000,
+  })
+  // console.log('data --', data)
+  // add key to manage state of "choose / chosen button"
+  if (data) data = data.map((v: any) => ({ ...v, chosen: false }))
+  // console.log('data --', data)
+
+  return data
+}
+
+
+export function SwrCards() {
+  let { data } = useSWR('cards', () => getProducts('card'), {
+    revalidateOnReconnect: true,
+    refreshInterval: 120000,
+  })
+  // console.log('data --', data)
+  // add key to manage state of "choose / chosen button"
+  if (data) data = data.map((v: any) => ({ ...v, chosen: false }))
+  // console.log('data --', data)
+
+  return data
+}
+
+
+export function SwrGifts() {
+  let { data } = useSWR('gifts', () => getProducts('gift'), {
     revalidateOnReconnect: true,
     refreshInterval: 120000,
   })
