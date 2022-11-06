@@ -58,9 +58,8 @@ const createCheckoutSession = async (
       billing_address_collection: 'required',
       success_url: `${req.headers.origin}/order?id=${orderId}&status=true`,
       cancel_url: `${req.headers.origin}/order?id=${orderId}&status=false`,
-      automatic_tax: { enabled: false },
-      expand:['line_items']
-    })
+      automatic_tax: { enabled: false }
+    },)
 
     return res.status(200).json({ sessionId: session.id })
     // } catch (err: any) {

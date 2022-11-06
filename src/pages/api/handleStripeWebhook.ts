@@ -41,27 +41,34 @@ const handleStripeWebhook = async (
       // directus api - https://docs.directus.io/reference/items.html
       let product: Stripe.Product
       let price: Stripe.Price
-      
+      let session: Stripe.Checkout.Session
       let results: any
 
-      // if (event.type === 'checkout.session.completed') {
-      //   // update stockQty
-      //   order.cart.items.map(async (product: any) => {
-      //     await fetch(`${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id, {
-      //       method: 'PATCH',
-      //       headers: {
-      //         Authorization: `Bearer ${process.env.DIRECTUS}`,
-      //         'Content-Type': 'application/json',
-      //       },
-      //       credentials: 'same-origin',
-      //       body: JSON.stringify({
-      //         stockQty: (product.stockQty*1) - 1,
-      //       }),
-      //     })
-      //   })
-        
-      // }
-
+      if (event.type === 'checkout.session.completed') {
+        // retrieve session lineitems
+        session = event.data.object as Stripe.Checkout.Session
+        console.log('checkout lineitems >',session.line_items)
+        // session = stripe.checkout.sessions.retrieve(event.data.object.id, {
+        //   expand: ['customer'],
+        // })
+        // update stockQty
+        // order.cart.items.map(async (product: any) => {
+        //   await fetch(
+        //     `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id,
+        //     {
+        //       method: 'PATCH',
+        //       headers: {
+        //         Authorization: `Bearer ${process.env.DIRECTUS}`,
+        //         'Content-Type': 'application/json',
+        //       },
+        //       credentials: 'same-origin',
+        //       body: JSON.stringify({
+        //         stockQty: product.stockQty * 1 - 1,
+        //       }),
+        //     }
+        //   )
+        // })
+      }
 
       if (event.type === 'product.created') {
         product = event.data.object as Stripe.Product
@@ -80,7 +87,7 @@ const handleStripeWebhook = async (
             priceId: product.default_price,
           }),
         })
-        console.log('product.created',)
+        console.log('product.created')
       }
 
       if (event.type === 'product.updated') {
