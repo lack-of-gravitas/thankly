@@ -90,10 +90,7 @@ export default function Home({ slug, preview, data }: any) {
 
             {status && (
               <>
-
                 <div className="max-w-3xl p-10 mt-10 border border-gray-300 rounded-md shadow-sm bg-gray-50 lg:mt-0">
-                 
-
                   <div className="mt-4">
                     <ul role="list" className="divide-y divide-gray-200">
                       {cart.items?.map((product: any) => (
@@ -214,7 +211,7 @@ Home.Layout = Layout
 export async function getServerSideProps(context: any) {
   const { id, status } = context.query
   const order = context.query.id != undefined ? await getOrder(id) : null
-  // console.log('order >', order)
+  console.log('order >', order)
 
   // redirect to home if order is not found
   if (context.query.id === undefined || order.id === undefined) {
@@ -252,9 +249,42 @@ export async function getServerSideProps(context: any) {
 
     // // update stockQty
     // const stock = updateStock(order.cart.items) // fucking breaks Stripe
-    const stock = await fetch(
-      `${process.env.NEXT_PUBLIC_REST_API}/api/updateStock?items=${order.cart.items}`
-    )
+
+    order.items?.map(async (product: any) => {
+      console.log('updating stock ...')
+      console.log(
+        `${process.env.NEXT_PUBLIC_REST_API}/products/${product.products_id}`
+      )
+
+      let data = await (
+        await fetch(
+          `${process.env.NEXT_PUBLIC_REST_API}/products` +
+            `?fields=stockQty` +
+            `&filter[id][_eq]=${product.products_id}` + // TODO: REMOVE IN PROD
+            `&filter[live][_eq]=false` // TODO: REMOVE IN PROD
+        )
+      ).json()
+      data = data.data[0]
+      console.log('data', data)
+
+      await fetch(
+        `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.products_id,
+        {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${process.env.DIRECTUS}`,
+            'Content-Type': 'application/json',
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            stockQty: data.stockQty * 1 - product.qty,
+          }),
+        }
+      )
+    })
+    // const stock = await fetch(
+    //   `${process.env.NEXT_PUBLIC_REST_API}/api/updateStock?items=${order.cart.items}`
+    // )
 
     //TODO:create/update customer if selected / signedin
     // const customer = upsertCustomer(order)

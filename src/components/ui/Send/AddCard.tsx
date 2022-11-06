@@ -63,7 +63,7 @@ export default function AddGift() {
         return item.item
       })
     }
-    console.log('new result', newResult)
+    // console.log('new result', newResult)
     updateSearchResults(newResult)
 
     // updateResult(fuse.search(query))

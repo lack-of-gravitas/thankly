@@ -1,16 +1,27 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { stripe } from '@/lib/stripe'
-import Stripe from 'stripe'
 
 const updateStock = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST' || req.method === 'PATCH') {
     let { items } = req.body
+    console.log('updating stock ...')
 
     try {
       console.log('updating stock ...')
       items?.map(async (product: any) => {
+        // get current stock for product
+
+        let data = await (
+          await fetch(
+            `${process.env.NEXT_PUBLIC_REST_API}/products` +
+              `?fields=stockQty` +
+              `&filter[id][_eq]=${product.products_id}` + // TODO: REMOVE IN PROD
+              `&filter[live][_eq]=false` // TODO: REMOVE IN PROD
+          )
+        ).json()
+        data = data.data[0]
+
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id,
+          `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.products_id,
           {
             method: 'PATCH',
             headers: {
@@ -19,7 +30,7 @@ const updateStock = async (req: NextApiRequest, res: NextApiResponse) => {
             },
             credentials: 'same-origin',
             body: JSON.stringify({
-              stockQty: product.stockQty * 1 - 1,
+              stockQty: data.stockQty * 1 - product.qty,
             }),
           }
         )
