@@ -123,7 +123,7 @@ export default function PersonaliseOrder() {
             )} */}
           </div>
 
-          {ribbons.length > 0 && (
+          {ribbons && ribbons?.length > 0 && (
             <div className="mt-10 lg:mt-0">
               <RadioGroup
                 value={selectedRibbon}
