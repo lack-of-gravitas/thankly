@@ -3,7 +3,7 @@ import { stripe } from '@/lib/stripe'
 import Stripe from 'stripe'
 
 const updateStock = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'POST') {
+  if (req.method === 'POST' || req.method === 'PATCH') {
     let { items } = req.body
 
     try {

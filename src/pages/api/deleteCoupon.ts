@@ -4,7 +4,7 @@ import Stripe from 'stripe'
 
 
 const deleteCoupon = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'POST') {
+  if (req.method === 'POST' || req.method === 'PATCH') {
     console.log('deleteCoupon req >',req)
     let coupon: any = req.body
 
