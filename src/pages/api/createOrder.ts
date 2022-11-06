@@ -40,6 +40,19 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         ]
       })
 
+      // loop and add ribbon as product
+      if (Object.keys(cart.options.ribbon).length > 0) {
+        line_items = [
+          ...line_items,
+          {
+            products_id: cart.options.ribbon.id,
+            unit_amount: 0, //cart.options.ribbon.unit_amount,
+            currency: 'aud', //item.currency,
+            qty: 1,
+          },
+        ]
+      }
+
       // just pull order id and chuck into orders_products intersection table
       order = await (
         await fetch(`${process.env.NEXT_PUBLIC_REST_API}/orders`, {
@@ -65,6 +78,9 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
             items: [...line_items],
 
             // recipient
+            message: cart.cardContent.message,
+            writingStyle: cart.options.writingStyle.name,
+            instructions: cart.cardContent.specialInstructions,
             firstname: cart.recipient.firstname,
             lastname: cart.recipient.lastname,
             company: cart.recipient.company,
@@ -81,7 +97,6 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
       ).json()
       console.log('order created --', order)
 
-    
       return res.status(200).json({ ...order.data })
     } catch (err: any) {
       console.log(err)

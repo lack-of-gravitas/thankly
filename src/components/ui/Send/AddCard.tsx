@@ -49,8 +49,7 @@ export default function AddGift() {
   // console.log('products -- ', products)
 
   function onSearch({ currentTarget }: any) {
-    console.log('currentTarget >', currentTarget)
-     || query === ""
+    currentTarget.value === '' || query === ''
       ? updateQuery('card')
       : updateQuery(currentTarget.value)
 
@@ -58,7 +57,7 @@ export default function AddGift() {
     let newResult = response.map((item: any) => {
       return item.item
     })
-    if (currentTarget.value === "" ) {
+    if (currentTarget.value === '') {
       response = fuse.search('card')
       newResult = response.map((item: any) => {
         return item.item
@@ -91,8 +90,8 @@ export default function AddGift() {
                 // (e: any) => {
                 // console.log('e.target.value >', e.target.value)
                 onSearch
-              // }
-            }
+                // }
+              }
             />
           </div>
           {/* <div className="basis-1/8">
