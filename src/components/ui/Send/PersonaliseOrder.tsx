@@ -23,7 +23,7 @@ export default function PersonaliseOrder() {
   // Function Declarations
   // Component Return
 
-  let {errors} = state.cart
+  let { errors } = state.cart
   const writingStyles = SwrWritingStyles()
   const ribbons = SwrRibbons()
   const [selectedWritingStyle, setSelectedWritingStyle] = useState(
@@ -123,83 +123,86 @@ export default function PersonaliseOrder() {
             )} */}
           </div>
 
-          <div className="mt-10 lg:mt-0">
-            <RadioGroup
-              value={selectedRibbon}
-              onChange={(ribbon: any) => {
-                setSelecedRibbon(ribbon)
-                dispatch({
-                  type: 'SET_RIBBON',
-                  payload: { ribbon },
-                })
-              }}
-            >
-              <h3
-                id="contact-info-heading"
-                className="text-lg font-medium text-gray-900 border-b border-gray-200"
+          {ribbons.length > 0 && (
+            <div className="mt-10 lg:mt-0">
+              <RadioGroup
+                value={selectedRibbon}
+                onChange={(ribbon: any) => {
+                  setSelecedRibbon(ribbon)
+                  dispatch({
+                    type: 'SET_RIBBON',
+                    payload: { ribbon },
+                  })
+                }}
               >
-                Add a Ribbon (optional)
-              </h3>
-              <RadioGroup.Label className="hidden text-lg font-medium text-gray-900 ">
-                Add a Ribbon
-              </RadioGroup.Label>
+                <h3
+                  id="contact-info-heading"
+                  className="text-lg font-medium text-gray-900 border-b border-gray-200"
+                >
+                  Add a Ribbon (optional)
+                </h3>
+                <RadioGroup.Label className="hidden text-lg font-medium text-gray-900 ">
+                  Add a Ribbon
+                </RadioGroup.Label>
 
-              <div className="grid grid-cols-1 mt-4 gap-y-6 sm:grid-cols-3 sm:gap-x-3">
-                {ribbons?.map((item: any) => (
-                  <RadioGroup.Option
-                    key={item.id}
-                    value={item}
-                    className={({ checked, active }) =>
-                      cn(
-                        checked ? 'border-transparent' : 'border-gray-300',
-                        active ? 'ring-2 ring-slate-700' : '',
-                        'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none'
-                      )
-                    }
-                  >
-                    {({ checked, active }) => (
-                      <>
-                        <span className="flex flex-1">
-                          <span className="flex flex-col">
-                            {checked ? (
-                              <Icon className="" name={`check`} />
-                            ) : null}
-                            <img
-                              className="h-auto mx-3 my-3 rounded-md w-15 lg:w-25 lg:h-auto"
-                              src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${item.images[0].directus_files_id}`}
-                              alt=""
-                            />
+                <div className="grid grid-cols-1 mt-4 gap-y-6 sm:grid-cols-3 sm:gap-x-3">
+                  {ribbons?.map((item: any) => (
+                    <RadioGroup.Option
+                      key={item.id}
+                      value={item}
+                      className={({ checked, active }) =>
+                        cn(
+                          checked ? 'border-transparent' : 'border-gray-300',
+                          active ? 'ring-2 ring-slate-700' : '',
+                          'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none'
+                        )
+                      }
+                    >
+                      {({ checked, active }) => (
+                        <>
+                          <span className="flex flex-1">
+                            <span className="flex flex-col">
+                              {checked ? (
+                                <Icon className="" name={`check`} />
+                              ) : null}
+                              <img
+                                className="h-auto mx-3 my-3 rounded-md w-15 lg:w-25 lg:h-auto"
+                                src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${item.images[0].directus_files_id}`}
+                                alt=""
+                              />
 
-                            <RadioGroup.Label
-                              as="span"
-                              className="block mx-3 text-sm font-semibold leading-tight text-gray-900"
-                            >
-                              {item.name}
-                            </RadioGroup.Label>
-                            <RadioGroup.Description
-                              as="span"
-                              className="flex items-center mx-3 mt-1 text-sm leading-tight text-gray-500"
-                            >
-                              {item.description}
-                            </RadioGroup.Description>
+                              <RadioGroup.Label
+                                as="span"
+                                className="block mx-3 text-sm font-semibold leading-tight text-gray-900"
+                              >
+                                {item.name}
+                              </RadioGroup.Label>
+                              <RadioGroup.Description
+                                as="span"
+                                className="flex items-center mx-3 mt-1 text-sm leading-tight text-gray-500"
+                              >
+                                {item.description}
+                              </RadioGroup.Description>
+                            </span>
                           </span>
-                        </span>
 
-                        <span
-                          className={cn(
-                            active ? 'border' : 'border-2',
-                            checked ? 'border-slate-700' : 'border-transparent',
-                            'pointer-events-none absolute -inset-px rounded-lg'
-                          )}
-                          aria-hidden="true"
-                        />
-                      </>
-                    )}
-                  </RadioGroup.Option>
-                ))}
-              </div>
-            </RadioGroup>
-            {/* {errors?.filter((error: any) => error.id === 'ribbon').length > 0 && (
+                          <span
+                            className={cn(
+                              active ? 'border' : 'border-2',
+                              checked
+                                ? 'border-slate-700'
+                                : 'border-transparent',
+                              'pointer-events-none absolute -inset-px rounded-lg'
+                            )}
+                            aria-hidden="true"
+                          />
+                        </>
+                      )}
+                    </RadioGroup.Option>
+                  ))}
+                </div>
+              </RadioGroup>
+              {/* {errors?.filter((error: any) => error.id === 'ribbon').length > 0 && (
               <p className="mt-2 text-xs leading-snug text-red-600">
                 {
                   errors?.filter((error: any) => error.id === 'shippingRate')[0]
@@ -207,7 +210,8 @@ export default function PersonaliseOrder() {
                 }
               </p>
             )} */}
-          </div>
+            </div>
+          )}
 
           <div className="mt-10 lgmt-0 ">
             <h2 className="text-lg font-medium text-gray-900 border-b border-gray-300">
@@ -244,8 +248,8 @@ export default function PersonaliseOrder() {
                       `block w-full rounded-md shadow-sm sm:text-sm`
                     )}
                   />
-                  {errors?.filter((error: any) => error.id === 'message').length >
-                    0 && (
+                  {errors?.filter((error: any) => error.id === 'message')
+                    .length > 0 && (
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                       <Icon
                         name={'error'}
@@ -286,15 +290,16 @@ export default function PersonaliseOrder() {
                       })
                     }, 300)}
                     className={cn(
-                      errors?.filter((error: any) => error.id === 'instructions')
-                        .length > 0
+                      errors?.filter(
+                        (error: any) => error.id === 'instructions'
+                      ).length > 0
                         ? `border-red-600 pr-10 text-red-600 placeholder-red-600 focus:border-red-600 focus:ring-red-600`
                         : `border-gray-300 focus:border-slate-500 focus:ring-slate-500`,
                       `block w-full rounded-md shadow-sm sm:text-sm`
                     )}
                   />
-                  {errors?.filter((error: any) => error.id === 'message').length >
-                    0 && (
+                  {errors?.filter((error: any) => error.id === 'message')
+                    .length > 0 && (
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                       <Icon
                         name={'error'}
