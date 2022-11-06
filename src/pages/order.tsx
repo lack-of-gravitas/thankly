@@ -251,7 +251,10 @@ export async function getServerSideProps(context: any) {
     }
 
     // // update stockQty
-    // const stock = updateStock(order.cart.items)
+    // const stock = updateStock(order.cart.items) // fucking breaks Stripe
+    const stock = await fetch(
+      `${process.env.NEXT_PUBLIC_REST_API}/api/updateStock?items=${order.cart.items}`
+    )
 
     //TODO:create/update customer if selected / signedin
     // const customer = upsertCustomer(order)
