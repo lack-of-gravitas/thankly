@@ -261,7 +261,7 @@ export async function getServerSideProps(context: any) {
           `${process.env.NEXT_PUBLIC_REST_API}/products` +
             `?fields=stockQty` +
             `&filter[id][_eq]=${product.products_id}` + // TODO: REMOVE IN PROD
-            `&filter[live][_eq]=false` // TODO: REMOVE IN PROD
+            `&filter[live][_eq]=true` // TODO: REMOVE IN PROD
         )
       ).json()
       data = data.data[0]

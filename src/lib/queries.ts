@@ -314,7 +314,7 @@ export async function getSection(params: any) {
             `?fields=*,images.directus_files_id` +
             `&filter[featured][_eq]=true` +
             `&filter[status][_eq]=true` +
-            `&filter[live][_eq]=false` + // TODO: REMOVE IN PROD
+            `&filter[live][_eq]=true` + // TODO: REMOVE IN PROD
             `&filter[stockQty][_gt]=0` +
             `&filter[type][_in]=${
               section.type ? section.type.toString() : `card,gift`
@@ -432,7 +432,7 @@ export async function getProducts(type:string) {
         `?fields=*,categories.item.*,images.directus_files_id` + // key fields
         `&filter[status][_eq]=true` +
         `&filter[stockQty][_gt]=0` +
-        `&filter[live][_eq]=false` + // TODO: REMOVE IN PROD
+        `&filter[live][_eq]=true` + // TODO: REMOVE IN PROD
         `&filter[type][_in]=${type}`
     )
   ).json()
