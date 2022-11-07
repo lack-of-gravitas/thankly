@@ -48,7 +48,7 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                     className="relative flex flex-col overflow-hidden bg-white rounded-md group"
                   >
                     <div className="bg-gray-200 aspect-w-3 aspect-h-4 group-hover:opacity-75 sm:aspect-none sm:h-96">
-                      {product.images &&
+                      {product.images.length > 0 &&
                       product.images[0]?.directus_files_id !== '' ? (
                         <Image
                           className="object-cover object-center w-full h-full sm:h-full sm:w-full"
