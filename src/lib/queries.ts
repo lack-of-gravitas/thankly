@@ -155,22 +155,7 @@ export async function upsertCustomer(voucher: any) {
   return data
 }
 
-export async function updateStock(items: any) {
-  items.map(async (product: any) => {
-    await fetch(`${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${process.env.DIRECTUS}`,
-        'Content-Type': 'application/json',
-      },
-      credentials: 'same-origin',
-      body: JSON.stringify({
-        stockQty: (product.stockQty*1) - 1,
-      }),
-    })
-  })
 
-}
 
 // colors
 export const getBrandColors = async () =>
@@ -362,43 +347,8 @@ export async function getSection(params: any) {
       section = section.data[0].item
 
       return section
-    case 'ProductComponents':
-      section = await (
-        await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
-            `?fields=item.id,item.text,item.section_name,item.items.*,` +
-            `item.items.item.id,item.items.item.name,item.items.item.description,` + // products
-            `item.items.item.modules.item.id,item.items.item.modules.item.name,item.items.item.modules.item.description,item.items.item.modules.sort` + // modules
-            `&filter[id][_eq]=${params.id}`
-        )
-      ).json()
-      section = section.data[0].item
-
-      return section
-      break
-    case 'ProductFAQs':
-      section = await (
-        await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
-            `?fields=item.*` +
-            `&filter[id][_eq]=${params.id}`
-        )
-      ).json()
-      return section.data[0].item
-      break
-
-    //   return section
-    case 'ProductReviews':
-      section = await (
-        await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/pages_sections` +
-            `?fields=*,item.*,item.items.*,item.items.ReviewId.*` +
-            `&filter[id][_eq]=${params.id}`
-        )
-      ).json()
-      section = section.data[0].item
-      // console.log('section', section)
-      return section
+   
+    
     case 'PostsAll':
       section = await (
         await fetch(

@@ -33,7 +33,6 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
   // console.log('navbar data->', data)
   const [bannerVisible, setBannerVisible] = useState(true)
   const { header } = data
-console.log('header >',header)
 
   return (
     <>

@@ -1002,6 +1002,17 @@ export default function ConfirmOrder() {
                         })
                         // console.log('returned order -- ', order)
 
+                        // delete stripe coupon
+    // const coupon = await fetch(
+    //   `${process.env.NEXT_PUBLIC_REST_API}/api/deleteCoupon?id=${order.id}`
+    // )
+
+                        // update stock
+
+// update voucher if used
+ // if (Object.keys(order.cart.options.voucher).length != 0) {
+    //   const voucher = updateVoucher(order.cart)
+    // }
                         // redirect to order page with order data
                         order.id != ''
                           ? router.push({

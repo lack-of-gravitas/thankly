@@ -9,7 +9,7 @@ import {
   getOrder,
   deleteOrder,
   updateVoucher,
-  updateStock,
+
 } from '@/lib/queries'
 import Image from 'next/future/image'
 import { Cart } from '@/types'
@@ -24,7 +24,6 @@ export default function Home({ slug, preview, data }: any) {
   // console.log('prefetchedData->', data)
   const router = useRouter()
   const brand = SwrBrand()
-
   let { status } = data
   const { cart } = data.order
   // status = Boolean(data.status === 'true')
@@ -52,11 +51,12 @@ export default function Home({ slug, preview, data }: any) {
 
               <p className="mt-2 mb-5 text-base text-gray-500">
                 {status
-                  ? `We appreciate your order, we’re currently processing it. Check your email for the order confirmation and we'll keep you updated as your order progresses. Something doesn't look quite right? Get in touch with us.`
+                  ? `We appreciate your order, we’re currently processing it. Check your email for the order confirmation. We'll keep you updated as your order progresses. Something doesn't look quite right? Get in touch with us.`
                   : `Payment for your order has been cancelled and your cart has been cleared. Please start again if you'd like to send a new Thankly.`}
               </p>
-              {false && (
-                <Link className="pt-6" passHref href={'/account'}>
+              
+              {/* {true && (
+                <Link className="pt-6 pb-6" passHref href={'/account'}>
                   <Button
                     style={{
                       backgroundColor: brand.firstAccentColour
@@ -67,25 +67,12 @@ export default function Home({ slug, preview, data }: any) {
                     type="button"
                   >
                     <Icon className="mr-2 text-white" name={'person'} />
-                    {/* {`Create ` : `Your ` + ` Account`} */}Account
+                   Account
                   </Button>
                 </Link>
-              )}
-              {/* <Link className="pt-6" passHref href={'/account'}>
-                <Button
-                  style={{
-                    backgroundColor: brand.firstAccentColour
-                      ? brand.firstAccentColour
-                      : '#fff',
-                  }}
-                  className="inline-flex items-center px-4 py-2 mr-5 text-sm font-medium text-white border border-transparent rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-                  type="button"
-                >
-                 <Icon name="picture_as_pdf" className="mr-3" />
-                          Download Invoice
-                </Button>
-              </Link>
-              */}
+              )} */}
+             
+             
             </div>
 
             {status && (
@@ -242,46 +229,13 @@ export async function getServerSideProps(context: any) {
       `${process.env.NEXT_PUBLIC_REST_API}/api/deleteCoupon?id=${order.id}`
     )
 
-    // // update voucher balance
+    // update voucher balance
     if (Object.keys(order.cart.options.voucher).length != 0) {
       const voucher = updateVoucher(order.cart)
     }
 
     // // update stockQty
-    // const stock = updateStock(order.cart.items) // fucking breaks Stripe
-
-    order.items?.map(async (product: any) => {
-      console.log('updating stock ...')
-      console.log(
-        `${process.env.NEXT_PUBLIC_REST_API}/products/${product.products_id}`
-      )
-
-      let data = await (
-        await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/products` +
-            `?fields=stockQty` +
-            `&filter[id][_eq]=${product.products_id}` + // TODO: REMOVE IN PROD
-            `&filter[live][_eq]=true` // TODO: REMOVE IN PROD
-        )
-      ).json()
-      data = data.data[0]
-      console.log('data', data)
-
-      await fetch(
-        `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.products_id,
-        {
-          method: 'PATCH',
-          headers: {
-            Authorization: `Bearer ${process.env.DIRECTUS}`,
-            'Content-Type': 'application/json',
-          },
-          credentials: 'same-origin',
-          body: JSON.stringify({
-            stockQty: data.stockQty * 1 - product.qty,
-          }),
-        }
-      )
-    })
+    // const stock = updateStock(order.cart.items) // fucking breaks Stripe  
     // const stock = await fetch(
     //   `${process.env.NEXT_PUBLIC_REST_API}/api/updateStock?items=${order.cart.items}`
     // )
