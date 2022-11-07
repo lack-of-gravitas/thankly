@@ -19,34 +19,23 @@ export default function Document(props: any) {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
         />
-
-    
-
-
-
-      
-           
       </Head>
       <body className="">
         {/* flex flex-col h-full  */}
         <Main />
         <NextScript />
-        <noscript
-            dangerouslySetInnerHTML={{
-              __html: `<iframe src='https://www.googletagmanager.com/ns.html?id=G-01Y5P4HKGH' height='0' width='0' style='display:none;visibility:hidden'></iframe>`,
-            }}
-          ></noscript> 
-
-<Script id="google-tag-manager" strategy="afterInteractive">
-      {`
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','G-01Y5P4HKGH');
-      `}
-    </Script>
-
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-01Y5P4HKGH"
+        ></Script>
+        <Script id="ga4">
+          {`window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID}', {
+              page_path: window.location.pathname,
+            });`}
+        </Script>
 
         <Script
           strategy="beforeInteractive"
