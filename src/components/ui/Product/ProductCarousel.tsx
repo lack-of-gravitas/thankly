@@ -57,6 +57,8 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
               src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${image}?fit=cover&width=500&height=500&quality=80`}
               width={500}
               height={500}
+              alt=''
+
             />
           ))}
         </div>

@@ -743,6 +743,8 @@ export default function ConfirmOrder() {
                       }`}
                       width={900}
                       height={900}
+                      alt=''
+
                     />
                   </div>
 

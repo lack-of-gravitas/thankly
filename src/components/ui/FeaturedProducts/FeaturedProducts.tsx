@@ -56,7 +56,7 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ data }) => {
                           // layout="fill"
                           width={1000}
                           height={900}
-                          // alt={data?.name || ''}
+                          alt=''
                         />
                       ) : (
                         <>

@@ -10,33 +10,42 @@ import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
 import { MyUserContextProvider } from '@/lib/hooks/useUser'
 import { StoreProvider } from '@/lib/Store'
 
-const Noop: FC = ({ children }: any) => <>{children}</>
 
-export default function MyApp({ Component, pageProps,router }: AppProps) {
+const Noop: FC = ({ children }: any) => <>{children}</>
+declare global {
+  interface Window {
+    gtag: any
+  }
+}
+
+export default function MyApp({ Component, pageProps, router }: AppProps) {
   const Layout = (Component as any).Layout || Noop
   const brand: any = SwrBrand()
   // console.log('_app brand->', brand)
 
+  
   useEffect(() => {
     document.body.classList?.remove('loading')
   }, [])
 
   // https://www.codedisciples.in/next-ga4.html
   useEffect(() => {
-    const handleRouteChange = (url:any) => {
-      window.gtag("config", process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID, {
-        page_path: url,
-      });
-    };
+    const handleRouteChange = (url: any) => {
+      if (typeof window.gtag !== 'undefined') {
+        
+        window.gtag("config", process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID, {
+          page_path: url,
+        })
+      }
+    }
 
     // Subscribe to the change event
-    router.events.on("routeChangeComplete", handleRouteChange);
+    router.events.on('routeChangeComplete', handleRouteChange)
 
     return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
-  }, [router.events]);
-
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [router.events])
 
   return (
     <>

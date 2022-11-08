@@ -73,7 +73,7 @@ export function FeatureColumns({ data }: any) {
                     // layout="fill"
                     width={400}
                     height={800}
-                    // alt={data?.name || ''}
+                    alt=""
                   />
                 ) : (
                   <>
@@ -103,8 +103,8 @@ export function FeatureColumns({ data }: any) {
 
           switch (collection) {
             case 'posts':
-                                coll = 'blog/'
-                                case 'pages':
+              coll = 'blog/'
+            case 'pages':
               return (
                 <Link
                   key={id}
@@ -134,7 +134,8 @@ export function FeatureColumns({ data }: any) {
               return (
                 <a
                   key={id}
-                  target="_blank" rel="noopener noreferrer"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   href={item.slug}
                   className="flex items-center text-sm font-medium no-underline text-slate-500"
                 >
@@ -159,27 +160,27 @@ export function FeatureColumns({ data }: any) {
             default:
               return (
                 <Link
-                key={id}
-                href={'/' + coll + item.slug}
-                className="flex items-center text-sm font-medium no-underline text-slate-500"
-              >
-                <Button
-                  style={{
-                    backgroundColor: brand.firstAccentColour
-                      ? brand.firstAccentColour
-                      : '#fff',
-                  }}
-                  className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
-                  type="button"
-                  // item={item}
-                  // collection={collection}
+                  key={id}
+                  href={'/' + coll + item.slug}
+                  className="flex items-center text-sm font-medium no-underline text-slate-500"
                 >
-                  {item.name}
-                  <span className="ml-2 align-middle material-symbols-outlined">
-                    arrow_forward
-                  </span>
-                </Button>
-              </Link>
+                  <Button
+                    style={{
+                      backgroundColor: brand.firstAccentColour
+                        ? brand.firstAccentColour
+                        : '#fff',
+                    }}
+                    className="inline-block px-8 py-3 mt-8 font-medium prose-xl text-white border rounded-md shadow-md hover:border-slate-300 hover:bg-gray-100 hover:text-slate-500"
+                    type="button"
+                    // item={item}
+                    // collection={collection}
+                  >
+                    {item.name}
+                    <span className="ml-2 align-middle material-symbols-outlined">
+                      arrow_forward
+                    </span>
+                  </Button>
+                </Link>
               )
           }
         })}
@@ -199,7 +200,7 @@ export function FeatureImageCover({ data }: any) {
             // layout="fill"
             width={1600}
             height={800}
-            // alt={data?.name || ''}
+            alt=""
           />
         ) : (
           <>
@@ -251,7 +252,7 @@ export function FeatureImageRight({ data }: any) {
               // layout="fill"
               width={800}
               height={600}
-              // alt={data?.name || ''}
+              alt=""
             />
           ) : (
             <>
@@ -282,7 +283,7 @@ export function FeatureImageLeft({ data }: any) {
             // layout="fill"
             width={800}
             height={600}
-            // alt={data?.name || ''}
+            alt=""
           />
         ) : (
           <>

@@ -639,7 +639,9 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
                           '344cabf1-43ff-4184-acb0-cc7d461aff09'
                         }`}
                         width={900}
-                        height={900}
+                        height={900} 
+                        alt=''
+
                       />
                     </div>
 
