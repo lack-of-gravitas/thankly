@@ -20,7 +20,6 @@ const createStripeProduct = async (
         // create product
         product = req.body.record
         console.log('creating product...')
-        // req.body -- {  type: 'INSERT',  table: 'products',  record: {    id: 'test12314',    name: 'test',    tags: null,    type: 'gift',    brand: null,    status: true,    priceId: null,    currency: 'AUD',    featured: false,    stockQty: 0,    description: 'test',    unit_amount: 0,    date_created: '2022-10-31T10:27:16.785+00:00',    date_updated: null  },  schema: 'public',  old_record: null}
 
         results = await stripe.products.create({
           id: product.id,
@@ -55,5 +54,3 @@ const createStripeProduct = async (
 }
 
 export default createStripeProduct
-
-// req.body -- {  type: 'DELETE',  table: 'products',  record: null,  schema: 'public',  old_record: {    id: 'test12314',    name: 'test',    tags: null,    type: 'gift',    brand: null,    status: true,    priceId: null,    currency: 'AUD',    featured: false,    stockQty: 0,    description: 'test',    unit_amount: 0,    date_created: '2022-10-31T10:27:16.785+00:00',    date_updated: null  }}

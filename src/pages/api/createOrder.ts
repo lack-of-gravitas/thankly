@@ -65,7 +65,7 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
           body: JSON.stringify({
             id: uuidv4(),
             status: status, // draft, placed, processing, completed/cancelled
-
+            // customerEmail: ,
             // totals
             gross: cart.totals.items * 1,
             discount: cart.totals.discount * 1,

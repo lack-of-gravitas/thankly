@@ -91,6 +91,7 @@ export default function Home({ slug, preview, data }: any) {
                               }`}
                               width={900}
                               height={900}
+                              alt=''
                             />
                           </div>
 
