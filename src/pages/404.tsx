@@ -7,7 +7,25 @@ const Layout = dynamic(() => import('@/components/common/Layout'))
 export default function NotFound() {
   return (
     <>
-      <NextSeo
+      <SEO
+        title={`Thankly Page Not Found`}
+        description={``}
+        openGraph={{
+          type: 'website',
+          title: `Thankly Page Not Found`,
+          description: ``,
+          images: [
+            {
+              url: '/thankly_card.jpg', //product.images[0]?.url!,
+              width: '800',
+              height: '600',
+              alt: '404 Page Not Found',
+            },
+          ],
+        }}
+      />
+
+      {/* <NextSeo
         title="Using More of Config"
         description="This example uses more of the available config options."
         canonical="https://www.canonical.ie/"
@@ -34,13 +52,13 @@ export default function NotFound() {
             { url: 'https://www.example.ie/og-image-04.jpg' },
           ],
           siteName: 'SiteName',
-        }}
+        }} 
         twitter={{
           handle: '@handle',
           site: '@site',
           cardType: 'summary_large_image',
         }}
-      />
+      />*/}
       <main className="h-screen min-h-full bg-top bg-cover sm:bg-top">
         <div className="grid px-4 py-16 mx-auto text-center max-w-7xl justify-items-center sm:px-6 sm:py-24 lg:px-8 lg:py-48">
           <Logo

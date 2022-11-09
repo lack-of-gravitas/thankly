@@ -47,17 +47,3 @@ export default function Document(props: any) {
     </Html>
   )
 }
-
-// import { Head, Html, Main, NextScript } from 'next/document'
-
-// export default function Document() {
-//   return (
-//     <Html className='h-full antialiased bg-gray-50' lang='en'>
-//       <Head />
-//       <body className='flex flex-col h-full'>
-//         <Main />
-//         <NextScript />
-//       </body>
-//     </Html>
-//   )
-// }

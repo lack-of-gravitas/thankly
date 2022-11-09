@@ -10,7 +10,7 @@
     "site_name": "Thankly",
     "images": [
       {
-        "url": "/card.png",
+        "url": "/thankly_card.jpg",
         "width": "800",
         "height": "600",
         "alt": "Thankly"
@@ -18,8 +18,8 @@
     ]
   },
   "twitter": {
-    "handle": "@nextjs",
-    "site": "@nextjs",
+    "handle": "@thanklyaus",
+    "site": "@thanklyaus",
     "cardType": "summary_large_image"
   }
 }

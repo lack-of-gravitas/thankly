@@ -74,7 +74,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
             }}
           >
             <StoreProvider>
-              <DefaultSeo
+              {/* <DefaultSeo
                 openGraph={{
                   type: 'website',
                   locale: 'en_AU',
@@ -103,7 +103,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
                   site: '@thanklyaus',
                   cardType: 'summary_large_image',
                 }}
-              />
+              /> */}
               <Layout pageProps={pageProps} brand={brand}>
                 <Component {...pageProps} />
               </Layout>
