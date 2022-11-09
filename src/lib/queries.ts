@@ -5,7 +5,7 @@ export async function getBrand() {
   let brand = await (
     await fetch(
       `${process.env.NEXT_PUBLIC_REST_API}/brands?fields=` +
-        `*,banner.*,header.*,header.item.id,header.item.name,header.item.slug,footer.*,footer.item.*,footer.item.links.*,footer.item.links.item.slug,footer.item.links.item.name` +
+        `*,banner.*,header.*,header.item.id,header.item.name,header.item.slug,seo.*,footer.*,footer.item.*,footer.item.links.*,footer.item.links.item.slug,footer.item.links.item.name` +
         `&filter[domain][_eq]=${process.env.NEXT_PUBLIC_BRAND}`
     )
   ).json()
