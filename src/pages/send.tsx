@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import Image from 'next/future/image'
+import Image from 'next/image'
 
 import { Disclosure } from '@headlessui/react'
 import { SwrBrand } from '@/lib/swr-helpers'

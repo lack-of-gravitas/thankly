@@ -11,7 +11,7 @@ import {
   updateVoucher,
 
 } from '@/lib/queries'
-import Image from 'next/future/image'
+import Image from 'next/image'
 import { Cart } from '@/types'
 import { Store } from '@/lib/Store'
 import { useContext, useEffect } from 'react'

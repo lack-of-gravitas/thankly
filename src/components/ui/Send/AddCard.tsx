@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
-import Image from 'next/future/image'
+import Image from 'next/image'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 

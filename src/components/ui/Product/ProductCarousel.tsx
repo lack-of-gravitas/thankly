@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { SwrBrand } from '@/lib/swr-helpers'
 import dynamic from 'next/dynamic'
 import useEmblaCarousel from 'embla-carousel-react'
-import Image from 'next/future/image'
+import Image from 'next/image'
 
 interface ProductCarouselProps {
   // children?: React.ReactNode[]

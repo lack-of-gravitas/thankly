@@ -1,6 +1,6 @@
 import { SWRConfig } from 'swr'
 import { SwrBrand } from '@/lib/swr-helpers'
-import Image from 'next/future/image'
+import Image from 'next/image'
 
 export default function Logo({ className = '', ...props }) {
   const brand: any = SwrBrand()

@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Button, Container } from '@/components/ui'
 import Link from 'next/link'
-import Image from 'next/future/image'
+import Image from 'next/image'
 import { SwrBrand } from '@/lib/swr-helpers'
 
 interface SeenOnProps {

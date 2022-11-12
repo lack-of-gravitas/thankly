@@ -11,9 +11,9 @@ const nextConfig = {
     newNextLinkBehavior: true,
     nextScriptWorkers: true,
     scrollRestoration: true,
-    images: {
-      allowFutureImage: true,
-    },
+    // images: {
+    //   allowFutureImage: true,
+    // },
   },
   images: {
     domains: [
