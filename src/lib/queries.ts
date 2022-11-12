@@ -100,7 +100,6 @@ export async function deleteOrder(order: any) {
 //   )
 // }
 
-
 export async function getVoucher(voucher: any) {
   let data = await (
     await fetch(
@@ -149,8 +148,6 @@ export async function upsertCustomer(voucher: any) {
 
   return data
 }
-
-
 
 // colors
 export const getBrandColors = async () =>
@@ -294,7 +291,9 @@ export async function getSection(params: any) {
             `?fields=*,images.directus_files_id` +
             `&filter[featured][_eq]=true` +
             `&filter[status][_eq]=true` +
-            `&filter[live][_eq]=true` + // TODO: REMOVE IN PROD
+            `&filter[live][_eq]=${
+              process.env.NODE_ENV === 'development' ? false : true
+            }` +
             `&filter[stockQty][_gt]=0` +
             `&filter[type][_in]=${
               section.type ? section.type.toString() : `card,gift`
@@ -342,8 +341,7 @@ export async function getSection(params: any) {
       section = section.data[0].item
 
       return section
-   
-    
+
     case 'PostsAll':
       section = await (
         await fetch(
@@ -369,7 +367,7 @@ export async function getSection(params: any) {
   }
 }
 
-export async function getProducts(type:string) {
+export async function getProducts(type: string) {
   // console.log('query', path)
   let data = await (
     await fetch(
@@ -377,7 +375,9 @@ export async function getProducts(type:string) {
         `?fields=*,categories.item.*,images.directus_files_id` + // key fields
         `&filter[status][_eq]=true` +
         `&filter[stockQty][_gt]=0` +
-        `&filter[live][_eq]=true` + // TODO: REMOVE IN PROD
+        `&filter[live][_eq]=${
+          process.env.NODE_ENV === 'development' ? false : true
+        }` +
         `&filter[type][_in]=${type}`
     )
   ).json()

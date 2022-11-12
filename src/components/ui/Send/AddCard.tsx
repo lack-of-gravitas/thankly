@@ -73,7 +73,6 @@ export default function AddGift() {
   // Component Return
   return (
     <div className="max-w-2xl py-2 mx-auto sm:py-5 lg:max-w-7xl ">
-      <h2 className="sr-only">Products</h2>
       <div className="border rounded-md border-gray-150 bg-gray-50">
         <div className="relative flex flex-row px-3 py-3 justify-items-center focus-within:z-10">
           <div className="grow basis-1/2">

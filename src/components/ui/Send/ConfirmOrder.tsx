@@ -31,9 +31,9 @@ const Notification = dynamic(() => import('@/components/ui/Notification'))
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 const key: any =
-      process.env.NEXT_PUBLIC_ENV === 'DEV'
-        ? process.env.NEXT_PUBLIC_DEV_STRIPE_PUB_KEY
-        : process.env.NEXT_PUBLIC_PRD_STRIPE_PUB_KEY
+  process.env.NODE_ENV === 'development'
+    ? process.env.NEXT_PUBLIC_DEV_STRIPE_PUB_KEY
+    : process.env.NEXT_PUBLIC_PRD_STRIPE_PUB_KEY
 
 const stripePromise = loadStripe(key)
 
@@ -189,8 +189,7 @@ export default function ConfirmOrder() {
     clearSuggestions()
   }
 
-  function validateOrder() {
-    // collate all errors
+  function validateCart() {
     dispatch({ type: 'CLEAR_ERRORS' })
 
     let foundErrors: any[] = []
@@ -517,8 +516,15 @@ export default function ConfirmOrder() {
             </div>
           </div>
 
-          <div className="p-2 px-3 mt-5">
-            <h3 className="text-lg font-medium text-gray-900">
+          
+        </div>
+
+        <div>
+        <div className="p-2 px-3 ">
+        <h3
+              id="contact-info-heading"
+              className="text-lg font-medium text-gray-900 border-b border-gray-200"
+            >
               Shipping Address
             </h3>
             <p className="mt-2 text-sm italic leading-snug text-gray-500">
@@ -724,9 +730,10 @@ export default function ConfirmOrder() {
               </div>
             </div>
           </div>
+          
+       
         </div>
-
-        <div className="p-2 px-3 mt-10 border border-gray-300 rounded-md shadow-sm bg-gray-50 lg:mt-0">
+        {/* <div className="p-2 px-3 mt-10 border border-gray-300 rounded-md shadow-sm bg-gray-50 lg:mt-0">
           <h2 className="text-lg font-medium text-gray-900 border-b border-gray-200 ">
             Order summary
           </h2>
@@ -746,8 +753,7 @@ export default function ConfirmOrder() {
                       }`}
                       width={900}
                       height={900}
-                      alt=''
-
+                      alt=""
                     />
                   </div>
 
@@ -993,50 +999,39 @@ export default function ConfirmOrder() {
                   e.preventDefault()
                   setProcessing(true)
                   console.log('final cart -- ', state.cart)
+                  console.log('initiating checkout...')
 
                   try {
                     console.log('validating order...')
-                    const validOrder = validateOrder()
-                    if (validOrder) {
-                      console.log('initiating checkout...')
+                    // const validCart =
+                    if (validateCart()) {
                       if (state.cart.totals.net * 1 === 0) {
                         // nothing to pay, complete processing of order directly (send to api)
                         const order = await postData({
                           url: '/api/createOrder',
                           data: { cart: state.cart, status: 'placed' },
                         })
-                        // console.log('returned order -- ', order)
 
-                        // delete stripe coupon
-    // const coupon = await fetch(
-    //   `${process.env.NEXT_PUBLIC_REST_API}/api/deleteCoupon?id=${order.id}`
-    // )
-
-                        // update stock
-
-// update voucher if used
- // if (Object.keys(order.cart.options.voucher).length != 0) {
-    //   const voucher = updateVoucher(order.cart)
-    // }
                         // redirect to order page with order data
                         order.id != ''
                           ? router.push({
                               pathname: '/order',
                               query: { id: order.id, status: true },
                             })
-                          : null
+                          : router.push({
+                            pathname: '/order',
+                            query: { id: order.id, status: false },
+                          })
 
+                        dispatch({ type: 'CLEAR_CART' })
                         setProcessing(false)
                         setInitiateCheckout(false)
-                        dispatch({
-                          type: 'CLEAR_CART',
-                        })
                       } else {
                         // balance to pay -- total != 0
                         // create draft order before initating checkout
                         const order = await postData({
                           url: '/api/createOrder',
-                          data: { cart: state.cart, status: 'placed' },
+                          data: { cart: state.cart, status: 'draft' },
                         })
 
                         const { sessionId } = await postData({
@@ -1045,12 +1040,10 @@ export default function ConfirmOrder() {
                         })
 
                         const stripe = await getStripe()
-                        stripe?.redirectToCheckout({ sessionId }) // should re-direct to orderconfirm or fail
+                        stripe?.redirectToCheckout({ sessionId })
+                        dispatch({ type: 'CLEAR_CART' })
                         setProcessing(false)
                         setInitiateCheckout(false)
-                        dispatch({
-                          type: 'CLEAR_CART',
-                        })
                       }
                     } else {
                       // refresh page & show notification
@@ -1093,8 +1086,13 @@ export default function ConfirmOrder() {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
+
+
       </div>
+
+
+      
       <Modal
         show={processing}
         readOnly

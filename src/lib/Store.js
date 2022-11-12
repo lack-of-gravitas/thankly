@@ -63,7 +63,7 @@ function setCookies(obj) {
 function reducer(state, action) {
   // console.log('action.payload --', action.payload)
   let newCart = state.cart
-  console.log('newCart >', newCart)
+  // console.log('newCart >', newCart)
 
   // console.log('cookie >', Cookies.get('cart')) // should be blank for fresh
   // console.log('newCart...', newCart) // should be blank for fresh

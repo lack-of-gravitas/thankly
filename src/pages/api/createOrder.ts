@@ -1,9 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { stripe } from '@/lib/stripe'
 import Stripe from 'stripe'
-import { postData } from '@/lib/api-helpers'
 import { v4 as uuidv4 } from 'uuid'
-import { getVoucher } from '@/lib/queries'
 
 // import { getUser, withApiAuth } from '@supabase/supabase-auth-helpers/nextjs'
 // import { createOrRetrieveCustomer } from '@/lib/supabase-admin'
@@ -96,6 +93,10 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
         })
       ).json()
       console.log('order created --', order)
+
+      // deleteCoupon
+
+      // updateStockQty
 
       return res.status(200).json({ ...order.data })
     } catch (err: any) {
