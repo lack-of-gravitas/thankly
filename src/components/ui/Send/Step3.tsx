@@ -185,7 +185,7 @@ const Step3: React.FC<Step3Props> = ({ className }) => {
         strategy="beforeInteractive"
         id="googlemaps"
         type="text/javascript"
-        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_PLACES_AUTOCOMPLETE}&libraries=places`}
+        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOG_ADDRESSFILL}&libraries=places`}
       /> */}
 
       <div className="max-w-2xl pt-5 pb-24 mx-auto lg:max-w-7xl ">

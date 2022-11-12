@@ -4,9 +4,12 @@ let stripePromise: Promise<Stripe | null>
 
 export const getStripe = () => {
   if (!stripePromise) {
-    stripePromise = loadStripe(
-      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ''
-    )
+    const key: any =
+      process.env.NEXT_PUBLIC_ENV === 'DEV'
+        ? process.env.NEXT_PUBLIC_DEV_STRIPE_PUB_KEY
+        : process.env.NEXT_PUBLIC_PRD_STRIPE_PUB_KEY
+        
+    stripePromise = loadStripe(key)
   }
 
   return stripePromise

@@ -46,7 +46,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
   useEffect(() => {
     const handleRouteChange = (url: any) => {
       if (typeof window.gtag !== 'undefined') {
-        window.gtag('config', process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID, {
+        window.gtag('config', process.env.NEXT_PUBLIC_GA4_ID, {
           page_path: url,
         })
       }

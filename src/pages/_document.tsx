@@ -32,7 +32,7 @@ export default function Document(props: any) {
           {`window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID}', {
+            gtag('config', '${process.env.NEXT_PUBLIC_GA4_ID}', {
               page_path: window.location.pathname,
             });`}
         </Script>
@@ -41,7 +41,7 @@ export default function Document(props: any) {
           strategy="beforeInteractive"
           id="googlemaps"
           type="text/javascript"
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_PLACES_AUTOCOMPLETE}&libraries=places`}
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOG_ADDRESSFILL}&libraries=places`}
         />
       </body>
     </Html>

@@ -56,11 +56,12 @@ const createCheckoutSession = async (
           : undefined,
       mode: 'payment',
       billing_address_collection: 'required',
-      phone_number_collection: {enabled: true},
+      phone_number_collection: { enabled: true },
+      client_reference_id: `${cart.id}`,
       success_url: `${req.headers.origin}/order?id=${orderId}&status=true`,
       cancel_url: `${req.headers.origin}/order?id=${orderId}&status=false`,
-      automatic_tax: { enabled: false }
-    },)
+      automatic_tax: { enabled: false },
+    })
 
     return res.status(200).json({ sessionId: session.id })
     // } catch (err: any) {
