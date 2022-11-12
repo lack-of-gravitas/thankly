@@ -100,11 +100,6 @@ export async function deleteOrder(order: any) {
 //   )
 // }
 
-// trigger email
-// const { emailSent } = await postData({
-//   url: '/api/sendEmail',
-//   data: state.cart,
-// })
 
 export async function getVoucher(voucher: any) {
   let data = await (
