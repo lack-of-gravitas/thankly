@@ -32,6 +32,7 @@ const PersonaliseOrder = dynamic(
   () => import('@/components/ui/Send/PersonaliseOrder')
 )
 const ConfirmOrder = dynamic(() => import('@/components/ui/Send/ConfirmOrder'))
+const Notification = dynamic(() => import('@/components/ui/Notification'))
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -160,47 +161,43 @@ export default function Send({ slug, preview, prefetchedData }: any) {
 
             {errors?.length > 0 && (
               <>
-                <div className="p-4 rounded-md bg-red-50">
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <Icon
-                        name="warning"
-                        className="w-5 h-5 text-red-600"
-                        aria-hidden="true"
-                      />
+                <Notification
+                  show={true}
+                  // icon={
+                  //   <Icon
+                  //     name="warning"
+                  //     className="w-5 h-5 text-red-600"
+                  //     aria-hidden="true"
+                  //   />
+                  // }
+                  errors={
+                    <div className=" w-0 flex-1 pt-0.5">
+                      {/* <p className="text-sm font-bold text-red-600">
+                        Errors with your Order
+                      </p> */}
+                      <ul role="list" className="space-y-0 list-disc">
+                        {errors.map((error: any) => (
+                          <li
+                            key={error.id}
+                            className="flex space-x-0 leading-snug"
+                          >
+                            <Icon
+                              name="close"
+                              className="flex-shrink-0 w-5 h-5 text-sm leading-snug text-red-600"
+                              aria-hidden="true"
+                            />
+                            <span className="pr-1 text-sm font-medium leading-snug text-red-600">
+                              {/* {`${error.title}: `} */}
+                              {/* </span>
+                            <span className="text-sm leading-snug text-red-600"> */}
+                              {` ${error.message}`}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-red-600">{`There were ${errors.length} errors with your order`}</h3>
-                      <div className="mt-2 -ml-5 text-sm text-red-600">
-                        <ul role="list" className="space-y-0 list-disc">
-                          {errors.map((error: any) => (
-                            <li
-                              key={error.id}
-                              className="flex space-x-0 leading-snug"
-                            >
-                              <Icon
-                                name="close"
-                                className="flex-shrink-0 w-5 h-5 text-sm leading-snug text-red-600"
-                                aria-hidden="true"
-                              />
-                              <span className="pr-1 text-sm font-medium leading-snug text-red-600">
-                                {/* {`${error.title}: `} */}
-                                {/* </span>
-                              <span className="text-sm leading-snug text-red-600"> */}
-                                {` ${error.message}`}
-                              </span>
-                            </li>
-                          ))}
-                          {/* <li>Your password must be at least 8 characters</li>
-                          <li>
-                            Your password must include at least one pro
-                            wrestling finishing move
-                          </li> */}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  }
+                />
               </>
             )}
 
@@ -247,146 +244,147 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                 </Disclosure>
               ))}
             </dl>
-<div className="flex justify-center">
-            <div className="max-w-2xl p-5 px-5 mt-10 border-2 rounded-md shadow-md border-slate-700 bg-gray-50 lg:mt-0">
-            <h2 className="text-lg font-bold text-gray-900 border-b border-gray-200 ">
-              Order Summary
-            </h2>
+            <div className="flex justify-center">
+              <div className="max-w-2xl p-5 px-5 mt-10 border-2 rounded-md shadow-md border-slate-700 bg-gray-50 lg:mt-0">
+                <h2 className="text-lg font-bold text-gray-900 border-b border-gray-200 ">
+                  Order Summary
+                </h2>
 
-            <div className="mt-4">
-              <h3 className="sr-only">Items in your cart</h3>
+                <div className="mt-4">
+                  <h3 className="sr-only">Items in your cart</h3>
 
-              <ul role="list" className="divide-y divide-gray-200">
-                {state.cart.items?.map((product: any) => (
-                  <li key={product.id} className="flex ">
-                    <div className="flex-shrink-0 border rounded-sm shadow-sm border-gray-150">
-                      <Image
-                        className="object-cover object-center w-24 h-24 rounded-md sm:h-32 sm:w-32"
-                        src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${
-                          product.images[0]?.directus_files_id ??
-                          '344cabf1-43ff-4184-acb0-cc7d461aff09'
-                        }`}
-                        width={900}
-                        height={900}
-                        alt=""
-                      />
-                    </div>
-
-                    <div className="flex flex-col flex-1 ml-4 ">
-                      <div>
-                        <div className="flex justify-between">
-                          <h4 className="text-sm">
-                            <a
-                              href={product.href}
-                              className="font-medium text-gray-700 hover:text-gray-800"
-                            >
-                              {product.name}
-                            </a>
-                          </h4>
-                          <p className="ml-4 text-sm font-medium text-gray-900">
-                            {product.price}
-                          </p>
+                  <ul role="list" className="divide-y divide-gray-200">
+                    {state.cart.items?.map((product: any) => (
+                      <li key={product.id} className="flex ">
+                        <div className="flex-shrink-0 border rounded-sm shadow-sm border-gray-150">
+                          <Image
+                            className="object-cover object-center w-24 h-24 rounded-md sm:h-32 sm:w-32"
+                            src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${
+                              product.images[0]?.directus_files_id ??
+                              '344cabf1-43ff-4184-acb0-cc7d461aff09'
+                            }`}
+                            width={900}
+                            height={900}
+                            alt=""
+                          />
                         </div>
-                        <p className="mt-1 text-sm text-gray-500">
-                          {product.color}
-                        </p>
-                        <p className="mt-1 text-sm text-gray-500">
-                          {product.size}
-                        </p>
-                      </div>
+
+                        <div className="flex flex-col flex-1 ml-4 ">
+                          <div>
+                            <div className="flex justify-between">
+                              <h4 className="text-sm">
+                                <a
+                                  href={product.href}
+                                  className="font-medium text-gray-700 hover:text-gray-800"
+                                >
+                                  {product.name}
+                                </a>
+                              </h4>
+                              <p className="ml-4 text-sm font-medium text-gray-900">
+                                {product.price}
+                              </p>
+                            </div>
+                            <p className="mt-1 text-sm text-gray-500">
+                              {product.color}
+                            </p>
+                            <p className="mt-1 text-sm text-gray-500">
+                              {product.size}
+                            </p>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <dl className="py-3 ">
+                    <div className="flex items-center justify-between">
+                      <dt className="text-sm">Items</dt>
+                      <dd className="text-sm font-medium text-gray-900">
+                        {`$ ${(state.cart.totals.items * 1).toFixed(2)}`}
+                      </dd>
                     </div>
-                  </li>
-                ))}
-              </ul>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-sm">- Discounted Card with Gifts</dt>
+                      <dd className="text-sm font-medium text-gray-900">
+                        {`($ ${(state.cart.totals.discount * 1).toFixed(2)})`}
+                      </dd>
+                    </div>
 
-              <dl className="py-3 ">
-                <div className="flex items-center justify-between">
-                  <dt className="text-sm">Items</dt>
-                  <dd className="text-sm font-medium text-gray-900">
-                    {`$ ${(state.cart.totals.items * 1).toFixed(2)}`}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-sm">- Discounted Card with Gifts</dt>
-                  <dd className="text-sm font-medium text-gray-900">
-                    {`($ ${(state.cart.totals.discount * 1).toFixed(2)})`}
-                  </dd>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <dt className="text-sm">+ Shipping</dt>
-                  <dd className="text-sm font-medium text-gray-900">
-                    {`$` + (state.cart.totals.shipping * 1).toFixed(2)}
-                  </dd>
-                </div>
-                <dt className="text-sm">
-                  <RadioGroup
-                    value={state.cart.options.shipping ?? shippingRates[0]}
-                    onChange={(e: any) => {
-                      // console.log('radiogroup -- ', e)
-                      dispatch({
-                        type: 'SET_SHIPPING',
-                        payload: {
-                          shippingRate: { ...e },
-                        },
-                      })
-                    }}
-                    className="mt-2"
-                  >
-                    <div className="grid grid-cols-3 gap-3 sm:grid-cols-3">
-                      {shippingRates.map((option: any) => (
-                        <>
-                          {state.cart.totals.items * 1 <= 50 &&
-                          option.name === 'Express Shipping (FREE)' ? (
-                            <></>
-                          ) : state.cart.totals.items * 1 > 50 &&
-                            option.name === 'Express Shipping' ? (
-                            <></>
-                          ) : (
-                            <RadioGroup.Option
-                              key={option.id}
-                              value={option}
-                              className={cn(
-                                'cursor-pointer focus:outline-none',
-                                option.id === state.cart.options.shipping.id
-                                  ? 'border-transparent bg-slate-600 text-white ring-2 ring-slate-500 ring-offset-2 hover:bg-slate-700'
-                                  : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50',
-                                'flex items-center justify-center rounded-md border py-3 px-3 text-xs font-medium sm:flex-1'
+                    <div className="flex items-center justify-between">
+                      <dt className="text-sm">+ Shipping</dt>
+                      <dd className="text-sm font-medium text-gray-900">
+                        {`$` + (state.cart.totals.shipping * 1).toFixed(2)}
+                      </dd>
+                    </div>
+                    <dt className="text-sm">
+                      <RadioGroup
+                        value={state.cart.options.shipping ?? shippingRates[0]}
+                        onChange={(e: any) => {
+                          // console.log('radiogroup -- ', e)
+                          dispatch({
+                            type: 'SET_SHIPPING',
+                            payload: {
+                              shippingRate: { ...e },
+                            },
+                          })
+                        }}
+                        className="mt-2"
+                      >
+                        <div className="grid grid-cols-3 gap-3 sm:grid-cols-3">
+                          {shippingRates.map((option: any) => (
+                            <>
+                              {state.cart.totals.items * 1 <= 50 &&
+                              option.name === 'Express Shipping (FREE)' ? (
+                                <></>
+                              ) : state.cart.totals.items * 1 > 50 &&
+                                option.name === 'Express Shipping' ? (
+                                <></>
+                              ) : (
+                                <RadioGroup.Option
+                                  key={option.id}
+                                  value={option}
+                                  className={cn(
+                                    'cursor-pointer focus:outline-none',
+                                    option.id === state.cart.options.shipping.id
+                                      ? 'border-transparent bg-slate-600 text-white ring-2 ring-slate-500 ring-offset-2 hover:bg-slate-700'
+                                      : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50',
+                                    'flex items-center justify-center rounded-md border py-3 px-3 text-xs font-medium sm:flex-1'
+                                  )}
+                                >
+                                  <RadioGroup.Label as="span">
+                                    {option.name +
+                                      ` $` +
+                                      Number(option.unit_amount * 1)}
+                                  </RadioGroup.Label>
+                                </RadioGroup.Option>
                               )}
-                            >
-                              <RadioGroup.Label as="span">
-                                {option.name +
-                                  ` $` +
-                                  Number(option.unit_amount * 1)}
-                              </RadioGroup.Label>
-                            </RadioGroup.Option>
-                          )}
-                        </>
-                      ))}
-                    </div>
-                  </RadioGroup>
+                            </>
+                          ))}
+                        </div>
+                      </RadioGroup>
 
-                  {errors?.filter((error: any) => error.id === 'shippingRate')
-                    .length > 0 && (
-                    <p className="mt-2 text-xs leading-snug text-red-600">
-                      {
-                        errors?.filter(
-                          (item: any) => item.id === 'shippingRate'
-                        )[0].message
-                      }
-                    </p>
-                  )}
-                </dt>
-                <div className="flex items-center justify-between pt-2">
-                  <dt className="text-sm font-bold">Subtotal</dt>
-                  <dd className="text-sm font-bold text-gray-900">
-                    {`$ ${(state.cart.totals.subtotal * 1).toFixed(2)}`}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between pt-2">
-                  <dt className="text-sm">G.S.T Included</dt>
-                  <dd className="text-sm font-medium text-gray-900">
-                    {`$ 
+                      {errors?.filter(
+                        (error: any) => error.id === 'shippingRate'
+                      ).length > 0 && (
+                        <p className="mt-2 text-xs leading-snug text-red-600">
+                          {
+                            errors?.filter(
+                              (item: any) => item.id === 'shippingRate'
+                            )[0].message
+                          }
+                        </p>
+                      )}
+                    </dt>
+                    <div className="flex items-center justify-between pt-2">
+                      <dt className="text-sm font-bold">Subtotal</dt>
+                      <dd className="text-sm font-bold text-gray-900">
+                        {`$ ${(state.cart.totals.subtotal * 1).toFixed(2)}`}
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between pt-2">
+                      <dt className="text-sm">G.S.T Included</dt>
+                      <dd className="text-sm font-medium text-gray-900">
+                        {`$ 
                     ${
                       state.cart.totals.subtotal * 1 +
                         state.cart.totals.shipping * 1 ===
@@ -398,214 +396,219 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                             11
                           ).toFixed(2)
                     }`}
-                  </dd>
-                </div>
-                {state.cart.totals.voucher * 1 !== 0 && (
-                  <div className="flex items-center justify-between">
-                    <dt className="text-sm">- used Thankly Voucher</dt>
-                    <dd className="text-sm font-medium text-gray-900">
-                      {`($ ${(state.cart.totals.voucher * 1).toFixed(2)})`}
-                    </dd>
-                  </div>
-                )}
-                <div className="flex items-center justify-between py-6 border-t border-b border-gray-200">
-                  <dt className="text-base font-semibold">Total Outstanding</dt>
-                  <dd className="text-base font-semibold text-gray-900">
-                    {`$ ${(state.cart.totals.net * 1).toFixed(2)}`}
-                  </dd>
-                </div>
-              </dl>
-
-              <div className="py-3 ">
-                <div>
-                  <h3 className="font-medium text-gray-900 text-md">
-                    Thankly Voucher
-                  </h3>
-                  <p className="block pt-2 text-sm font-medium leading-snug text-gray-700">
-                    {`If you would like to use a Thankly Voucher for this
-                  purchase, please enter it here.`}
-                    <span className="font-semibold">{` If Voucher Balance is insufficient, you will be directed to Stripe to collect card details for the remaining amount.`}</span>
-                  </p>
-
-                  <div className="flex py-3 mt-1 rounded-md ">
-                    <div className="relative flex items-stretch flex-grow focus-within:z-10">
-                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <Icon name={'redeem'} />
-                      </div>
-                      <input
-                        type="text"
-                        name="voucher"
-                        id="voucher"
-                        maxLength={10}
-                        size={10}
-                        className={`txt-slate-500 block w-full rounded-none rounded-l-md border-gray-300 pl-10 font-semibold focus:border-slate-500 focus:ring-slate-500 sm:text-sm`}
-                        placeholder="VOUCHER CODE"
-                        onChange={debounce(async (e: any) => {
-                          // call api to validate voucher and set
-                          setVoucherBalance(0)
-                          // console.log('voucher', e.target.value)
-                          if (e.target.value === '') {
-                            dispatch({
-                              type: 'REMOVE_VOUCHER',
-                            })
-                          } else {
-                            let data = await (
-                              await fetch(
-                                `${process.env.NEXT_PUBLIC_REST_API}/vouchers?fields=*` +
-                                  `&filter[code][_eq]=${e.target.value}` +
-                                  `&filter[status][_eq]=published`
-                              )
-                            ).json()
-                            data = data.data
-                            if (data?.length === 1) {
-                              data = data[0]
-                              // console.log('voucher data >', data)
-                              setVoucherValid(true)
-                            } else {
-                              data = null
-                              setVoucherValid(false)
-                            }
-                            // console.log('voucher data', data)
-                            // console.log('getVoucher', data)
-
-                            dispatch({
-                              type: 'APPLY_VOUCHER',
-                              payload: data,
-                            })
-
-                            setVoucherBalance(state.cart.totals.voucher * 1)
-                          }
-                        }, 300)}
-                      />
+                      </dd>
                     </div>
+                    {state.cart.totals.voucher * 1 !== 0 && (
+                      <div className="flex items-center justify-between">
+                        <dt className="text-sm">- used Thankly Voucher</dt>
+                        <dd className="text-sm font-medium text-gray-900">
+                          {`($ ${(state.cart.totals.voucher * 1).toFixed(2)})`}
+                        </dd>
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between py-6 border-t border-b border-gray-200">
+                      <dt className="text-base font-semibold">
+                        Total Outstanding
+                      </dt>
+                      <dd className="text-base font-semibold text-gray-900">
+                        {`$ ${(state.cart.totals.net * 1).toFixed(2)}`}
+                      </dd>
+                    </div>
+                  </dl>
 
+                  <div className="py-3 ">
+                    <div>
+                      <h3 className="font-medium text-gray-900 text-md">
+                        Thankly Voucher
+                      </h3>
+                      <p className="block pt-2 text-sm font-medium leading-snug text-gray-700">
+                        {`If you would like to use a Thankly Voucher for this
+                  purchase, please enter it here.`}
+                        <span className="font-semibold">{` If Voucher Balance is insufficient, you will be directed to Stripe to collect card details for the remaining amount.`}</span>
+                      </p>
+
+                      <div className="flex py-3 mt-1 rounded-md ">
+                        <div className="relative flex items-stretch flex-grow focus-within:z-10">
+                          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <Icon name={'redeem'} />
+                          </div>
+                          <input
+                            type="text"
+                            name="voucher"
+                            id="voucher"
+                            maxLength={10}
+                            size={10}
+                            className={`txt-slate-500 block w-full rounded-none rounded-l-md border-gray-300 pl-10 font-semibold focus:border-slate-500 focus:ring-slate-500 sm:text-sm`}
+                            placeholder="VOUCHER CODE"
+                            onChange={debounce(async (e: any) => {
+                              // call api to validate voucher and set
+                              setVoucherBalance(0)
+                              // console.log('voucher', e.target.value)
+                              if (e.target.value === '') {
+                                dispatch({
+                                  type: 'REMOVE_VOUCHER',
+                                })
+                              } else {
+                                let data = await (
+                                  await fetch(
+                                    `${process.env.NEXT_PUBLIC_REST_API}/vouchers?fields=*` +
+                                      `&filter[code][_eq]=${e.target.value}` +
+                                      `&filter[status][_eq]=published`
+                                  )
+                                ).json()
+                                data = data.data
+                                if (data?.length === 1) {
+                                  data = data[0]
+                                  // console.log('voucher data >', data)
+                                  setVoucherValid(true)
+                                } else {
+                                  data = null
+                                  setVoucherValid(false)
+                                }
+                                // console.log('voucher data', data)
+                                // console.log('getVoucher', data)
+
+                                dispatch({
+                                  type: 'APPLY_VOUCHER',
+                                  payload: data,
+                                })
+
+                                setVoucherBalance(state.cart.totals.voucher * 1)
+                              }
+                            }, 300)}
+                          />
+                        </div>
+
+                        <button
+                          type="button"
+                          className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100 "
+                        >
+                          <Icon name={'attach_money'} />
+                          <span className="font-medium text-gray-700">
+                            {`Balance `}
+                            {state.cart.options.voucher &&
+                            state.cart.options.voucher != undefined &&
+                            Object.keys(state.cart.options.voucher).length != 0
+                              ? (
+                                  state.cart.options.voucher.value * 1 -
+                                  state.cart.options.voucher.used * 1
+                                ).toFixed(2)
+                              : (0).toFixed(2)}
+                          </span>
+                        </button>
+                      </div>
+
+                      {voucherValid === false && (
+                        <p className="block pb-4 text-sm font-medium leading-tight text-red-600 0">
+                          <Icon
+                            className="w-5 h-5 text-sm leading-tight"
+                            name={'cancel'}
+                          />
+                          <span className="text-sm leading-snug">{`Invalid or already used Voucher. Please try a different Voucher. If you think this is in error, please contact us.`}</span>
+                        </p>
+                      )}
+                    </div>
                     <button
-                      type="button"
-                      className="relative inline-flex items-center px-4 py-2 -ml-px space-x-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100 "
-                    >
-                      <Icon name={'attach_money'} />
-                      <span className="font-medium text-gray-700">
-                        {`Balance `}
-                        {state.cart.options.voucher &&
-                        state.cart.options.voucher != undefined &&
-                        Object.keys(state.cart.options.voucher).length != 0
-                          ? (
-                              state.cart.options.voucher.value * 1 -
-                              state.cart.options.voucher.used * 1
-                            ).toFixed(2)
-                          : (0).toFixed(2)}
-                      </span>
-                    </button>
-                  </div>
+                      type="submit"
+                      onClick={async (e: any) => {
+                        e.preventDefault()
+                        setProcessing(true)
+                        console.log('final cart -- ', state.cart)
+                        console.log('initiating checkout...')
 
-                  {voucherValid === false && (
-                    <p className="block pb-4 text-sm font-medium leading-tight text-red-600 0">
-                      <Icon
-                        className="w-5 h-5 text-sm leading-tight"
-                        name={'cancel'}
-                      />
-                      <span className="text-sm leading-snug">{`Invalid or already used Voucher. Please try a different Voucher. If you think this is in error, please contact us.`}</span>
-                    </p>
-                  )}
-                </div>
-                <button
-                  type="submit"
-                  onClick={async (e: any) => {
-                    e.preventDefault()
-                    setProcessing(true)
-                    console.log('final cart -- ', state.cart)
-                    console.log('initiating checkout...')
-
-                    try {
-                      console.log('validating order...')
-                      // const validCart =
-                      if (validateCart()) {
-                        if (state.cart.totals.net * 1 === 0) {
-                          // nothing to pay, complete processing of order directly (send to api)
-                          const order = await postData({
-                            url: '/api/createOrder',
-                            data: { cart: state.cart, status: 'placed' },
-                          })
-
-                          // redirect to order page with order data
-                          order.id != ''
-                            ? router.push({
-                                pathname: '/order',
-                                query: { id: order.id, status: true },
-                              })
-                            : router.push({
-                                pathname: '/order',
-                                query: { id: order.id, status: false },
+                        try {
+                          console.log('validating order...')
+                          // const validCart =
+                          if (validateCart()) {
+                            if (state.cart.totals.net * 1 === 0) {
+                              // nothing to pay, complete processing of order directly (send to api)
+                              const order = await postData({
+                                url: '/api/createOrder',
+                                data: { cart: state.cart, status: 'placed' },
                               })
 
-                          dispatch({ type: 'CLEAR_CART' })
-                          setProcessing(false)
-                          setInitiateCheckout(false)
-                        } else {
-                          // balance to pay -- total != 0
-                          // create draft order before initating checkout
-                          const order = await postData({
-                            url: '/api/createOrder',
-                            data: { cart: state.cart, status: 'draft' },
-                          })
+                              // redirect to order page with order data
+                              order.id != ''
+                                ? router.push({
+                                    pathname: '/order',
+                                    query: { id: order.id, status: true },
+                                  })
+                                : router.push({
+                                    pathname: '/order',
+                                    query: { id: order.id, status: false },
+                                  })
 
-                          const { sessionId } = await postData({
-                            url: '/api/createCheckoutSession',
-                            data: { cart: state.cart, orderId: order.id },
-                          })
+                              dispatch({ type: 'CLEAR_CART' })
+                              setProcessing(false)
+                              setInitiateCheckout(false)
+                            } else {
+                              // balance to pay -- total != 0
+                              // create draft order before initating checkout
+                              const order = await postData({
+                                url: '/api/createOrder',
+                                data: { cart: state.cart, status: 'draft' },
+                              })
 
-                          const stripe = await getStripe()
-                          stripe?.redirectToCheckout({ sessionId })
-                          dispatch({ type: 'CLEAR_CART' })
-                          setProcessing(false)
-                          setInitiateCheckout(false)
+                              const { sessionId } = await postData({
+                                url: '/api/createCheckoutSession',
+                                data: { cart: state.cart, orderId: order.id },
+                              })
+
+                              const stripe = await getStripe()
+                              stripe?.redirectToCheckout({ sessionId })
+                              dispatch({ type: 'CLEAR_CART' })
+                              setProcessing(false)
+                              setInitiateCheckout(false)
+                            }
+                          } else {
+                            // refresh page & show notification
+                          }
+                        } catch (error) {
+                          return alert((error as Error)?.message)
                         }
-                      } else {
-                        // refresh page & show notification
-                      }
-                    } catch (error) {
-                      return alert((error as Error)?.message)
-                    }
 
-                    // should already be redirected to orderConfirmation or orderError routes
-                  }}
-                  style={{
-                    backgroundColor: brand.firstAccentColour
-                      ? brand.firstAccentColour
-                      : '#fff',
-                  }}
-                  className="w-full px-4 py-3 text-base font-medium text-white align-middle border border-transparent rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                >
-                  <Icon
-                    className="mr-3 -mt-1 text-white align-middle"
-                    name={'credit_card'}
-                  />
-                  {`Checkout`}
-                </button>
-                <div className="flex justify-center"><p className="max-w-md pt-3 text-xs font-medium leading-tight text-center align-middle justify-middle text-slate-700 ">
-                  <Icon
-                    name={'lock'}
-                    className="p-2 mr-1 text-xl "
-                    aria-hidden="true"
-                  />
-                  {`We use `}
-                  <Link className="underline" href="https://stripe.com/au">
-                    Stripe
-                  </Link>
-                  {` to securely process your payments. By checking out, you also accept the `}
-                  <Link className="underline" passHref href="/privacy">
-                    <a target="_blank" rel="noopener noreferrer">
-                      {' Thankly Terms & Conditions.'}
-                    </a>
-                  </Link>
-                </p>
-              </div>
+                        // should already be redirected to orderConfirmation or orderError routes
+                      }}
+                      style={{
+                        backgroundColor: brand.firstAccentColour
+                          ? brand.firstAccentColour
+                          : '#fff',
+                      }}
+                      className="w-full px-4 py-3 text-base font-medium text-white align-middle border border-transparent rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                    >
+                      <Icon
+                        className="mr-3 -mt-1 text-white align-middle"
+                        name={'credit_card'}
+                      />
+                      {`Checkout`}
+                    </button>
+                    <div className="flex justify-center">
+                      <p className="max-w-md pt-3 text-xs font-medium leading-tight text-center align-middle justify-middle text-slate-700 ">
+                        <Icon
+                          name={'lock'}
+                          className="p-2 mr-1 text-xl "
+                          aria-hidden="true"
+                        />
+                        {`We use `}
+                        <Link
+                          className="underline"
+                          href="https://stripe.com/au"
+                        >
+                          Stripe
+                        </Link>
+                        {` to securely process your payments. By checking out, you also accept the `}
+                        <Link className="underline" passHref href="/privacy">
+                          <a target="_blank" rel="noopener noreferrer">
+                            {' Thankly Terms & Conditions.'}
+                          </a>
+                        </Link>
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div></div>
           </div>
-
-         
         </section>
       </div>
     </>
@@ -622,7 +625,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
           {
             id: 'card',
             title: 'Card',
-            message: `You must choose a card to send with your Thankly.`,
+            message: `Thankly Card not selected.`,
           },
         ]))
       : null
@@ -652,7 +655,17 @@ export default function Send({ slug, preview, prefetchedData }: any) {
           {
             id: 'message',
             title: 'Empty Message',
-            message: `A message in your Thankly is required. Please fill in the field.`,
+            message: `Recipient Message field is empty.`,
+          },
+        ]))
+      : null
+
+    state.cart.cardContent.message.length > 400
+      ? (foundErrors = foundErrors.concat([
+          {
+            id: 'message',
+            title: 'Message Limit',
+            message: `Recipient Message too long (400 character limit).`,
           },
         ]))
       : null
@@ -662,7 +675,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
           {
             id: 'shippingRate',
             title: 'Shipping Option',
-            message: `Please select a shipping option.`,
+            message: `Shipping Option not selected.`,
           },
         ]))
       : null
@@ -672,7 +685,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
           {
             id: 'firstname',
             title: 'Empty First Name',
-            message: `First Name is required. Please fill in the field.`,
+            message: `Recipient First Name is empty.`,
           },
         ]))
       : null
@@ -682,7 +695,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
           {
             id: 'lastname',
             title: 'Empty Last Name',
-            message: `Last Name is required. Please fill in the field.`,
+            message: `Recipient Last Name is empty.`,
           },
         ]))
       : null
@@ -694,20 +707,20 @@ export default function Send({ slug, preview, prefetchedData }: any) {
           {
             id: 'address',
             title: 'Address Empty',
-            message: `Recipient Address not provided. Please fill out the recipient's shipping address.`,
+            message: `Recipient Address is empty.`,
           },
         ]))
       : null
 
-    JSON.stringify(state.cart.options.shipping) === '{}'
-      ? (foundErrors = foundErrors.concat([
-          {
-            id: 'shippingRate',
-            title: 'Shipping Option not selected.',
-            message: `Please select a shipping option.`,
-          },
-        ]))
-      : null
+    // JSON.stringify(state.cart.options.shipping) === '{}'
+    //   ? (foundErrors = foundErrors.concat([
+    //       {
+    //         id: 'shippingRate',
+    //         title: 'Shipping Option not selected.',
+    //         message: `Please select a shipping option.`,
+    //       },
+    //     ]))
+    //   : null
 
     console.log('errors detected >', foundErrors)
 

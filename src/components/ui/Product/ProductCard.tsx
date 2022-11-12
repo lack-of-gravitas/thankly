@@ -12,6 +12,7 @@ const Icon = dynamic(() => import('@/components/common/Icon'))
 const ProductCarousel = dynamic(
   () => import('@/components/ui/Product/ProductCarousel')
 )
+const Notification = dynamic(() => import('@/components/ui/Notification'))
 
 interface ProductCardProps {
   className?: string

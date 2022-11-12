@@ -1,103 +1,110 @@
 import { SWRConfig } from 'swr'
 import { SwrBrand } from '@/lib/swr-helpers'
-import Icon from '@/components/common/Icon'
-import { Fragment, useState } from 'react'
-import { useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-
+import React, { Fragment, useState, useEffect, useRef, useContext } from 'react'
+import Image from 'next/future/image'
+import Link from 'next/link'
+import dynamic from 'next/dynamic'
+import cn from 'clsx'
+const Icon = dynamic(() => import('@/components/common/Icon'))
+import debounce from 'lodash/debounce'
 interface NotificationProps {
   // children?: React.ReactNode[]
   className?: string
-  currentStep?: number
-  data?: any
+  show?: boolean
+  icon?: React.ReactNode
+  content?: any
+  errors?:any
+  buttons?: React.ReactNode
+  readOnly?: boolean
 }
 
-export default function Notification({ className = '', ...props }) {
+export default function Notification({
+  className = '',
+  show,
+  icon,
+  content,
+  errors,
+  ...props
+}: any) {
   const brand: any = SwrBrand()
-  const [open, setOpen] = useState(true)
   const cancelButtonRef = useRef(null)
+  const [open, setOpen] = useState(show ? show : false)
 
   return (
     <>
       <span className={className + ` `}>
-        <Transition.Root show={open} as={Fragment}>
-          <Dialog
-            as="div"
-            className="relative z-10"
-            initialFocus={cancelButtonRef}
-            onClose={setOpen}
-          >
-            <Transition.Child
+        <div
+          aria-live="assertive"
+          className={cn(`fixed inset-0 z-10 flex items-end px-4 py-6 pointer-events-none sm:items-start sm:p-6`,open ? `bg-gray-500 bg-opacity-75 transition-opacity`:``)} >
+          <div className="flex flex-col items-center w-full space-y-4 sm:items-end">
+            <Transition
+              show={open}
               as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
+              enter="transform ease-out duration-300 transition"
+              enterFrom="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+              enterTo="translate-y-0 opacity-100 sm:translate-x-0"
+              leave="transition ease-in duration-100"
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" />
-            </Transition.Child>
+              <div className="w-full max-w-sm overflow-hidden border rounded-lg shadow-xl pointer-events-auto bg-slate-50 border-slate-400 ring-1 ring-black ring-opacity-5">
+                <div className="p-4">
+                
+                  <div className="flex items-start">
+                  {/* <p className="text-sm font-bold text-red-600">
+                        Errors with your Order
+                      </p> */}
+                    <div className="flex-shrink-0">
+                      {icon ? (
+                        icon
+                      ) : (
+                       null
+                      )}
+                    </div>
 
-            <div className="fixed inset-0 z-10 overflow-y-auto">
-              <div className="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                  enterTo="opacity-100 translate-y-0 sm:scale-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                  leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                >
-                  <Dialog.Panel className="relative px-4 pt-5 pb-4 overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                    <div className="sm:flex sm:items-start">
-                      <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-red-100 rounded-full sm:mx-0 sm:h-10 sm:w-10">
+                    {errors ? (
+                      errors
+                    ) : (
+                      null
+                    )}
+
+{/* 
+                    {content ? (
+                      content
+                    ) : (
+                      <div className="ml-3 w-0 flex-1 pt-0.5">
+                        <p className="text-sm font-medium text-gray-900">
+                          {`${content?.title ?? ''}`}
+                        </p>
+                        <p className="mt-1 text-sm text-gray-500">
+                          {`${content?.message ?? ''}`}
+                        </p>
+                      </div>
+                    )} */}
+                    <div className="flex flex-shrink-0 ml-4">
+                      <button
+                        type="button"
+                        className="inline-flex text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        onClick={() => {
+                          setOpen(false)
+
+                        }}
+                      >
+                        <span className="sr-only">Close</span>
                         <Icon
-                          className="text-red-600"
+                          name="close"
+                          className="w-5 h-5"
                           aria-hidden="true"
-                          name={'warning'}
                         />
-                      </div>
-                      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                        <Dialog.Title
-                          as="h3"
-                          className="text-lg font-medium leading-6 text-gray-900"
-                        >
-                          Deactivate account
-                        </Dialog.Title>
-                        <div className="mt-2">
-                          <p className="text-sm text-gray-500">
-                            Are you sure you want to deactivate your account?
-                            All of your data will be permanently removed from
-                            our servers forever. This action cannot be undone.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                      <button
-                        type="button"
-                        className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                        onClick={() => setOpen(false)}
-                      >
-                        Deactivate
-                      </button>
-                      <button
-                        type="button"
-                        className="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
-                        onClick={() => setOpen(false)}
-                        ref={cancelButtonRef}
-                      >
-                        Cancel
                       </button>
                     </div>
-                  </Dialog.Panel>
-                </Transition.Child>
+                  </div>
+                </div>
               </div>
-            </div>
-          </Dialog>
-        </Transition.Root>
+            </Transition>
+          </div>
+        </div>
       </span>
     </>
   )
