@@ -30,9 +30,12 @@ const Notification = dynamic(() => import('@/components/ui/Notification'))
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ''
-)
+const key: any =
+      process.env.NEXT_PUBLIC_ENV === 'DEV'
+        ? process.env.NEXT_PUBLIC_DEV_STRIPE_PUB_KEY
+        : process.env.NEXT_PUBLIC_PRD_STRIPE_PUB_KEY
+
+const stripePromise = loadStripe(key)
 
 export default function ConfirmOrder() {
   // State & Variable Declarations
@@ -1095,6 +1098,7 @@ export default function ConfirmOrder() {
       <Modal
         show={processing}
         readOnly
+        className="cursor-progress"
         icon={
           <Icon
             className="animate-pulse text-slate-700"
@@ -1110,98 +1114,3 @@ export default function ConfirmOrder() {
     </div>
   )
 }
-
-// function SendOrder() {
-//   ;async (e: any) => {
-//     e.preventDefault()
-//     setProcessing(true)
-
-//     // final cart
-//     // console.log('final cart --', state.cart)
-
-//     // collate any errors
-//     let foundErrors: any[] = []
-//     state.cart.recipient.firstname === ''
-//       ? (foundErrors = foundErrors.concat([
-
-//         ]))
-//       : null
-//     state.cart.recipient.lastname === ''
-//       ? (foundErrors = foundErrors.concat([
-
-//         ]))
-//       : null
-
-//     JSON.stringify(state.cart.options.shipping) === '{}'
-//       ? (foundErrors = foundErrors.concat([
-
-//         ]))
-//       : null
-
-//     Object.values(state.cart.recipient.address).every(
-//       (x) => x === null || x === ''
-//     )
-//       ? (foundErrors = foundErrors.concat([
-
-//         ]))
-//       : null
-
-//     if (foundErrors.length > 0) {
-//       setErrors(foundErrors)
-//       // console.log('errors --', errors)
-//       setProcessing(false)
-//       return
-//     }
-
-//     console.log('initiating checkout...')
-
-//     try {
-//       console.log('final cart -- ', state.cart)
-//       if (state.cart.totals.net * 1 === 0) {
-//         // nothing to pay, complete processing of order directly (send to api)
-//         const order = await postData({
-//           url: '/api/createOrder',
-//           data: { cart: state.cart, status: 'placed' },
-//         })
-//         // console.log('returned order -- ', order)
-
-//         // redirect to order page with order data
-//         order.id != ''
-//           ? router.push({
-//               pathname: '/order',
-//               query: { id: order.id, status: true },
-//             })
-//           : null
-
-//         setProcessing(false)
-//         setInitiateCheckout(false)
-//         dispatch({
-//           type: 'CLEAR_CART',
-//         })
-//       } else {
-//         // balance to pay -- total != 0
-
-//         // create draft order before initating checkout
-//         const order = await postData({
-//           url: '/api/createOrder',
-//           data: { cart: state.cart, status: 'placed' },
-//         })
-
-//         const { sessionId } = await postData({
-//           url: '/api/createCheckoutSession',
-//           data: { cart: state.cart, orderId: order.id },
-//         })
-
-//         const stripe = await getStripe()
-//         stripe?.redirectToCheckout({ sessionId }) // should re-direct to orderconfirm or fail
-//         setProcessing(false)
-//         setInitiateCheckout(false)
-//         dispatch({
-//           type: 'CLEAR_CART',
-//         })
-//       }
-//     } catch (error) {
-//       return alert((error as Error)?.message)
-//     }
-//   }
-// }
