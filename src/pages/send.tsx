@@ -52,13 +52,14 @@ export default function Send({ slug, preview, prefetchedData }: any) {
   const [voucherBalance, setVoucherBalance] = useState(
     state.cart.options.voucher * 1
       ? state.cart.options.voucher.value * 1 -
-          state.cart.options.voucher.used * 1
+      state.cart.options.voucher.used * 1
       : 0
   )
-  let { errors } = state.cart
+  // let { errors } = state.cart
   const [voucherValid, setVoucherValid]: any = useState()
   const [processing, setProcessing]: any = useState(false)
   const [initiateCheckout, setInitiateCheckout] = useState(false)
+  const [errors, setErrors] = useState(state.cart.errors)
 
   const steps: any[] = [
     {
@@ -132,49 +133,26 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                   type="button"
                   onClick={() => {
                     dispatch({ type: 'CLEAR_CART' })
+                    setErrors([])
                     // console.log('cart >', state.cart)
                     // console.log('cookie >', Cookies?.get('cart'))
                     router.push('/send')
+                    
                   }}
                 >
                   <Icon name="undo" className="mr-2" /> Start Over
                 </Button>
 
-                {/* <Button
-                  disabled={state.cart?.status === 'ready_to_submit'}
-                  // onClick={handleNextStep}
-                  style={{
-                    backgroundColor: brand.firstAccentColour
-                      ? brand.firstAccentColour
-                      : '#fff',
-                  }}
-                  className={cn(
-                    `ml-3 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2`,
-                    `text-white hover:bg-slate-500 hover:text-white `
-                  )}
-                  type="button"
-                >
-                  <Icon name="shopping_basket" className="mr-2" /> Checkout
-                </Button> */}
+
               </div>
             </div>
 
-            {errors?.length > 0 && (
+            {/* {errors.length > 0 && (
               <>
                 <Notification
-                  show={true}
-                  // icon={
-                  //   <Icon
-                  //     name="warning"
-                  //     className="w-5 h-5 text-red-600"
-                  //     aria-hidden="true"
-                  //   />
-                  // }
+                  show={errors?.length > 0}
                   errors={
                     <div className=" w-0 flex-1 pt-0.5">
-                      {/* <p className="text-sm font-bold text-red-600">
-                        Errors with your Order
-                      </p> */}
                       <ul role="list" className="space-y-0 list-disc">
                         {errors.map((error: any) => (
                           <li
@@ -187,9 +165,6 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                               aria-hidden="true"
                             />
                             <span className="pr-1 text-sm font-medium leading-snug text-red-600">
-                              {/* {`${error.title}: `} */}
-                              {/* </span>
-                            <span className="text-sm leading-snug text-red-600"> */}
                               {` ${error.message}`}
                             </span>
                           </li>
@@ -199,7 +174,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                   }
                 />
               </>
-            )}
+            )} */}
 
             <dl className="space-y-4 sm:pb-5 ">
               {steps.map((step) => (
@@ -259,10 +234,9 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                         <div className="flex-shrink-0 border rounded-sm shadow-sm border-gray-150">
                           <Image
                             className="object-cover object-center w-24 h-24 rounded-md sm:h-32 sm:w-32"
-                            src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${
-                              product.images[0]?.directus_files_id ??
+                            src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${product.images[0]?.directus_files_id ??
                               '344cabf1-43ff-4184-acb0-cc7d461aff09'
-                            }`}
+                              }`}
                             width={900}
                             height={900}
                             alt=""
@@ -334,7 +308,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                           {shippingRates.map((option: any) => (
                             <>
                               {state.cart.totals.items * 1 <= 50 &&
-                              option.name === 'Express Shipping (FREE)' ? (
+                                option.name === 'Express Shipping (FREE)' ? (
                                 <></>
                               ) : state.cart.totals.items * 1 > 50 &&
                                 option.name === 'Express Shipping' ? (
@@ -366,14 +340,14 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                       {errors?.filter(
                         (error: any) => error.id === 'shippingRate'
                       ).length > 0 && (
-                        <p className="mt-2 text-xs leading-snug text-red-600">
-                          {
-                            errors?.filter(
-                              (item: any) => item.id === 'shippingRate'
-                            )[0].message
-                          }
-                        </p>
-                      )}
+                          <p className="mt-2 text-xs leading-snug text-red-600">
+                            {
+                              errors?.filter(
+                                (item: any) => item.id === 'shippingRate'
+                              )[0].message
+                            }
+                          </p>
+                        )}
                     </dt>
                     <div className="flex items-center justify-between pt-2">
                       <dt className="text-sm font-bold">Subtotal</dt>
@@ -385,17 +359,16 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                       <dt className="text-sm">G.S.T Included</dt>
                       <dd className="text-sm font-medium text-gray-900">
                         {`$ 
-                    ${
-                      state.cart.totals.subtotal * 1 +
-                        state.cart.totals.shipping * 1 ===
-                      0
-                        ? 0
-                        : (
-                            (state.cart.totals.subtotal * 1 +
-                              state.cart.totals.shipping * 1) /
-                            11
-                          ).toFixed(2)
-                    }`}
+                    ${state.cart.totals.subtotal * 1 +
+                            state.cart.totals.shipping * 1 ===
+                            0
+                            ? 0
+                            : (
+                              (state.cart.totals.subtotal * 1 +
+                                state.cart.totals.shipping * 1) /
+                              11
+                            ).toFixed(2)
+                          }`}
                       </dd>
                     </div>
                     {state.cart.totals.voucher * 1 !== 0 && (
@@ -452,8 +425,8 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                                 let data = await (
                                   await fetch(
                                     `${process.env.NEXT_PUBLIC_REST_API}/vouchers?fields=*` +
-                                      `&filter[code][_eq]=${e.target.value}` +
-                                      `&filter[status][_eq]=published`
+                                    `&filter[code][_eq]=${e.target.value}` +
+                                    `&filter[status][_eq]=published`
                                   )
                                 ).json()
                                 data = data.data
@@ -487,12 +460,12 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                           <span className="font-medium text-gray-700">
                             {`Balance `}
                             {state.cart.options.voucher &&
-                            state.cart.options.voucher != undefined &&
-                            Object.keys(state.cart.options.voucher).length != 0
+                              state.cart.options.voucher != undefined &&
+                              Object.keys(state.cart.options.voucher).length != 0
                               ? (
-                                  state.cart.options.voucher.value * 1 -
-                                  state.cart.options.voucher.used * 1
-                                ).toFixed(2)
+                                state.cart.options.voucher.value * 1 -
+                                state.cart.options.voucher.used * 1
+                              ).toFixed(2)
                               : (0).toFixed(2)}
                           </span>
                         </button>
@@ -508,6 +481,9 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                         </p>
                       )}
                     </div>
+
+
+
                     <button
                       type="submit"
                       onClick={async (e: any) => {
@@ -530,13 +506,13 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                               // redirect to order page with order data
                               order.id != ''
                                 ? router.push({
-                                    pathname: '/order',
-                                    query: { id: order.id, status: true },
-                                  })
+                                  pathname: '/order',
+                                  query: { id: order.id, status: true },
+                                })
                                 : router.push({
-                                    pathname: '/order',
-                                    query: { id: order.id, status: false },
-                                  })
+                                  pathname: '/order',
+                                  query: { id: order.id, status: false },
+                                })
 
                               dispatch({ type: 'CLEAR_CART' })
                               setProcessing(false)
@@ -562,6 +538,8 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                             }
                           } else {
                             // refresh page & show notification
+                            // setErrors(state.cart.errors)
+
                           }
                         } catch (error) {
                           return alert((error as Error)?.message)
@@ -582,6 +560,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                       />
                       {`Checkout`}
                     </button>
+
                     <div className="flex justify-center">
                       <p className="max-w-md pt-3 text-xs font-medium leading-tight text-center align-middle justify-middle text-slate-700 ">
                         <Icon
@@ -597,13 +576,48 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                           Stripe
                         </Link>
                         {` to securely process your payments. By checking out, you also accept the `}
-                        <Link className="underline" passHref href="/privacy" target="_blank" rel="noopener noreferrer">
-                          <span >
-                            {' Thankly Terms & Conditions.'}
-                          </span>
+                        <Link
+                          className="underline"
+                          passHref
+                          href="/privacy"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span>{' Thankly Terms & Conditions.'}</span>
                         </Link>
                       </p>
                     </div>
+
+                    {errors?.length > 0 && <div className="p-4 mt-3 border rounded-md shadow-lg bg-red-50 border-slate-50">
+                      <div className="flex">
+                        <div className="flex-shrink-0">
+                          <Icon name="error" className="w-5 h-5 text-red-400" aria-hidden="true" />
+                        </div>
+                        <div className="ml-1">
+                          <h3 className="text-sm font-medium text-red-600">{`There are ${errors.length} errors. Please fix and click Checkout again.`}</h3>
+                          <div className="mt-2 text-sm text-red-600">
+                            <ul role="list" className="space-y-0 list-disc">
+                              {errors.map((error: any) => (
+                                <li
+                                  key={error.id}
+                                  className="flex space-x-0 leading-snug"
+                                >
+                                  <Icon
+                                    name="close"
+                                    className="flex-shrink-0 w-5 h-5 text-sm leading-snug text-red-600"
+                                    aria-hidden="true"
+                                  />
+                                  <span className="pr-1 text-sm font-medium leading-snug text-red-600">
+                                    {` ${error.message}`}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    }
                   </div>
                 </div>
               </div>
@@ -616,28 +630,27 @@ export default function Send({ slug, preview, prefetchedData }: any) {
 
   function validateCart() {
     dispatch({ type: 'CLEAR_ERRORS' })
-
     let foundErrors: any[] = []
 
     state.cart.items.filter((product: any) => product.type === 'card')
       .length === 0
       ? (foundErrors = foundErrors.concat([
-          {
-            id: 'card',
-            title: 'Card',
-            message: `Thankly Card not selected.`,
-          },
-        ]))
+        {
+          id: 'card',
+          title: 'Card',
+          message: `Thankly Card not selected.`,
+        },
+      ]))
       : null
 
     JSON.stringify(state.cart.cardContent.writingStyle) === '{}'
       ? (foundErrors = foundErrors.concat([
-          {
-            id: 'writingStyle',
-            title: 'Writing Style',
-            message: `Please choose a preferred writing style.`,
-          },
-        ]))
+        {
+          id: 'writingStyle',
+          title: 'Writing Style',
+          message: `Please choose a preferred writing style.`,
+        },
+      ]))
       : null
 
     // JSON.stringify(state.cart.options.ribbon) === '{}'
@@ -652,75 +665,87 @@ export default function Send({ slug, preview, prefetchedData }: any) {
 
     state.cart.cardContent.message === ''
       ? (foundErrors = foundErrors.concat([
-          {
-            id: 'message',
-            title: 'Empty Message',
-            message: `Recipient Message field is empty.`,
-          },
-        ]))
+        {
+          id: 'message',
+          title: 'Empty Message',
+          message: `Recipient Message field is empty.`,
+        },
+      ]))
       : null
 
     state.cart.cardContent.message.length > 400
       ? (foundErrors = foundErrors.concat([
-          {
-            id: 'message',
-            title: 'Message Limit',
-            message: `Recipient Message too long (400 character limit).`,
-          },
-        ]))
+        {
+          id: 'message',
+          title: 'Message Limit',
+          message: `Recipient Message too long (400 character limit).`,
+        },
+      ]))
       : null
 
     JSON.stringify(state.cart.options.shipping) === '{}'
       ? (foundErrors = foundErrors.concat([
-          {
-            id: 'shippingRate',
-            title: 'Shipping Option',
-            message: `Shipping Option not selected.`,
-          },
-        ]))
+        {
+          id: 'shippingRate',
+          title: 'Shipping Option',
+          message: `Shipping Option not selected.`,
+        },
+      ]))
       : null
 
     state.cart.recipient.firstname === ''
       ? (foundErrors = foundErrors.concat([
-          {
-            id: 'firstname',
-            title: 'Empty First Name',
-            message: `Recipient First Name is empty.`,
-          },
-        ]))
+        {
+          id: 'firstname',
+          title: 'Empty First Name',
+          message: `Recipient First Name is empty.`,
+        },
+      ]))
       : null
 
     state.cart.recipient.lastname === ''
       ? (foundErrors = foundErrors.concat([
-          {
-            id: 'lastname',
-            title: 'Empty Last Name',
-            message: `Recipient Last Name is empty.`,
-          },
-        ]))
+        {
+          id: 'lastname',
+          title: 'Empty Last Name',
+          message: `Recipient Last Name is empty.`,
+        },
+      ]))
       : null
 
     Object.values(state.cart.recipient.address).every(
       (x) => x === null || x === ''
     )
       ? (foundErrors = foundErrors.concat([
-          {
-            id: 'address',
-            title: 'Address Empty',
-            message: `Recipient Address is empty.`,
-          },
-        ]))
+        {
+          id: 'address',
+          title: 'Address Empty',
+          message: `Recipient Address is empty.`,
+        },
+      ]))
       : null
 
-    // JSON.stringify(state.cart.options.shipping) === '{}'
-    //   ? (foundErrors = foundErrors.concat([
-    //       {
-    //         id: 'shippingRate',
-    //         title: 'Shipping Option not selected.',
-    //         message: `Please select a shipping option.`,
-    //       },
-    //     ]))
-    //   : null
+    state.cart.sender.name === ''
+      ? (foundErrors = foundErrors.concat([
+        {
+          id: 'sender_name',
+          title: 'Sender Name',
+          message: `Sender Name is empty.`,
+        },
+      ]))
+      : null
+
+    state.cart.sender.email === ''
+      ? (foundErrors = foundErrors.concat([
+        {
+          id: 'sender_email',
+          title: 'Sender Email',
+          message: `Sender email is not valid.`,
+        },
+      ]))
+      : null
+
+
 
     console.log('errors detected >', foundErrors)
 
@@ -730,6 +755,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
         payload: foundErrors,
       })
 
+      setErrors(foundErrors)
       setProcessing(false)
       return false
     }
@@ -738,43 +764,6 @@ export default function Send({ slug, preview, prefetchedData }: any) {
       setProcessing(true)
       return true
     }
-
-    // setErrors([
-    //   {
-    //     id: 'firstname',
-    //     title: 'Empty First Name',
-    //     message: `First Name is required. Please fill in the field.`,
-    //   },
-    //   {
-    //     id: 'lastname',
-    //     title: 'Empty Last Name',
-    //     message: `Last Name is required. Please fill in the field.`,
-    //   },
-    //   {
-    //     id: 'shippingRate',
-    //     title: 'Shipping Option not selected.',
-    //     message: `Please select a shipping option.`,
-    //   },
-    //   {
-    //     id: 'address',
-    //     title: 'Address Empty',
-    //     message: `Recipient Address not provided. Please fill out the recipient's shipping address.`,
-    //   },
-    //   {
-    //     id: 'firstname',
-    //     icon: <Icon className="mr-3 " name={'mark_email_unread'} />,
-    //     title: 'Card not selected',
-    //     description:
-    //       'You need to select at least one Card to send as your Thankly. Please select from one of our cards to include in your Thankly.',
-    //   },
-    //   {
-    //     id: 2,
-    //     icon: <Icon className="mr-3 " name={'mark_email_unread'} />,
-    //     title: 'Message not provided',
-    //     description:
-    //       'You need to provide a message to put on the card. Please write a message to your recipient.',
-    //   },
-    // ])
   }
 }
 

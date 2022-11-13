@@ -8,6 +8,8 @@ import dynamic from 'next/dynamic'
 import cn from 'clsx'
 const Icon = dynamic(() => import('@/components/common/Icon'))
 import debounce from 'lodash/debounce'
+import { Store } from '@/lib/Store'
+
 interface NotificationProps {
   // children?: React.ReactNode[]
   className?: string
@@ -29,7 +31,8 @@ export default function Notification({
 }: any) {
   const brand: any = SwrBrand()
   const cancelButtonRef = useRef(null)
-  const [open, setOpen] = useState(show ? show : false)
+  const { state, dispatch } = useContext(Store)
+  const [open, setOpen] = useState(state.cart.errors.length > 0 ? true : false)
 
   return (
     <>

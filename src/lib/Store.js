@@ -28,6 +28,11 @@ const emptyCartObject = {
     },
   },
 
+  sender: {
+    name: '',
+    email: '',
+  },
+
   options: {
     voucher: {},
     shipping: {},
@@ -119,8 +124,22 @@ function reducer(state, action) {
     }
 
     case 'SET_RECIPIENT': {
-      let payload = action.payload
+      // let payload = action.payload
       newCart.recipient = { ...newCart.recipient, ...action.payload }
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
+    }
+
+    case 'SET_SENDER_EMAIL': {
+      // let payload = action.payload
+      newCart.sender.email = action.payload
+      setCookies(newCart)
+      return { ...state, cart: { ...newCart } }
+    }
+
+    case 'SET_SENDER_NAME': {
+      // let payload = action.payload
+      newCart.sender.name = action.payload
       setCookies(newCart)
       return { ...state, cart: { ...newCart } }
     }
@@ -198,6 +217,11 @@ function reducer(state, action) {
           },
         },
 
+        sender: {
+          name: '',
+          email: '',
+        },
+
         options: {
           voucher: {},
           shipping: {},
@@ -238,6 +262,11 @@ function reducer(state, action) {
             fulladdress: '',
             line2: '',
           },
+        },
+
+        sender: {
+          name: '',
+          email: '',
         },
 
         options: {

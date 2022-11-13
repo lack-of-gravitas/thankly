@@ -77,9 +77,11 @@ export default function PersonaliseOrder() {
                             {checked ? (
                               <Icon className="" name={`check`} />
                             ) : null}
-                            <img
+                            <Image
                               className="h-auto mx-3 my-3 rounded-md w-15 lg:w-25 lg:h-auto"
                               src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${writingStyle.image}`}
+                              width={900}
+                            height={900}
                               alt=""
                             />
 
@@ -113,14 +115,7 @@ export default function PersonaliseOrder() {
               </div>
             </RadioGroup>
 
-            {/* {errors?.filter((error: any) => error.id === 'ribbon').length > 0 && (
-              <p className="mt-2 text-xs leading-snug text-red-600">
-                {
-                  errors?.filter((error: any) => error.id === 'shippingRate')[0]
-                    .message
-                }
-              </p>
-            )} */}
+          
           </div>
 
           {ribbons && ribbons?.length > 0 && (
@@ -165,7 +160,7 @@ export default function PersonaliseOrder() {
                               {checked ? (
                                 <Icon className="" name={`check`} />
                               ) : null}
-                              <img
+                              <Image
                                 className="h-auto mx-3 my-3 rounded-md w-15 lg:w-25 lg:h-auto"
                                 src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${item.images[0].directus_files_id}`}
                                 alt=""
@@ -202,14 +197,7 @@ export default function PersonaliseOrder() {
                   ))}
                 </div>
               </RadioGroup>
-              {/* {errors?.filter((error: any) => error.id === 'ribbon').length > 0 && (
-              <p className="mt-2 text-xs leading-snug text-red-600">
-                {
-                  errors?.filter((error: any) => error.id === 'shippingRate')[0]
-                    .message
-                }
-              </p>
-            )} */}
+             
             </div>
           )}
 
