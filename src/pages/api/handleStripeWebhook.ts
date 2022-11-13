@@ -26,9 +26,10 @@ const handleStripeWebhook = async (
   if (req.method === 'POST' || req.method === 'PATCH') {
     const buf = await buffer(req)
     const sig = req.headers['stripe-signature']
-    const webhookSecret =  process.env.NODE_ENV === 'development'
-    ? process.env.DEV_STRIPE_WHK_SEC
-    : process.env.PRD_STRIPE_WHK_SEC
+    const webhookSecret =
+      process.env.NODE_ENV === 'development'
+        ? process.env.DEV_STRIPE_WHK_SEC
+        : process.env.PRD_STRIPE_WHK_SEC
     let event: Stripe.Event
 
     try {
@@ -46,31 +47,56 @@ const handleStripeWebhook = async (
       let session: Stripe.Checkout.Session
       let results: any
 
-      // if (event.type === 'checkout.session.completed') {
-      //   // retrieve session lineitems
-      //   session = event.data.object as Stripe.Checkout.Session
-      //   console.log('checkout lineitems >',session.line_items)
-      //   // session = stripe.checkout.sessions.retrieve(event.data.object.id, {
-      //   //   expand: ['customer'],
-      //   // })
-      //   // update stockQty
-      //   order.cart.items.map(async (product: any) => {
-      //     await fetch(
-      //       `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.id,
-      //       {
-      //         method: 'PATCH',
-      //         headers: {
-      //           Authorization: `Bearer ${process.env.DIRECTUS}`,
-      //           'Content-Type': 'application/json',
-      //         },
-      //         credentials: 'same-origin',
-      //         body: JSON.stringify({
-      //           stockQty: product.stockQty * 1 - 1,
-      //         }),
-      //       }
-      //     )
-      //   })
-      // }
+      if (event.type === 'checkout.session.completed') {
+        session = event.data.object as Stripe.Checkout.Session
+
+        // get order from client_reference_id
+        const orderId: any = session.client_reference_id
+        const customerId: any = session.customer // id of the customer
+
+        // find and update the order
+        console.log('finding Order...')
+        let order: any = await (
+          await fetch(
+            `${process.env.NEXT_PUBLIC_REST_API}/orders?fields=*,items.*&filter[id][_eq]=${orderId}`,
+            {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${process.env.DIRECTUS}`,
+                'Content-Type': 'application/json',
+              },
+              credentials: 'same-origin',
+            }
+          )
+        ).json()
+        order.data?.length > 0 ? (order = order.order[0]) : order
+
+        if (order && order != undefined && Object.keys(order).length > 0) {
+          console.log('update stock...')
+          fetch(`${process.env.NEXT_PUBLIC_REST_API}/api/updateStockQty?items=${order.cart.items}`)
+
+          console.log('update voucher...')
+          if (Object.keys(order.cart.options.voucher).length != 0) {
+            fetch(`${process.env.NEXT_PUBLIC_REST_API}/api/updateVoucher?cart=${order.cart}`)
+          }
+
+          console.log('delete stripe coupon...')
+          fetch(`${process.env.NEXT_PUBLIC_REST_API}/api/deleteCoupon?id=${order.id}`)
+
+          
+          // // update order email & customer associated
+          // console.log('upsert customer...')
+          // fetch(`${process.env.NEXT_PUBLIC_REST_API}/api/upsertCustomer?customer=${session.customer_details}&order=${order.id}`
+          //   //            `${process.env.NEXT_PUBLIC_REST_API}/api/upsertCustomer?customer=${order.sender}`
+          // )
+
+          
+
+          
+        } else {
+          // empty order
+        }
+      }
 
       if (event.type === 'product.created') {
         product = event.data.object as Stripe.Product

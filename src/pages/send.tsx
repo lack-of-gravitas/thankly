@@ -527,8 +527,8 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                                 url: '/api/createOrder',
                                 data: { cart: state.cart, status: 'draft' },
                               })
-                              console.log('transfer to Stripe...')
 
+                              console.log('transfer to Stripe...')
                               const { sessionId } = await postData({
                                 url: '/api/createCheckoutSession',
                                 data: { cart: state.cart },

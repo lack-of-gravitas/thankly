@@ -12,7 +12,7 @@ const createCheckoutSession = async (
 ) => {
   if (req.method === 'POST') {
     // console.log('stripe checkout ->', req.body)
-    const { cart, orderId } = req.body
+    const { cart } = req.body
     const { items, sender } = cart
     // create a temp coupon if Voucher is used
     let coupon: any
@@ -24,10 +24,9 @@ const createCheckoutSession = async (
     ) {
       coupon = await stripe.coupons.create({
         name: `Used Discounts & Vouchers`,
-        id: orderId,
+        id: cart.id,
         amount_off: cart.totals.voucher * 100 + cart.totals.discount * 100,
         currency: 'aud',
-        // duration: 'forever',
       })
     }
 
@@ -57,10 +56,11 @@ const createCheckoutSession = async (
       mode: 'payment',
       billing_address_collection: 'required',
       customer: sender.email ?? '',
+      customer_creation: 'always',
       // phone_number_collection: { enabled: true },
       client_reference_id: cart.id,
-      success_url: `${req.headers.origin}/order?id=${orderId}&status=true`,
-      cancel_url: `${req.headers.origin}/order?id=${orderId}&status=false`,
+      success_url: `${req.headers.origin}/order?id=${cart.id}&status=true`,
+      cancel_url: `${req.headers.origin}/order?id=${cart.id}&status=false`,
       automatic_tax: { enabled: false },
     })
 

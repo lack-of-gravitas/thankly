@@ -2,18 +2,17 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { stripe } from '@/lib/stripe'
 import Stripe from 'stripe'
 
-
 const deleteCoupon = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST' || req.method === 'PATCH') {
-    console.log('deleteCoupon req >',req)
-    let coupon: any = req.body
+    console.log('deleteCoupon req >', req)
+    let id: any = req.body
 
     try {
       console.log('deleting coupon..')
 
       let deleted: any
-      if (coupon != undefined && coupon != '') {
-        deleted = await stripe.coupons.del(coupon)
+      if (id != undefined && id != '') {
+        deleted = await stripe.coupons.del(id)
       }
 
       return res.status(200).json(deleted)

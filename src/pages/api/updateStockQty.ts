@@ -3,25 +3,26 @@ import { NextApiRequest, NextApiResponse } from 'next'
 const updateStock = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST' || req.method === 'PATCH') {
     let { items } = req.body
-    console.log('updating stock ...')
 
     try {
       console.log('updating stock ...')
       items?.map(async (product: any) => {
-        // get current stock for product
-
+        // for each product, decrease qty by 1
+        // get current qty first
         let data = await (
           await fetch(
             `${process.env.NEXT_PUBLIC_REST_API}/products` +
               `?fields=stockQty` +
-              `&filter[id][_eq]=${product.products_id}` + 
-              `&filter[live][_eq]=true` // TODO: REMOVE IN PROD
+              `&filter[id][_eq]=${product.id}` +
+              `&filter[live][_eq]=${
+                process.env.NODE_ENV === 'development' ? false : true
+              }`
           )
         ).json()
         data = data.data[0]
 
         await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/products/` + product.products_id,
+          `${process.env.NEXT_PUBLIC_REST_API}/products/${product.id}`,
           {
             method: 'PATCH',
             headers: {

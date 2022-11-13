@@ -225,15 +225,15 @@ export async function getServerSideProps(context: any) {
       },
     }
   } else {
-    // call deleteStripeCoupon api to blow away Coupon used
-    const coupon = await fetch(
-      `${process.env.NEXT_PUBLIC_REST_API}/api/deleteCoupon?id=${order.id}`
-    )
+    // // call deleteStripeCoupon api to blow away Coupon used
+    // const coupon = await fetch(
+    //   `${process.env.NEXT_PUBLIC_REST_API}/api/deleteCoupon?id=${order.id}`
+    // )
 
-    // update voucher balance
-    if (Object.keys(order.cart.options.voucher).length != 0) {
-      const voucher = updateVoucher(order.cart)
-    }
+    // // update voucher balance
+    // if (Object.keys(order.cart.options.voucher).length != 0) {
+    //   const voucher = updateVoucher(order.cart)
+    // }
 
     // // update stockQty
     // const stock = updateStock(order.cart.items) // fucking breaks Stripe  
