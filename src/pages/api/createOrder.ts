@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    console.log('createOrder ->', JSON.stringify(req.body))
+    console.log('createOrder (completed) ->', JSON.stringify(req.body))
     let results: any
     let product: Stripe.Product
     const { cart, status } = req.body
@@ -92,12 +92,8 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse) => {
           }),
         })
       ).json()
-      console.log('order created --', order)
-
-      // deleteCoupon
-
-      // updateStockQty
-
+      // console.log('order created --', order)
+      console.log('createOrder (completed)')
       return res.status(200).json({ ...order.data })
     } catch (err: any) {
       console.log(err)
