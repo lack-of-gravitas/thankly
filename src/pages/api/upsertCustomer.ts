@@ -2,51 +2,67 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 const updateStock = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST' || req.method === 'PATCH') {
-    let { customer,orderId } = req.body
+    let { stripeCustomer, orderId } = req.body
 
     try {
       console.log('upserting customer ...')
 
+      // check if customer already exists
 
-// create or update customer
+      let customer = await (
+        await fetch(
+          `https://thankly.fly.dev/users?fields=*&filter[email][_eq]==${stripeCustomer.email}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${process.env.DIRECTUS}`,
+              'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+          }
+        )
+      ).json()
+      customer = customer.data[0]
 
+      if (
+        customer &&
+        customer != undefined &&
+        Object.keys(customer).length > 0
+      ) {
+        // customer exists, just update order
+      } else {
+        // customer doesnt exist, create customer then update order
+        customer = await fetch(`https://thankly.fly.dev/users`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${process.env.DIRECTUS}`,
+            'Content-Type': 'application/json',
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            email: stripeCustomer.email,
+            first_name: stripeCustomer.first_name,
+            last_name: stripeCustomer.last_name,
+            role: `32a2785c-037a-4b09-bd9a-c29ec2ae9de3`,
+          }),
+        })
+        customer = customer.data[0]
+      }
 
-
-
-      // // create customer move this to Order Confirmation Page
-      // if (cart.options.createAccount === true) {
-      //   // create customer record
-      //   console.log(`${process.env.VERCEL_URL}/users`)
-      //   customer = await fetch(`${process.env.VERCEL_URL}/users`, {
-      //     method: 'POST',
-      //     headers: {
-      //       Authorization: `Bearer ${process.env.DIRECTUS}`,
-      //       'Content-Type': 'application/json',
-      //     },
-      //     credentials: 'same-origin',
-      //     body: JSON.stringify({
-      //       first_name: '',
-      //       last_name: '',
-      //       email: '',
-      //       // password: '',
-      //       role: '32a2785c-037a-4b09-bd9a-c29ec2ae9de3',
-      //     }),
-      //   })
-      //   console.log('customer created -- ', customer.id)
-
-      //   results = await fetch(
-      //     `${process.env.NEXT_PUBLIC_REST_API}/orders/${order.id}`,
-      //     {
-      //       method: 'PATCH',
-      //       headers: {
-      //         Authorization: `Bearer ${process.env.DIRECTUS}`,
-      //         'Content-Type': 'application/json',
-      //       },
-      //       credentials: 'same-origin',
-      //       body: JSON.stringify({ customer: customer.id }),
-      //     }
-      //   )
-      // }
+      let order = await fetch(
+        `${process.env.NEXT_PUBLIC_REST_API}/orders/${orderId}`,
+        {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${process.env.DIRECTUS}`,
+            'Content-Type': 'application/json',
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            customer: customer.id,
+          }),
+        }
+      )
 
       return res.status(200).json({ status: `done` })
     } catch (err: any) {

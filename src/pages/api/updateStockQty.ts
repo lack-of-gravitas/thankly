@@ -16,7 +16,15 @@ const updateStock = async (req: NextApiRequest, res: NextApiResponse) => {
               `&filter[id][_eq]=${product.id}` +
               `&filter[live][_eq]=${
                 process.env.NODE_ENV === 'development' ? false : true
-              }`
+              }`,
+              {
+                method: 'GET',
+                headers: {
+                  Authorization: `Bearer ${process.env.DIRECTUS}`,
+                  'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+              }
           )
         ).json()
         data = data.data[0]

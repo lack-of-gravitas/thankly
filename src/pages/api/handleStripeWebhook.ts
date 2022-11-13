@@ -69,30 +69,32 @@ const handleStripeWebhook = async (
             }
           )
         ).json()
-        order.data?.length > 0 ? (order = order.order[0]) : order
+        order.data?.length > 0 ? (order = order.data[0]) : order
 
         if (order && order != undefined && Object.keys(order).length > 0) {
           console.log('update stock...')
-          fetch(`${process.env.NEXT_PUBLIC_REST_API}/api/updateStockQty?items=${order.cart.items}`)
+          fetch(
+            `${process.env.NEXT_PUBLIC_REST_API}/api/updateStockQty?items=${order.cart.items}`
+          )
 
           console.log('update voucher...')
           if (Object.keys(order.cart.options.voucher).length != 0) {
-            fetch(`${process.env.NEXT_PUBLIC_REST_API}/api/updateVoucher?cart=${order.cart}`)
+            fetch(
+              `${process.env.NEXT_PUBLIC_REST_API}/api/updateVoucher?cart=${order.cart}`
+            )
           }
 
           console.log('delete stripe coupon...')
-          fetch(`${process.env.NEXT_PUBLIC_REST_API}/api/deleteCoupon?id=${order.id}`)
+          fetch(
+            `${process.env.NEXT_PUBLIC_REST_API}/api/deleteCoupon?id=${order.id}`
+          )
 
-          
-          // // update order email & customer associated
-          // console.log('upsert customer...')
-          // fetch(`${process.env.NEXT_PUBLIC_REST_API}/api/upsertCustomer?customer=${session.customer_details}&order=${order.id}`
-          //   //            `${process.env.NEXT_PUBLIC_REST_API}/api/upsertCustomer?customer=${order.sender}`
-          // )
-
-          
-
-          
+          // update order email & customer associated
+          console.log('upsert customer...')
+          fetch(
+            `${process.env.NEXT_PUBLIC_REST_API}/api/upsertCustomer?stripeCustomer=${session.customer_details}&order=${order.id}`
+            //            `${process.env.NEXT_PUBLIC_REST_API}/api/upsertCustomer?customer=${order.sender}`
+          )
         } else {
           // empty order
         }

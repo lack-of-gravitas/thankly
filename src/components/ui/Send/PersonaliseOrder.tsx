@@ -81,7 +81,7 @@ export default function PersonaliseOrder() {
                               className="h-auto mx-3 my-3 rounded-md w-15 lg:w-25 lg:h-auto"
                               src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${writingStyle.image}`}
                               width={900}
-                            height={900}
+                              height={900}
                               alt=""
                             />
 
@@ -115,7 +115,7 @@ export default function PersonaliseOrder() {
               </div>
             </RadioGroup>
 
-          
+
           </div>
 
           {ribbons && ribbons?.length > 0 && (
@@ -164,6 +164,8 @@ export default function PersonaliseOrder() {
                                 className="h-auto mx-3 my-3 rounded-md w-15 lg:w-25 lg:h-auto"
                                 src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${item.images[0].directus_files_id}`}
                                 alt=""
+                                idth={900}
+                                height={900}
                               />
 
                               <RadioGroup.Label
@@ -197,7 +199,7 @@ export default function PersonaliseOrder() {
                   ))}
                 </div>
               </RadioGroup>
-             
+
             </div>
           )}
 
@@ -238,14 +240,14 @@ export default function PersonaliseOrder() {
                   />
                   {errors?.filter((error: any) => error.id === 'message')
                     .length > 0 && (
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <Icon
-                        name={'error'}
-                        className="w-5 h-5 text-red-600"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  )}
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <Icon
+                          name={'error'}
+                          className="w-5 h-5 text-red-600"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    )}
                 </div>
               </div>
             </div>
@@ -288,14 +290,14 @@ export default function PersonaliseOrder() {
                   />
                   {errors?.filter((error: any) => error.id === 'message')
                     .length > 0 && (
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                      <Icon
-                        name={'error'}
-                        className="w-5 h-5 text-red-600"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  )}
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <Icon
+                          name={'error'}
+                          className="w-5 h-5 text-red-600"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    )}
                 </div>
               </div>
             </div>
