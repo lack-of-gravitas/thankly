@@ -137,7 +137,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                     // console.log('cart >', state.cart)
                     // console.log('cookie >', Cookies?.get('cart'))
                     router.push('/send')
-                    
+
                   }}
                 >
                   <Icon name="undo" className="mr-2" /> Start Over
@@ -497,6 +497,8 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                           // const validCart =
                           if (validateCart()) {
                             if (state.cart.totals.net * 1 === 0) {
+                              console.log('creating order...')
+
                               // nothing to pay, complete processing of order directly (send to api)
                               const order = await postData({
                                 url: '/api/createOrder',
@@ -519,7 +521,8 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                               setInitiateCheckout(false)
                             } else {
                               // balance to pay -- total != 0
-                              // create draft order before initating checkout
+                              console.log('creating order...')
+
                               const order = await postData({
                                 url: '/api/createOrder',
                                 data: { cart: state.cart, status: 'draft' },
@@ -527,7 +530,7 @@ export default function Send({ slug, preview, prefetchedData }: any) {
 
                               const { sessionId } = await postData({
                                 url: '/api/createCheckoutSession',
-                                data: { cart: state.cart, orderId: order.id },
+                                data: { cart: state.cart },
                               })
 
                               const stripe = await getStripe()

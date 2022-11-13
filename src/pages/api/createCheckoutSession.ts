@@ -56,7 +56,7 @@ const createCheckoutSession = async (
           : undefined,
       mode: 'payment',
       billing_address_collection: 'required',
-      customer: cart.sender.email ?? '',
+      customer: sender.email ?? '',
       // phone_number_collection: { enabled: true },
       client_reference_id: cart.id,
       success_url: `${req.headers.origin}/order?id=${orderId}&status=true`,
