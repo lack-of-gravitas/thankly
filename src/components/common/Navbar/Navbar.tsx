@@ -134,19 +134,18 @@ const Navbar: FC<NavbarProps> = ({ data }) => {
                     <div className="px-4 py-6 space-y-6 border-t border-gray-200">
                       <div className="flow-root">
                         <Link passHref href="#">
-                          <a
-                            href="#"
+                          <span
                             className="block p-2 -m-2 font-medium text-gray-900"
                           >
                             Your account
-                          </a>
+                          </span>
                         </Link>
                       </div>
                       <div className="flow-root">
                         <Link passHref href="#">
-                          <a className="block p-2 -m-2 font-medium text-gray-900">
+                          <span className="block p-2 -m-2 font-medium text-gray-900">
                             Sign out
-                          </a>
+                          </span>
                         </Link>
                       </div>
                     </div>

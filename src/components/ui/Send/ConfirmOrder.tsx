@@ -515,13 +515,11 @@ export default function ConfirmOrder() {
               </div>
             </div>
           </div>
-
-          
         </div>
 
         <div>
-        <div className="p-2 px-3 ">
-        <h3
+          <div className="p-2 px-3 ">
+            <h3
               id="contact-info-heading"
               className="text-lg font-medium text-gray-900 border-b border-gray-200"
             >
@@ -730,8 +728,6 @@ export default function ConfirmOrder() {
               </div>
             </div>
           </div>
-          
-       
         </div>
         {/* <div className="p-2 px-3 mt-10 border border-gray-300 rounded-md shadow-sm bg-gray-50 lg:mt-0">
           <h2 className="text-lg font-medium text-gray-900 border-b border-gray-200 ">
@@ -1087,12 +1083,8 @@ export default function ConfirmOrder() {
             </div>
           </div>
         </div> */}
-
-
       </div>
 
-
-      
       <Modal
         show={processing}
         readOnly

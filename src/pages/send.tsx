@@ -597,10 +597,10 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                           Stripe
                         </Link>
                         {` to securely process your payments. By checking out, you also accept the `}
-                        <Link className="underline" passHref href="/privacy">
-                          <a target="_blank" rel="noopener noreferrer">
+                        <Link className="underline" passHref href="/privacy" target="_blank" rel="noopener noreferrer">
+                          <span >
                             {' Thankly Terms & Conditions.'}
-                          </a>
+                          </span>
                         </Link>
                       </p>
                     </div>
