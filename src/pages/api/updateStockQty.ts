@@ -15,7 +15,7 @@ const updateStock = async (req: NextApiRequest, res: NextApiResponse) => {
               `?fields=stockQty` +
               `&filter[id][_eq]=${product.id}` +
               `&filter[live][_eq]=${
-                process.env.NODE_ENV === 'development' ? false : true
+                (process.env.NODE_ENV === 'development' ||process.env.NODE_ENV === 'test') ? false : true
               }`,
               {
                 method: 'GET',

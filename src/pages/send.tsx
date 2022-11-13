@@ -37,7 +37,7 @@ const Notification = dynamic(() => import('@/components/ui/Notification'))
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 const key: any =
-  process.env.NODE_ENV === 'development'
+  (process.env.NODE_ENV === 'development' ||process.env.NODE_ENV === 'test')
     ? process.env.NEXT_PUBLIC_DEV_STRIPE_PUB_KEY
     : process.env.NEXT_PUBLIC_PRD_STRIPE_PUB_KEY
 

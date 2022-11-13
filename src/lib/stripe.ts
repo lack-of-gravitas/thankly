@@ -1,7 +1,7 @@
 import Stripe from 'stripe'
 
 const key: any =
-  process.env.NODE_ENV === 'development'
+  (process.env.NODE_ENV === 'development' ||process.env.NODE_ENV === 'test')
     ? process.env.DEV_STRIPE_SEC_KEY
     : process.env.PRD_STRIPE_SEC_KEY
 

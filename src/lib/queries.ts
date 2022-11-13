@@ -259,7 +259,7 @@ export async function getSection(params: any) {
             `&filter[featured][_eq]=true` +
             `&filter[status][_eq]=true` +
             `&filter[live][_eq]=${
-              process.env.NODE_ENV === 'development' ? false : true
+              (process.env.NODE_ENV === 'development' ||process.env.NODE_ENV === 'test') ? false : true
             }` +
             `&filter[stockQty][_gt]=0` +
             `&filter[type][_in]=${
@@ -343,7 +343,7 @@ export async function getProducts(type: string) {
         `&filter[status][_eq]=true` +
         `&filter[stockQty][_gt]=0` +
         `&filter[live][_eq]=${
-          process.env.NODE_ENV === 'development' ? false : true
+          (process.env.NODE_ENV === 'development' ||process.env.NODE_ENV === 'test') ? false : true
         }` +
         `&filter[type][_in]=${type}`
     )
