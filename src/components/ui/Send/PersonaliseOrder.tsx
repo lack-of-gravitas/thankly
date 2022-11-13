@@ -164,7 +164,7 @@ export default function PersonaliseOrder() {
                                 className="h-auto mx-3 my-3 rounded-md w-15 lg:w-25 lg:h-auto"
                                 src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${item.images[0].directus_files_id}`}
                                 alt=""
-                                idth={900}
+                                width={900}
                                 height={900}
                               />
 
