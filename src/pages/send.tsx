@@ -33,6 +33,7 @@ const PersonaliseOrder = dynamic(
 )
 const ConfirmOrder = dynamic(() => import('@/components/ui/Send/ConfirmOrder'))
 const Notification = dynamic(() => import('@/components/ui/Notification'))
+const Modal = dynamic(() => import('@/components/ui/Modal'))
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -630,6 +631,24 @@ export default function Send({ slug, preview, prefetchedData }: any) {
           </div>
         </section>
       </div>
+
+      <Modal
+        show={processing}
+        readOnly
+        className="cursor-progress"
+        icon={
+          <Icon
+            className="animate-spin-slower text-slate-700"
+            aria-hidden="true"
+            name="hourglass_empty"
+          />
+        }
+        content={{
+          title: `Confirming your order...`,
+          description: `Please wait we're confirming your order.`,
+        }}
+      />
+
     </>
   )
 

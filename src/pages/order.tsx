@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { fetchGetJSON, postData } from '@/lib/api-helpers'
 import {
   getOrder,
-  
+
 } from '@/lib/queries'
 import Image from 'next/image'
 
@@ -190,7 +190,14 @@ export async function getServerSideProps(context: any) {
   // send deleteOrder api if order cancelled
   if (status === false || status === 'false') {
     // delete order if it exists
-    await postData({ url: '/api/deleteOrder', data: id })
+    await fetch(`${process.env.NEXT_PUBLIC_REST_API}/orders/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${process.env.DIRECTUS}`,
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+    })
 
     // return false to show cancelled
     return {

@@ -13,7 +13,13 @@ export async function getBrand() {
 
   let shippingRates = await (
     await fetch(
-      `${process.env.NEXT_PUBLIC_REST_API}/products?fields=*&filter[status][_eq]=true&filter[type][_eq]=shipping`
+      `${process.env.NEXT_PUBLIC_REST_API}/products?fields=*&filter[status][_eq]=true&filter[type][_eq]=shipping` +
+        `&filter[live][_eq]=${
+          process.env.NODE_ENV === 'development' ||
+          process.env.NODE_ENV === 'test'
+            ? false
+            : true
+        }`
     )
   ).json()
   shippingRates = shippingRates.data
@@ -44,7 +50,6 @@ export async function getOrder(order: any) {
 
   return data
 }
-
 
 export async function getVoucher(voucher: any) {
   let data = await (
@@ -238,7 +243,10 @@ export async function getSection(params: any) {
             `&filter[featured][_eq]=true` +
             `&filter[status][_eq]=true` +
             `&filter[live][_eq]=${
-              (process.env.NODE_ENV === 'development' ||process.env.NODE_ENV === 'test') ? false : true
+              process.env.NODE_ENV === 'development' ||
+              process.env.NODE_ENV === 'test'
+                ? false
+                : true
             }` +
             `&filter[stockQty][_gt]=0` +
             `&filter[type][_in]=${
@@ -322,7 +330,10 @@ export async function getProducts(type: string) {
         `&filter[status][_eq]=true` +
         `&filter[stockQty][_gt]=0` +
         `&filter[live][_eq]=${
-          (process.env.NODE_ENV === 'development' ||process.env.NODE_ENV === 'test') ? false : true
+          process.env.NODE_ENV === 'development' ||
+          process.env.NODE_ENV === 'test'
+            ? false
+            : true
         }` +
         `&filter[type][_in]=${type}`
     )

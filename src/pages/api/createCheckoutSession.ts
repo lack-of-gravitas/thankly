@@ -30,7 +30,25 @@ const createCheckoutSession = async (
       })
     }
 
-    // console.log('coupon created ', JSON.stringify(coupon))
+    let customer: any
+
+    if (cart.customerId === '') {
+      // no customer in cart, search for customer and create one if not existing
+      let { data } = await stripe.customers.search({
+        query: `email:"${sender.email}"`,
+      })
+      console.log('customer stripeData >', data)
+
+      data.length > 0
+        ? (customer = data[0])
+        : (customer = await stripe.customers.create({
+            email: sender.email,
+            name: sender.name,
+          }))
+    }
+    
+    console.log('customer >', customer)
+
 
     // put all products into checkout session
     let line_items: any[] = []
@@ -55,8 +73,8 @@ const createCheckoutSession = async (
           : undefined,
       mode: 'payment',
       billing_address_collection: 'required',
-      customer: sender.email ?? '',
-      customer_creation: 'always',
+      customer: customer ? customer.id : cart.customerId, //sender.email ?? '',
+      // customer_creation: 'always',
       // phone_number_collection: { enabled: true },
       client_reference_id: cart.id,
       success_url: `${req.headers.origin}/order?id=${cart.id}&status=true`,

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 export const Store = createContext()
 const emptyCartObject = {
+  customerId: '',
   id: uuidv4(),
   status: 'draft', // draft, ready_to_submit, submitted
   items: [], // gift and/or card
@@ -194,6 +195,8 @@ function reducer(state, action) {
 
     case 'CLEAR_CART': {
       state.cart = {
+        customerId: '',
+
         id: uuidv4(),
         status: 'draft', // draft, ready_to_submit, submitted
         items: [], // gift and/or card
@@ -241,6 +244,8 @@ function reducer(state, action) {
       }
       // Cookies.remove('cart') // breaks everything
       setCookies({
+        customerId: '',
+
         id: uuidv4(),
         status: 'draft', // draft, ready_to_submit, submitted
         items: [], // gift and/or card

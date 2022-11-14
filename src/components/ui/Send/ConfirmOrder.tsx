@@ -714,22 +714,7 @@ export default function ConfirmOrder() {
 
 
 
-      <Modal
-        show={processing}
-        readOnly
-        className="cursor-progress"
-        icon={
-          <Icon
-            className="animate-spin-slower text-slate-700"
-            aria-hidden="true"
-            name="hourglass_empty"
-          />
-        }
-        content={{
-          title: `Confirming your order...`,
-          description: `Please wait we're confirming your order.`,
-        }}
-      />
+     
     </div >
   )
 }
