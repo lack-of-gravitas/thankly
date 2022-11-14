@@ -23,7 +23,7 @@ export async function fetchPostJSON({
       mode: 'cors', // no-cors, *cors, same-origin
       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
       credentials: 'same-origin', // include, *same-origin, omit
-    headers: new Headers({ 'Content-Type': 'application/json', token }),
+      headers: new Headers({ 'Content-Type': 'application/json', token }),
 
       // headers: {
       //   'Content-Type': 'application/json',
@@ -75,12 +75,12 @@ export const getURL = () => {
       ? process.env.URL
       : process?.env?.VERCEL_URL && process.env.VERCEL_URL !== ''
       ? process.env.VERCEL_URL
-      : 'http://localhost:3000';
-  return url.includes('http') ? url : `https://${url}`;
-};
+      : 'http://localhost:3000'
+  return url.includes('http') ? url : `https://${url}`
+}
 
 export const toDateTime = (secs: number) => {
-  var t = new Date('1970-01-01T00:30:00Z'); // Unix epoch start.
-  t.setSeconds(secs);
-  return t;
-};
+  var t = new Date('1970-01-01T00:30:00Z') // Unix epoch start.
+  t.setSeconds(secs)
+  return t
+}

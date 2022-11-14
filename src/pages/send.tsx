@@ -43,6 +43,7 @@ const key: any =
 
 const stripePromise = loadStripe(key)
 
+console.log('env > ', process.env.NODE_ENV)
 export default function Send({ slug, preview, prefetchedData }: any) {
   // console.log('prefetchedData->', prefetchedData)
   const brand = SwrBrand()

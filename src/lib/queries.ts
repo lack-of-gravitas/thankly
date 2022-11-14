@@ -45,27 +45,6 @@ export async function getOrder(order: any) {
   return data
 }
 
-export async function deleteOrder(order: any) {
-  // console.log ('deleteOrder > ', order)
-
-  let data = await (
-    await fetch(`${process.env.NEXT_PUBLIC_REST_API}/orders/${order}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${process.env.DIRECTUS}`,
-        'Content-Type': 'application/json',
-      },
-      credentials: 'same-origin',
-    })
-  ).json()
-  // console.log ('deleteOrder data > ', data)
-
-  data.data?.length > 0 ? (data = data.data[0]) : data
-
-  return data
-}
-
-
 
 export async function getVoucher(voucher: any) {
   let data = await (

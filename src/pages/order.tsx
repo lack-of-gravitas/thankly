@@ -7,15 +7,9 @@ import Link from 'next/link'
 import { fetchGetJSON, postData } from '@/lib/api-helpers'
 import {
   getOrder,
-  deleteOrder,
-  updateVoucher,
-
+  
 } from '@/lib/queries'
 import Image from 'next/image'
-import { Cart } from '@/types'
-import { Store } from '@/lib/Store'
-import { useContext, useEffect } from 'react'
-import deleteCoupon from './api/deleteCoupon'
 
 const Layout = dynamic(() => import('@/components/common/Layout'))
 const Icon = dynamic(() => import('@/components/common/Icon'))
@@ -54,25 +48,9 @@ export default function Home({ slug, preview, data }: any) {
                   ? `We appreciate your order, we’re currently processing it. Check your email for the order confirmation. We'll keep you updated as your order progresses. Something doesn't look quite right? Get in touch with us.`
                   : `Payment for your order has been cancelled and your cart has been cleared. Please start again if you'd like to send a new Thankly.`}
               </p>
-              
-              {/* {true && (
-                <Link className="pt-6 pb-6" passHref href={'/account'}>
-                  <Button
-                    style={{
-                      backgroundColor: brand.firstAccentColour
-                        ? brand.firstAccentColour
-                        : '#fff',
-                    }}
-                    className="inline-flex items-center px-4 py-2 mr-5 text-sm font-medium text-white border border-transparent rounded-md shadow-sm hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-                    type="button"
-                  >
-                    <Icon className="mr-2 text-white" name={'person'} />
-                   Account
-                  </Button>
-                </Link>
-              )} */}
-             
-             
+
+
+
             </div>
 
             {status && (
@@ -85,10 +63,9 @@ export default function Home({ slug, preview, data }: any) {
                           <div className="flex-shrink-0 border rounded-sm shadow-sm border-gray-150">
                             <Image
                               className="object-cover object-center w-24 h-24 rounded-md sm:h-32 sm:w-32"
-                              src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${
-                                product.images[0]?.directus_files_id ??
+                              src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/${product.images[0]?.directus_files_id ??
                                 '344cabf1-43ff-4184-acb0-cc7d461aff09'
-                              }`}
+                                }`}
                               width={900}
                               height={900}
                               alt=''
@@ -155,15 +132,14 @@ export default function Home({ slug, preview, data }: any) {
                         <dt className="text-sm">G.S.T Included</dt>
                         <dd className="text-sm font-medium text-gray-900">
                           {`$ 
-                    ${
-                      cart.totals.subtotal * 1 + cart.totals.shipping * 1 === 0
-                        ? 0
-                        : (
-                            (cart.totals.subtotal * 1 +
-                              cart.totals.shipping * 1) /
-                            11
-                          ).toFixed(2)
-                    }`}
+                    ${cart.totals.subtotal * 1 + cart.totals.shipping * 1 === 0
+                              ? 0
+                              : (
+                                (cart.totals.subtotal * 1 +
+                                  cart.totals.shipping * 1) /
+                                11
+                              ).toFixed(2)
+                            }`}
                         </dd>
                       </div>
                       {cart.totals.voucher * 1 !== 0 && (
@@ -214,7 +190,8 @@ export async function getServerSideProps(context: any) {
   // send deleteOrder api if order cancelled
   if (status === false || status === 'false') {
     // delete order if it exists
-    deleteOrder(id)
+    await postData({ url: '/api/deleteOrder', data: id })
+
     // return false to show cancelled
     return {
       props: {
