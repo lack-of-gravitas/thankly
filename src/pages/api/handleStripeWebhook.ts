@@ -26,8 +26,9 @@ const handleStripeWebhook = async (
   if (req.method === 'POST' || req.method === 'PATCH') {
     const buf = await buffer(req)
     const sig = req.headers['stripe-signature']
+    // const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
     const webhookSecret =
-      (process.env.NODE_ENV === 'development' ||process.env.NODE_ENV === 'test')
+      process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
         ? process.env.DEV_STRIPE_WHK_SEC
         : process.env.PRD_STRIPE_WHK_SEC
     let event: Stripe.Event

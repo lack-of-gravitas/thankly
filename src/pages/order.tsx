@@ -45,7 +45,7 @@ export default function Home({ slug, preview, data }: any) {
 
               <p className="mt-2 mb-5 text-base text-gray-500">
                 {status
-                  ? `We appreciate your order, we’re currently processing it. Check your email for the order confirmation. We'll keep you updated as your order progresses. Something doesn't look quite right? Get in touch with us.`
+                  ? `We appreciate your order, we’re currently processing it. Check your email for the order confirmation and Tax Invoice. We'll keep you updated as your order progresses. Something doesn't look quite right? Get in touch with us.`
                   : `Payment for your order has been cancelled and your cart has been cleared. Please start again if you'd like to send a new Thankly.`}
               </p>
 
