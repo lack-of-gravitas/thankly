@@ -536,11 +536,13 @@ export default function Send({ slug, preview, prefetchedData }: any) {
                                 data: { cart: state.cart },
                               })
 
+                              console.log('sessionId', sessionId)
                               const stripe = await getStripe()
                               stripe?.redirectToCheckout({ sessionId })
-                              dispatch({ type: 'CLEAR_CART' })
+                             
                               setProcessing(false)
                               setInitiateCheckout(false)
+                              dispatch({ type: 'CLEAR_CART' })
                             }
                           } else {
                             // refresh page & show notification
