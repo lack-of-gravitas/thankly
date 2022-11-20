@@ -72,7 +72,7 @@ const createCheckoutSession = async (
           ? [{ coupon: `${coupon.id}` }]
           : undefined,
       mode: 'payment',
-      billing_address_collection: 'required',
+      // billing_address_collection: 'required',
       customer: customer ? customer.id : cart.customerId, //sender.email ?? '',
       // customer_creation: 'always',
       // phone_number_collection: { enabled: true },
