@@ -85,6 +85,22 @@ const handleStripeWebhook = async (
             )
           }
 
+          // update order email & customer associated
+          console.log('upsert order...')
+
+          order = await fetch(
+            `${process.env.NEXT_PUBLIC_REST_API}/orders/${orderId}`,
+            {
+              method: 'PATCH',
+              headers: {
+                Authorization: `Bearer ${process.env.DIRECTUS}`,
+                'Content-Type': 'application/json',
+              },
+              credentials: 'same-origin',
+              body: JSON.stringify({ status: 'placed' }),
+            }
+          )
+
           console.log('delete stripe coupon...')
           fetch(
             `${process.env.NEXT_PUBLIC_REST_API}/api/deleteCoupon?id=${order.id}`
@@ -212,27 +228,27 @@ const handleStripeWebhook = async (
         console.log('price.deleted results', results)
       }
 
-      if (event.type === 'customer.created') {
-        price = event.data.object as Stripe.Price
-        results = await fetch(
-          `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
-          {
-            method: 'PATCH',
-            redirect: 'follow',
-            headers: {
-              Authorization: `Bearer ${process.env.DIRECTUS}`,
-              'Content-Type': 'application/json',
-            },
-            credentials: 'same-origin',
-            body: JSON.stringify({
-              priceId: '',
-              currency: '',
-              unit_amount: 0,
-            }),
-          }
-        )
-        console.log('price.deleted results', results)
-      }
+      // if (event.type === 'customer.created') {
+      //   price = event.data.object as Stripe.Price
+      //   results = await fetch(
+      //     `${process.env.NEXT_PUBLIC_REST_API}/products/` + price.product,
+      //     {
+      //       method: 'PATCH',
+      //       redirect: 'follow',
+      //       headers: {
+      //         Authorization: `Bearer ${process.env.DIRECTUS}`,
+      //         'Content-Type': 'application/json',
+      //       },
+      //       credentials: 'same-origin',
+      //       body: JSON.stringify({
+      //         priceId: '',
+      //         currency: '',
+      //         unit_amount: 0,
+      //       }),
+      //     }
+      //   )
+      //   console.log('price.deleted results', results)
+      // }
     } catch (error) {
       console.log(error)
       return res
