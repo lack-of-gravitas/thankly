@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { getPage } from '@/lib/queries'
+import { META_DESCRIPTION } from '@/lib/constants';
 
 const Layout = dynamic(() => import('@/components/common/Layout'))
 const Section = dynamic(() => import('@/components/ui/Section'))

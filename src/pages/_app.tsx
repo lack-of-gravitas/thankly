@@ -5,13 +5,13 @@ import type { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
 import { SwrBrand } from '@/lib/swr-helpers'
 
-import { UserProvider } from '@supabase/supabase-auth-helpers/react'
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs'
-import { MyUserContextProvider } from '@/lib/hooks/useUser'
 import { StoreProvider } from '@/lib/Store'
+import { Auth } from '@supabase/auth-ui-react'
+import { supabase } from '../lib/initSupabase'
 
 import { DefaultSeo } from 'next-seo'
 import { DefaultSeoProps } from 'next-seo'
+
 const config: DefaultSeoProps = {
   openGraph: {
     type: 'website',
@@ -64,53 +64,26 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
   const storeBaseUrl = storeUrl ? `https://${storeUrl}` : null
   return (
     <>
-      <UserProvider supabaseClient={supabaseClient}>
-        <MyUserContextProvider supabaseClient={supabaseClient}>
-          <SWRConfig
-            value={{
-              revalidateIfStale: false,
-              revalidateOnFocus: false,
-              dedupingInterval: 15000,
-            }}
-          >
-            <StoreProvider>
-              {/* <DefaultSeo
-                openGraph={{
-                  type: 'website',
-                  locale: 'en_AU',
-                  url: storeUrl,
-                  siteName: brand?.name ?? 'Thankly',
-                  title: brand?.seo?.title ?? 'Thankly',
-                  description:
-                    brand?.seo?.description ?? 'Handwritten Cards & Gifts',
-                  images: [
-                    {
-                      url: 'https://thankly.fly.dev/assets/files/52537484-80bc-4f21-af50-39fc2ec05baa',
-                      width: 800,
-                      height: 600,
-                      alt: 'Og Image Alt',
-                    },
-                    {
-                      url: 'https://thankly.fly.dev/assets/files/db898710-0551-4f96-9c49-62202e524faf',
-                      width: 800,
-                      height: 600,
-                      alt: 'Og Image Alt 2',
-                    },
-                  ],
-                }}
-                twitter={{
-                  handle: '@thanklyaus',
-                  site: '@thanklyaus',
-                  cardType: 'summary_large_image',
-                }}
-              /> */}
-              <Layout pageProps={pageProps} brand={brand}>
-                <Component {...pageProps} />
-              </Layout>
-            </StoreProvider>
-          </SWRConfig>
-        </MyUserContextProvider>
-      </UserProvider>
+      {/* <UserProvider supabaseClient={supabaseClient}> */}
+      {/* <MyUserContextProvider supabaseClient={supabaseClient}> */}
+      <Auth.UserContextProvider supabaseClient={supabase}>
+        <SWRConfig
+          value={{
+            revalidateIfStale: false,
+            revalidateOnFocus: false,
+            dedupingInterval: 15000,
+          }}
+        >
+          <StoreProvider>
+
+            <Layout pageProps={pageProps} brand={brand}>
+              <Component {...pageProps} />
+            </Layout>
+          </StoreProvider>
+        </SWRConfig>
+        </Auth.UserContextProvider>
+      {/* </MyUserContextProvider> */}
+      {/* </UserProvider> */}
     </>
   )
 }

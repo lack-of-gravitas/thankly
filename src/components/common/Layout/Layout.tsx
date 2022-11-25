@@ -4,18 +4,68 @@ import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 // import { useAcceptCookies } from '@/lib/hooks/useAcceptCookies'
 import { Button } from '@/components/ui'
+import { useRouter } from 'next/router';
 
 const Navbar = dynamic(() => import('@/components/common/Navbar'))
 const Footer = dynamic(() => import('@/components/common/Footer'))
 const Loading = dynamic(() => import('@/components/ui/Loading'))
 const FeatureBar = dynamic(() => import('@/components/common/FeatureBar'))
+import { SITE_NAME, SITE_URL, META_DESCRIPTION, TWITTER_USER_NAME } from '@/lib/constants';
+import Head from 'next/head';
+import {  } from '@/lib/constants';
 
-const Layout: React.FC = ({ children, brand }: any) => {
+
+type Meta = {
+  title: string | null;
+  description: string | null;
+  image?: string | null;
+  url?: string | null;
+};
+
+
+const Layout: React.FC = ({ children, brand, fullViewport = false }: any) => {
   // console.log('layout brand ->', children)
-  const [hideCookieBar, setHideCookieBar] = useState(Cookies.get('accept_cookie') ? true:false)
+  const router = useRouter();
+
+  const [hideCookieBar, setHideCookieBar] = useState(Cookies.get('accept_cookie') ? true : false)
+  const meta = {
+    title: 'Thankly',
+    description: META_DESCRIPTION, image:  '/thankly_card.jpg'
+    
+  };
+
+  const url = meta.url || `${SITE_URL}${router.asPath}`;
+
   if (brand) {
     return (
       <>
+        <Head>
+          <title>{meta.title}</title>
+          <meta property="og:title" content={meta.title} />
+          <meta property="og:url" content={url} />
+          <meta name="description" content={meta.description} />
+          <meta property="og:description" content={meta.description} />
+          <meta name="twitter:site" content={`@${TWITTER_USER_NAME}`} />
+          <meta name="twitter:card" content={meta.image ? 'summary_large_image' : 'summary'} />
+          <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+          <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+          <link rel="manifest" href="/site.webmanifest" />
+          <link rel="shortcut icon" href="/favicon.ico" />
+          <link
+            rel="preload"
+            href="https://assets.vercel.com/raw/upload/v1587415301/fonts/2/inter-var-latin.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          {meta.image && (
+            <meta
+              property="og:image"
+              content={meta.image.startsWith('https://') ? meta.image : `${SITE_URL}${meta.image}`}
+            />
+          )}
+        </Head>
         <div className="relative ">
           <Navbar data={brand ? brand : null} />
           <main>{children}</main>
