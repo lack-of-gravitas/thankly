@@ -30,11 +30,9 @@ const Layout: React.FC = ({ children, brand, fullViewport = false }: any) => {
   const [hideCookieBar, setHideCookieBar] = useState(Cookies.get('accept_cookie') ? true : false)
   const meta = {
     title: 'Thankly',
-    description: META_DESCRIPTION, image:  '/thankly_card.jpg'
-    
+    description: META_DESCRIPTION, image:  '/thankly_card.jpg',
+    url: `${SITE_URL}${router.asPath}`
   };
-
-  const url = meta.url || `${SITE_URL}${router.asPath}`;
 
   if (brand) {
     return (
@@ -42,7 +40,7 @@ const Layout: React.FC = ({ children, brand, fullViewport = false }: any) => {
         <Head>
           <title>{meta.title}</title>
           <meta property="og:title" content={meta.title} />
-          <meta property="og:url" content={url} />
+          <meta property="og:url" content={meta.url} />
           <meta name="description" content={meta.description} />
           <meta property="og:description" content={meta.description} />
           <meta name="twitter:site" content={`@${TWITTER_USER_NAME}`} />
@@ -52,13 +50,13 @@ const Layout: React.FC = ({ children, brand, fullViewport = false }: any) => {
           <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
           <link rel="manifest" href="/site.webmanifest" />
           <link rel="shortcut icon" href="/favicon.ico" />
-          <link
+          {/* <link
             rel="preload"
             href="https://assets.vercel.com/raw/upload/v1587415301/fonts/2/inter-var-latin.woff2"
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"
-          />
+          /> */}
           {meta.image && (
             <meta
               property="og:image"
