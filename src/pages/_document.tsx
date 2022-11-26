@@ -5,7 +5,13 @@ export default function Document(props: any) {
   return (
     <Html className="h-full antialiased scroll-smooth" lang="en">
       <Head>
-        
+      <link
+          rel="preload"
+          href="https://assets.vercel.com/raw/upload/v1587415301/fonts/2/inter-var-latin.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

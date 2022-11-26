@@ -336,7 +336,7 @@ export async function getProducts(type: string) {
             : true
         }` +
         `&filter[type][_in]=${type}`+
-        `&sort[]=-unit_amount`
+        `&sort[]=unit_amount` //-unit_amount`
     )
   ).json()
   data = data.data

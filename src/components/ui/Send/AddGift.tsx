@@ -56,7 +56,7 @@ export default function AddGift() {
     let newResult = response.map((item: any) => {
       return item.item
     })
-    if (currentTarget.value === "" ) {
+    if (currentTarget.value === "") {
       response = fuse.search('gift')
       newResult = response.map((item: any) => {
         return item.item
@@ -88,45 +88,7 @@ export default function AddGift() {
               onChange={onSearch}
             />
           </div>
-          {/* <div className="basis-1/8">
-              <Switch.Group
-                as="div"
-                className="relative flex items-center ml-3 tracking-tight"
-              >
-                <Switch
-                  checked={enabled}
-                  onChange={() => {
-                    let response: any
-                    let newResult: any
-                    if (enabled === true) {
-                      setEnabled(false)
-                      response = fuse.search('gift')
-                    }
-                    if (enabled === false) {
-                      setEnabled(true)
-                      response = fuse.search('card')
-                    }
-                    newResult = response.map((item: any) => {
-                      return item.item
-                    })
-                    updateSearchResults(newResult)
-                  }}
-                  className={cn(
-                    enabled ? 'bg-slate-600' : 'bg-gray-200',
-                    'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2'
-                  )}
-                >
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      enabled ? 'translate-x-5' : 'translate-x-0',
-                      'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
-                    )}
-                  />
-                </Switch>
-                
-              </Switch.Group>
-            </div> */}
+
         </div>
         <div className="px-4 py-2 text-sm italic leading-tight text-gray-500 grow">
           <p>
@@ -142,11 +104,11 @@ export default function AddGift() {
       <div className="grid grid-cols-1 pt-5 mx-auto tracking-snug gap-x-2 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-4 xl:grid-cols-4 xl:gap-x-4">
         {searchResults
           ? searchResults?.map((product: any) => (
-              <ProductCard key={product.name} product={product} />
-            ))
+            <ProductCard key={product.name} product={product} />
+          ))
           : products?.map((product: any) => (
-              <ProductCard key={product.name} product={product} />
-            ))}
+            <ProductCard key={product.name} product={product} />
+          ))}
       </div>
     </div>
   )

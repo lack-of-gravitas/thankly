@@ -1,5 +1,5 @@
 import '@/styles/tailwind.css'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import type { AppProps } from 'next/app'
 
 import { SWRConfig } from 'swr'
@@ -7,24 +7,12 @@ import { SwrBrand } from '@/lib/swr-helpers'
 
 import { StoreProvider } from '@/lib/Store'
 import { Auth } from '@supabase/auth-ui-react'
-import { supabase } from '../lib/initSupabase'
+// import { supabase } from '@/lib/initSupabase'
 
-import { DefaultSeo } from 'next-seo'
-import { DefaultSeoProps } from 'next-seo'
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { SessionContextProvider, Session } from '@supabase/auth-helpers-react'
 
-const config: DefaultSeoProps = {
-  openGraph: {
-    type: 'website',
-    locale: 'en_IE',
-    url: 'https://www.url.ie/',
-    siteName: 'SiteName',
-  },
-  twitter: {
-    handle: '@handle',
-    site: '@site',
-    cardType: 'summary_large_image',
-  },
-}
+
 const Noop: FC = ({ children }: any) => <>{children}</>
 declare global {
   interface Window {
@@ -32,8 +20,14 @@ declare global {
   }
 }
 
-export default function MyApp({ Component, pageProps, router }: AppProps) {
+export default function MyApp({ Component, pageProps, router }: AppProps<{
+
+  initialSession: Session
+
+}>) {
   const Layout = (Component as any).Layout || Noop
+  // Create a new supabase browser client on every first render.
+  const [supabaseClient] = useState(() => createBrowserSupabaseClient())
   const brand: any = SwrBrand()
   // console.log('_app brand->', brand)
 
@@ -64,9 +58,8 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
   const storeBaseUrl = storeUrl ? `https://${storeUrl}` : null
   return (
     <>
-      {/* <UserProvider supabaseClient={supabaseClient}> */}
-      {/* <MyUserContextProvider supabaseClient={supabaseClient}> */}
-      <Auth.UserContextProvider supabaseClient={supabase}>
+
+      <SessionContextProvider supabaseClient={supabaseClient} initialSession={pageProps.initialSession}>
         <SWRConfig
           value={{
             revalidateIfStale: false,
@@ -81,9 +74,8 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
             </Layout>
           </StoreProvider>
         </SWRConfig>
-        </Auth.UserContextProvider>
-      {/* </MyUserContextProvider> */}
-      {/* </UserProvider> */}
+      </SessionContextProvider>
+
     </>
   )
 }
