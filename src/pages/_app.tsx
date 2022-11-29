@@ -8,9 +8,10 @@ import { Analytics } from '@vercel/analytics/react';
 import { StoreProvider } from '@/lib/Store'
 import { Auth } from '@supabase/auth-ui-react'
 // import { supabase } from '@/lib/initSupabase'
-
+import { GoogleAnalytics } from "nextjs-google-analytics";
 import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { SessionContextProvider, Session } from '@supabase/auth-helpers-react'
+
 
 
 const Noop: FC = ({ children }: any) => <>{children}</>
@@ -21,9 +22,7 @@ declare global {
 }
 
 export default function MyApp({ Component, pageProps, router }: AppProps<{
-
   initialSession: Session
-
 }>) {
   const Layout = (Component as any).Layout || Noop
   // Create a new supabase browser client on every first render.
@@ -68,7 +67,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps<{
           }}
         >
           <StoreProvider>
-
+            <GoogleAnalytics trackPageViews />
             <Layout pageProps={pageProps} brand={brand}>
               <Component {...pageProps} />
             </Layout>

@@ -5,13 +5,13 @@ export default function Document(props: any) {
   return (
     <Html className="h-full antialiased scroll-smooth" lang="en">
       <Head>
-      <link
+      {/* <link
           rel="preload"
           href="https://assets.vercel.com/raw/upload/v1587415301/fonts/2/inter-var-latin.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
-        />
+        /> */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -20,7 +20,7 @@ export default function Document(props: any) {
         />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Lato&family=Roboto&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Roboto&family=Noto+Sans:wght@300&Inter:wght@100;200&display=swap"
         />
         <link
           rel="stylesheet"
@@ -32,7 +32,7 @@ export default function Document(props: any) {
         {/* flex flex-col h-full  */}
         <Main />
         <NextScript />
-        <Script
+        {/* <Script
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-01Y5P4HKGH"
           // src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
@@ -45,7 +45,7 @@ export default function Document(props: any) {
             gtag('config', '${process.env.NEXT_PUBLIC_GA4_ID}', {
               page_path: window.location.pathname,
             });`}
-        </Script>
+        </Script> */}
 
         <Script
           strategy="beforeInteractive"

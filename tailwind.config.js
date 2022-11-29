@@ -44,8 +44,9 @@ module.exports = {
         gray: colors.neutral,
       }),
       fontFamily: {
-        sans: ['Roboto', ...defaultTheme.fontFamily.sans],
-        title: ['Roboto', ...defaultTheme.fontFamily.sans],
+        'sans': ['Roboto','Inter', 'sans-serif'],
+        // sans: ['InterVar', ...defaultTheme.fontFamily.sans],
+        // title: ['InterVar', ...defaultTheme.fontFamily.sans],
       },
       keyframes: {
         'fade-in': {

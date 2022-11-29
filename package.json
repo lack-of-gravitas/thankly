@@ -41,6 +41,7 @@
     "next": "^13.0.5",
     "next-seo": "^5.14.1",
     "next-themes": "^0.2.1",
+    "nextjs-google-analytics": "^2.2.2",
     "postcss": "^8.4.19",
     "postcss-focus-visible": "^7.1.0",
     "react": "^18.2.0",
