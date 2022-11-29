@@ -4,7 +4,7 @@ import type { AppProps } from 'next/app'
 
 import { SWRConfig } from 'swr'
 import { SwrBrand } from '@/lib/swr-helpers'
-
+import { Analytics } from '@vercel/analytics/react';
 import { StoreProvider } from '@/lib/Store'
 import { Auth } from '@supabase/auth-ui-react'
 // import { supabase } from '@/lib/initSupabase'
@@ -75,7 +75,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps<{
           </StoreProvider>
         </SWRConfig>
       </SessionContextProvider>
-
+      <Analytics />
     </>
   )
 }

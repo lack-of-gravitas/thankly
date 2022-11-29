@@ -33,9 +33,11 @@ export default function Document(props: any) {
         <Main />
         <NextScript />
         <Script
-          async
+          strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-01Y5P4HKGH"
-        ></Script>
+          // src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
+        />
+       
         <Script id="ga4">
           {`window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
