@@ -26,6 +26,7 @@ export default function Document(props: any) {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
         />
+        <meta name="google-site-verification" content="O_D9XS1hEQehQtqShBRF_IpeKghrLhYCjEmlL_Jto9s" />
       </Head>
       <body className="">
         {/* flex flex-col h-full  */}

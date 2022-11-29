@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, useContext } from 'react'
+import React, { Fragment,useState, useEffect, useRef, useContext } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-
+import { Dialog, Disclosure, Menu, Popover, Tab, Transition } from '@headlessui/react'
 import { useRouter } from 'next/router'
 
 import cn from 'clsx'
@@ -18,6 +18,64 @@ const ProductCard = dynamic(() => import('@/components/ui/Product'))
 
 export default function AddGift() {
   const { state, dispatch } = useContext(Store)
+  // const CustomSort
+  const sortOptions = [
+    { name: 'Featured', href: '#' },
+    { name: 'Newest', href: '#' },
+    { name: 'Price: Low to High', href: '#' },
+    { name: 'Price: High to Low', href: '#' },
+  ]
+  const filters = [
+
+
+    {
+      id: 'category',
+      name: 'Category',
+      options: [
+        { value: 'tees', label: 'Tees' },
+        { value: 'crewnecks', label: 'Crewnecks' },
+        { value: 'hats', label: 'Hats' },
+        { value: 'bundles', label: 'Bundles' },
+        { value: 'carry', label: 'Carry' },
+        { value: 'objects', label: 'Objects' },
+      ],
+    },
+    {
+      id: 'brand',
+      name: 'Brand',
+      options: [
+        { value: 'clothing-company', label: 'Clothing Company' },
+        { value: 'fashion-inc', label: 'Fashion Inc.' },
+        { value: 'shoes-n-more', label: "Shoes 'n More" },
+        { value: 'supplies-n-stuff', label: "Supplies 'n Stuff" },
+      ],
+    },
+    {
+      id: 'color',
+      name: 'Color',
+      options: [
+        { value: 'white', label: 'White' },
+        { value: 'black', label: 'Black' },
+        { value: 'grey', label: 'Grey' },
+        { value: 'blue', label: 'Blue' },
+        { value: 'olive', label: 'Olive' },
+        { value: 'tan', label: 'Tan' },
+      ],
+    },
+    {
+      id: 'sizes',
+      name: 'Sizes',
+      options: [
+        { value: 'xs', label: 'XS' },
+        { value: 's', label: 'S' },
+        { value: 'm', label: 'M' },
+        { value: 'l', label: 'L' },
+        { value: 'xl', label: 'XL' },
+        { value: '2xl', label: '2XL' },
+      ],
+    },
+  ]
+  const activeFilters = [{ value: 'objects', label: 'Objects' }]
 
   let fuse: any
   let products = SwrCards()
@@ -38,7 +96,8 @@ export default function AddGift() {
   }
   const [searchResults, updateSearchResults]: any = useState()
   const [query, updateQuery] = useState('')
-
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   // useEffect(() => {
 
   //   if ()
@@ -76,6 +135,12 @@ export default function AddGift() {
       <div className="border rounded-md border-gray-150 bg-gray-50">
         <div className="relative flex flex-row px-3 py-3 justify-items-center focus-within:z-10">
           <div className="grow basis-1/2">
+
+       
+       
+
+
+
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 ml-2 pointer-events-none grow ">
               <Icon name={'search'} />
             </div>
@@ -85,12 +150,7 @@ export default function AddGift() {
               id="search"
               className="flex max-w-full min-w-full pl-10 font-medium tracking-tight border-gray-300 rounded-md txt-slate-500 grow focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
               placeholder="Start searching here..."
-              onChange={
-                // (e: any) => {
-                // console.log('e.target.value >', e.target.value)
-                onSearch
-                // }
-              }
+              onChange={onSearch}
             />
           </div>
           {/* <div className="basis-1/8">
